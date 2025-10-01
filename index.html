@@ -71,7 +71,7 @@
             will-change: transform;
         }
 
-        /* Countdown timer */
+        /* Countdown timer - hidden */
         .countdown-timer {
             position: fixed;
             bottom: 20px;
@@ -89,6 +89,8 @@
             align-items: center;
             gap: 10px;
             animation: pulseLight 2s infinite;
+            opacity: 0;
+            pointer-events: none;
         }
 
         body.dark-mode .countdown-timer {
@@ -748,53 +750,135 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        @media (max-width: 600px) {
+        /* Enable scrolling */
+        html {
+            overflow-y: auto;
+        }
+
+        body {
+            overflow-y: visible;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
             .user-counter {
-                font-size: 0.9rem;
-                padding: 7px 14px;
-            }
-            
-            .countdown-timer {
-                font-size: 0.9rem;
-                padding: 10px 20px;
+                font-size: 0.85rem;
+                padding: 6px 12px;
             }
             
             .top-controls {
-                gap: 10px;
+                gap: 8px;
             }
             
             .control-button {
-                width: 38px;
-                height: 38px;
+                width: 36px;
+                height: 36px;
             }
             
             .notifications-container {
-                top: 65px;
-                right: 15px;
-                max-width: 280px;
+                top: 60px;
+                right: 10px;
+                max-width: 250px;
             }
             
             .notification-popup {
-                width: 300px;
-                right: 10px;
+                width: 280px;
+                right: 5px;
             }
             
             .logo {
-                width: 90px;
-                height: 90px;
+                width: 80px;
+                height: 80px;
             }
             
             .logo-text {
                 font-size: 2rem;
             }
             
+            .subtitle {
+                font-size: 1rem;
+            }
+            
             .cta-button {
-                padding: 14px 30px;
-                font-size: 1.1rem;
+                padding: 12px 28px;
+                font-size: 1rem;
+                margin-bottom: 30px;
             }
             
             .social-card {
                 padding: 20px;
+                max-width: 350px;
+            }
+            
+            .contact-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .footer {
+                margin-top: 30px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-counter {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+            
+            .top-controls {
+                gap: 6px;
+            }
+            
+            .control-button {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .notifications-container {
+                top: 55px;
+                right: 5px;
+                max-width: 220px;
+            }
+            
+            .notification-popup {
+                width: 250px;
+                right: 2px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .cta-button {
+                padding: 10px 24px;
+                font-size: 0.95rem;
+                margin-bottom: 25px;
+            }
+            
+            .social-card {
+                padding: 18px;
+                max-width: 300px;
+            }
+            
+            .contact-button {
+                padding: 10px 25px;
+                font-size: 0.95rem;
+            }
+            
+            .footer {
+                margin-top: 25px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -816,7 +900,7 @@
     
     <div class="overlay"></div>
     
-    <!-- Countdown timer -->
+    <!-- Countdown timer - hidden with opacity 0 -->
     <div class="countdown-timer">
         <i class="fas fa-clock"></i>
         <span>Redirecting in <span id="countdown">5</span>s</span>
@@ -921,33 +1005,18 @@
             // Start countdown
             updateCountdown();
             
-            // Use localStorage to persist notification history across page reloads
-            let notificationHistory = JSON.parse(localStorage.getItem('notificationHistory')) || [];
-            const maxHistoryItems = 50; // Store last 50 notifications
-            
-            // Clean up old notifications (older than 30 minutes)
-            const now = new Date();
-            notificationHistory = notificationHistory.filter(item => {
-                const itemTime = new Date(item.timestamp);
-                return (now - itemTime) < 30 * 60 * 1000; // 30 minutes in milliseconds
-            });
-            
-            // Save cleaned history back to localStorage
-            localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+            // Notification history (using in-memory storage since localStorage is not supported)
+            let notificationHistory = [];
+            const maxHistoryItems = 50;
             
             // Live User Counter (12k-100k range) with faster updates
             const userCountElement = document.getElementById('userCount');
-            let userCount = parseInt(localStorage.getItem('userCount')) || 12555;
-            
-            // Ensure user count is within valid range
-            userCount = Math.max(12000, Math.min(100000, userCount));
+            let userCount = 12555;
             
             function updateCounter() {
-                // Faster fluctuation: -50 to +150 every 15 seconds
                 const fluctuation = Math.floor(Math.random() * 201) - 50;
                 userCount = Math.max(12000, Math.min(100000, userCount + fluctuation));
                 userCountElement.textContent = userCount.toLocaleString();
-                localStorage.setItem('userCount', userCount.toString());
             }
             
             // Update every 15 seconds (faster)
@@ -1018,8 +1087,6 @@
                     notificationHistory.pop();
                 }
                 
-                // Save to localStorage
-                localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
                 updatePopupHistoryList();
                 
                 // Remove notification after animation completes
@@ -1093,20 +1160,9 @@
             const darkModeToggle = document.getElementById('darkModeToggle');
             const body = document.body;
             
-            // Check for saved dark mode preference
-            if (localStorage.getItem('darkMode') === 'true') {
-                body.classList.add('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                // Ensure light mode is active (default)
-                body.classList.remove('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            
             darkModeToggle.addEventListener('click', function() {
                 body.classList.toggle('dark-mode');
                 const isDarkMode = body.classList.contains('dark-mode');
-                localStorage.setItem('darkMode', isDarkMode.toString());
                 
                 if (isDarkMode) {
                     darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
@@ -1126,13 +1182,6 @@
                 console.log('Video failed to load, using fallback background');
                 video.style.display = 'none';
             });
-            
-            // Prevent default touch behavior for better mobile performance
-            document.body.addEventListener('touchmove', function(e) {
-                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                }
-            }, { passive: false });
         });
     </script>
 </body>
