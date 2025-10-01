@@ -13,6 +13,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html {
+            overflow-y: auto;
+        }
+
         body {
             min-height: 100vh;
             background: linear-gradient(135deg, #e0f7fa, #bbdefb, #e8eaf6);
@@ -28,7 +32,6 @@
             color: white;
         }
 
-        /* Video background */
         .video-background {
             position: fixed;
             top: 0;
@@ -40,7 +43,6 @@
             opacity: 0.4;
         }
 
-        /* Overlay for readability */
         .overlay {
             position: fixed;
             top: 0;
@@ -57,7 +59,6 @@
             background: rgba(0, 0, 0, 0.3);
         }
 
-        /* Main container */
         .container {
             min-height: 100vh;
             display: flex;
@@ -67,48 +68,17 @@
             padding: 20px;
             position: relative;
             z-index: 2;
-            transform: translateZ(0);
-            will-change: transform;
         }
 
-        /* Countdown timer - hidden */
         .countdown-timer {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            z-index: 10;
-            border: 1px solid rgba(2, 136, 209, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: pulseLight 2s infinite;
             opacity: 0;
             pointer-events: none;
         }
 
-        body.dark-mode .countdown-timer {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-color: rgba(0, 219, 222, 0.3);
-            animation: pulse 2s infinite;
-        }
-
-        .countdown-timer i {
-            color: #0288d1;
-        }
-
-        body.dark-mode .countdown-timer i {
-            color: #00dbde;
-        }
-
-        /* Live user counter - smaller and top-left */
         .user-counter {
             position: fixed;
             top: 20px;
@@ -143,7 +113,6 @@
             color: #00dbde;
         }
 
-        /* Notification system */
         .notifications-container {
             position: fixed;
             top: 70px;
@@ -164,7 +133,6 @@
             transform: translateX(400px);
             opacity: 0;
             animation: slideIn 0.4s forwards, fadeOut 0.5s 4.5s forwards;
-            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         body.dark-mode .notification {
@@ -250,7 +218,6 @@
             color: #00c853;
         }
 
-        /* Top right controls */
         .top-controls {
             position: fixed;
             top: 20px;
@@ -271,7 +238,6 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid rgba(0, 0, 0, 0.2);
-            will-change: transform;
         }
 
         body.dark-mode .control-button {
@@ -292,7 +258,6 @@
             font-size: 16px;
         }
 
-        /* Notification popup */
         .notification-popup {
             position: fixed;
             top: 70px;
@@ -384,11 +349,6 @@
             margin-bottom: 12px;
             border-left: 3px solid #2e7d32;
             animation: fadeIn 0.3s ease;
-            transition: transform 0.2s ease;
-        }
-
-        .popup-item:hover {
-            transform: translateX(5px);
         }
 
         body.dark-mode .popup-item {
@@ -420,7 +380,6 @@
             color: #00c853;
         }
 
-        /* Logo section */
         .logo-container {
             text-align: center;
             margin-bottom: 40px;
@@ -440,9 +399,7 @@
             margin: 0 auto 20px;
             box-shadow: 0 10px 30px rgba(2, 136, 209, 0.3);
             transition: transform 0.2s ease;
-            will-change: transform;
             overflow: hidden;
-            position: relative;
         }
 
         .logo img {
@@ -487,7 +444,6 @@
             color: #aaa;
         }
 
-        /* Main CTA button */
         .cta-button {
             background: linear-gradient(45deg, #0288d1, #7b1fa2);
             color: white;
@@ -506,7 +462,6 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 0.6s ease 0.2s forwards;
-            will-change: transform, box-shadow;
         }
 
         body.dark-mode .cta-button {
@@ -523,11 +478,6 @@
             box-shadow: 0 15px 35px rgba(0, 219, 222, 0.5);
         }
 
-        .cta-button:active {
-            transform: translateY(0);
-        }
-
-        /* Social card */
         .social-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -541,7 +491,6 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 0.6s ease 0.4s forwards;
-            will-change: transform, box-shadow;
         }
 
         body.dark-mode .social-card {
@@ -630,7 +579,6 @@
             box-shadow: 0 5px 15px rgba(0, 219, 222, 0.3);
         }
 
-        /* Contact button */
         .contact-button {
             background: transparent;
             color: #0288d1;
@@ -647,7 +595,6 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 0.6s ease 0.6s forwards;
-            will-change: transform, box-shadow;
         }
 
         body.dark-mode .contact-button {
@@ -665,7 +612,6 @@
             box-shadow: 0 0 20px rgba(0, 219, 222, 0.3);
         }
 
-        /* Footer */
         .footer {
             margin-top: 40px;
             text-align: center;
@@ -680,7 +626,6 @@
             color: #777;
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             to {
                 opacity: 1;
@@ -718,7 +663,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scrollbar styling */
         .popup-body::-webkit-scrollbar {
             width: 6px;
         }
@@ -741,178 +685,51 @@
             background: rgba(0, 219, 222, 0.5);
         }
 
-        /* Performance optimizations */
-        .container, .logo, .cta-button, .social-card, .contact-button {
-            transform: translateZ(0);
-        }
-
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Enable scrolling */
-        html {
-            overflow-y: auto;
-        }
-
-        body {
-            overflow-y: visible;
-        }
-
-        /* Responsive design */
         @media (max-width: 768px) {
-            .user-counter {
-                font-size: 0.85rem;
-                padding: 6px 12px;
-            }
-            
-            .top-controls {
-                gap: 8px;
-            }
-            
-            .control-button {
-                width: 36px;
-                height: 36px;
-            }
-            
-            .notifications-container {
-                top: 60px;
-                right: 10px;
-                max-width: 250px;
-            }
-            
-            .notification-popup {
-                width: 280px;
-                right: 5px;
-            }
-            
-            .logo {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .logo-text {
-                font-size: 2rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .cta-button {
-                padding: 12px 28px;
-                font-size: 1rem;
-                margin-bottom: 30px;
-            }
-            
-            .social-card {
-                padding: 20px;
-                max-width: 350px;
-            }
-            
-            .contact-button {
-                padding: 12px 30px;
-                font-size: 1rem;
-            }
-            
-            .footer {
-                margin-top: 30px;
-                font-size: 0.85rem;
-            }
+            .user-counter { font-size: 0.85rem; padding: 6px 12px; }
+            .control-button { width: 36px; height: 36px; }
+            .notifications-container { top: 60px; right: 10px; max-width: 250px; }
+            .notification-popup { width: 280px; }
+            .logo { width: 80px; height: 80px; }
+            .logo-text { font-size: 2rem; }
+            .cta-button { padding: 12px 28px; font-size: 1rem; margin-bottom: 30px; }
+            .social-card { padding: 20px; max-width: 350px; }
+            .contact-button { padding: 12px 30px; font-size: 1rem; }
+            .footer { margin-top: 30px; font-size: 0.85rem; }
         }
 
         @media (max-width: 480px) {
-            .user-counter {
-                font-size: 0.8rem;
-                padding: 5px 10px;
-            }
-            
-            .top-controls {
-                gap: 6px;
-            }
-            
-            .control-button {
-                width: 32px;
-                height: 32px;
-            }
-            
-            .notifications-container {
-                top: 55px;
-                right: 5px;
-                max-width: 220px;
-            }
-            
-            .notification-popup {
-                width: 250px;
-                right: 2px;
-            }
-            
-            .logo {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .logo-text {
-                font-size: 1.8rem;
-            }
-            
-            .subtitle {
-                font-size: 0.95rem;
-            }
-            
-            .cta-button {
-                padding: 10px 24px;
-                font-size: 0.95rem;
-                margin-bottom: 25px;
-            }
-            
-            .social-card {
-                padding: 18px;
-                max-width: 300px;
-            }
-            
-            .contact-button {
-                padding: 10px 25px;
-                font-size: 0.95rem;
-            }
-            
-            .footer {
-                margin-top: 25px;
-                font-size: 0.8rem;
-            }
+            .user-counter { font-size: 0.8rem; padding: 5px 10px; }
+            .control-button { width: 32px; height: 32px; }
+            .notifications-container { top: 55px; right: 5px; max-width: 220px; }
+            .notification-popup { width: 250px; }
+            .logo { width: 70px; height: 70px; }
+            .logo-text { font-size: 1.8rem; }
+            .cta-button { padding: 10px 24px; font-size: 0.95rem; margin-bottom: 25px; }
+            .social-card { padding: 18px; max-width: 300px; }
+            .contact-button { padding: 10px 25px; font-size: 0.95rem; }
+            .footer { margin-top: 25px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Video background with flying dollar bills -->
-    <video 
-        autoplay 
-        muted 
-        loop 
-        playsinline 
-        class="video-background"
-        poster="image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGY3ZmEiLz48L3N2Zz4="
-    >
+    <video autoplay muted loop playsinline class="video-background">
         <source src="https://assets.mixkit.co/videos/preview/mixkit-money-rain-3106-large.mp4" type="video/mp4">
-        <!-- Fallback for browsers that don't support the video -->
         <div class="fallback-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#e0f7fa,#bbdefb,#e8eaf6);z-index:-2;"></div>
     </video>
     
     <div class="overlay"></div>
     
-    <!-- Countdown timer - hidden with opacity 0 -->
     <div class="countdown-timer">
         <i class="fas fa-clock"></i>
-        <span>Redirecting in <span id="countdown">5</span>s</span>
+        <span>Redirecting in <span id="countdown">20</span>s</span>
     </div>
     
-    <!-- Live User Counter - smaller and top-left -->
     <div class="user-counter">
         <i class="fas fa-users"></i>
         <span id="userCount">12,555</span> users active
     </div>
     
-    <!-- Top right controls -->
     <div class="top-controls">
         <div class="control-button" id="notificationBtn">
             <i class="fas fa-bell"></i>
@@ -922,22 +739,17 @@
         </div>
     </div>
     
-    <!-- Notifications Container -->
     <div class="notifications-container" id="notificationsContainer"></div>
     
-    <!-- Notification Popup -->
     <div class="notification-popup" id="notificationPopup">
         <div class="popup-header">
             <div class="popup-title">Recent Wins (Last 30 min)</div>
             <button class="close-popup" id="closePopup">&times;</button>
         </div>
-        <div class="popup-body" id="popupHistoryList">
-            <!-- History items will be added here -->
-        </div>
+        <div class="popup-body" id="popupHistoryList"></div>
     </div>
     
     <div class="container">
-        <!-- Logo section - with custom image -->
         <div class="logo-container">
             <div class="logo">
                 <img src="https://i.imgur.com/Xz1b9jH.jpeg" alt="REDHAT HACK Logo">
@@ -946,14 +758,12 @@
             <p class="subtitle">Advanced Aviator Prediction Technology</p>
         </div>
         
-        <!-- Main CTA button -->
         <button class="cta-button" id="getBotBtn">
             <i class="fas fa-bolt"></i>
             GET AVIATOR HACK BOT
             <i class="fas fa-paper-plane"></i>
         </button>
         
-        <!-- Social card -->
         <div class="social-card">
             <div class="social-header">
                 <div class="social-icon">
@@ -967,13 +777,11 @@
             </a>
         </div>
         
-        <!-- Contact button -->
         <button class="contact-button" id="contactBtn">
             <i class="fas fa-envelope"></i>
             CONTACT ME
         </button>
         
-        <!-- Footer -->
         <div class="footer">
             <p>© 2023 REDHAT AI HACK_BOT All rights reserved.</p>
         </div>
@@ -981,11 +789,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto redirect functionality
+            // Auto redirect
             const countdownElement = document.getElementById('countdown');
             let countdown = 20;
-            
-            // Randomly select between the two redirect URLs
             const redirectUrls = [
                 "https://t.me/+xkwOcW5ZSxIwOGU1",
                 "https://t.me/REDHAT_HACK1WIN_BOT"
@@ -1001,44 +807,25 @@
                     setTimeout(updateCountdown, 1000);
                 }
             }
-            
-            // Start countdown
             updateCountdown();
             
-            // Notification history (using in-memory storage since localStorage is not supported)
+            // In-memory state (no localStorage)
             let notificationHistory = [];
             const maxHistoryItems = 50;
             
-            // Live User Counter (12k-100k range) with faster updates
+            // Initialize user count to a realistic high value
             const userCountElement = document.getElementById('userCount');
-            let userCount = 12555;
+            let userCount = Math.floor(Math.random() * 3000) + 12500; // 12,500 - 15,500
+            userCountElement.textContent = userCount.toLocaleString();
             
-            function updateCounter() {
+            // Update counter every 15 seconds
+            setInterval(() => {
                 const fluctuation = Math.floor(Math.random() * 201) - 50;
                 userCount = Math.max(12000, Math.min(100000, userCount + fluctuation));
                 userCountElement.textContent = userCount.toLocaleString();
-            }
+            }, 15000);
             
-            // Update every 15 seconds (faster)
-            updateCounter();
-            setInterval(updateCounter, 15000);
-            
-            // Notification System - Aviator focused
-            const notificationsContainer = document.getElementById('notificationsContainer');
-            const popupHistoryList = document.getElementById('popupHistoryList');
-            
-            // Weighted game types - Aviator has 70% chance
-            const gameTypes = [
-                "Aviator", "Aviator", "Aviator", "Aviator", "Aviator", "Aviator", "Aviator",
-                "Mines", "Mines", "Mines",
-                "LuckyJet", "LuckyJet",
-                "Mines1Win",
-                "MI-mines",
-                "Penalty",
-                "Football_X"
-            ];
-            const winAmounts = [85, 95, 110, 120, 130, 150, 165, 175, 200, 210];
-            
+            // Pre-fill notification history with 8 recent wins
             function generateRandomUser() {
                 const prefixes = ['876', '921', '754', '632', '519', '487', '392', '276', '183', '945'];
                 const suffixes = ['87', '42', '19', '63', '78', '51', '94', '26', '35', '72'];
@@ -1047,59 +834,33 @@
             }
             
             function getCurrentTime() {
-                const now = new Date();
-                return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             }
             
-            function showNotification() {
-                const notification = document.createElement('div');
-                notification.className = 'notification success';
-                
+            const gameTypes = ["Aviator", "Aviator", "Aviator", "Mines", "LuckyJet", "Mines1Win"];
+            const winAmounts = [85, 95, 110, 120, 130, 150, 165, 175, 200];
+            
+            // Pre-fill history
+            for (let i = 0; i < 8; i++) {
                 const randomGame = gameTypes[Math.floor(Math.random() * gameTypes.length)];
                 const randomAmount = winAmounts[Math.floor(Math.random() * winAmounts.length)];
                 const randomUser = generateRandomUser();
-                const formattedMessage = `${randomUser} won $${randomAmount} from ${randomGame}!`;
-                const currentTime = getCurrentTime();
-                const timestamp = new Date().getTime();
+                const message = `${randomUser} won $${randomAmount} from ${randomGame}!`;
+                const time = new Date(Date.now() - i * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
-                notification.innerHTML = `
-                    <div class="notification-content">
-                        <div class="notification-icon success">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="notification-text">
-                            <strong>${formattedMessage}</strong>
-                        </div>
-                    </div>
-                `;
-                
-                notificationsContainer.appendChild(notification);
-                
-                // Add to history with timestamp
-                notificationHistory.unshift({
-                    time: currentTime,
-                    message: formattedMessage,
-                    timestamp: timestamp
+                notificationHistory.push({
+                    time,
+                    message,
+                    timestamp: Date.now() - i * 60000
                 });
-                
-                // Keep only last 50 items
-                if (notificationHistory.length > maxHistoryItems) {
-                    notificationHistory.pop();
-                }
-                
-                updatePopupHistoryList();
-                
-                // Remove notification after animation completes
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 5000);
             }
+            
+            const notificationsContainer = document.getElementById('notificationsContainer');
+            const popupHistoryList = document.getElementById('popupHistoryList');
             
             function updatePopupHistoryList() {
                 popupHistoryList.innerHTML = '';
-                notificationHistory.forEach(item => {
+                notificationHistory.slice(0, 20).forEach(item => {
                     const popupItem = document.createElement('div');
                     popupItem.className = 'popup-item';
                     popupItem.innerHTML = `
@@ -1110,36 +871,68 @@
                 });
             }
             
-            // Show notifications every 4-8 seconds (even faster, Aviator focused)
-            function scheduleNextNotification() {
-                const delay = Math.floor(Math.random() * 8000) + 8000; // 4-8 seconds
+            updatePopupHistoryList();
+            
+            function showNotification() {
+                const notification = document.createElement('div');
+                notification.className = 'notification success';
+                
+                const randomGame = gameTypes[Math.floor(Math.random() * gameTypes.length)];
+                const randomAmount = winAmounts[Math.floor(Math.random() * winAmounts.length)];
+                const randomUser = generateRandomUser();
+                const message = `${randomUser} won $${randomAmount} from ${randomGame}!`;
+                
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <div class="notification-icon success">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="notification-text">
+                            <strong>${message}</strong>
+                        </div>
+                    </div>
+                `;
+                
+                notificationsContainer.appendChild(notification);
+                
+                notificationHistory.unshift({
+                    time: getCurrentTime(),
+                    message,
+                    timestamp: Date.now()
+                });
+                
+                if (notificationHistory.length > maxHistoryItems) {
+                    notificationHistory.pop();
+                }
+                
+                updatePopupHistoryList();
+                
                 setTimeout(() => {
-                    showNotification();
-                    scheduleNextNotification();
-                }, delay);
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 5000);
             }
             
-            // Start notification system
-            showNotification(); // Show first notification immediately
-            scheduleNextNotification();
+            showNotification();
+            setInterval(showNotification, Math.floor(Math.random() * 4000) + 4000);
             
-            // Popup functionality
+            // Popup controls
             const notificationPopup = document.getElementById('notificationPopup');
             const notificationBtn = document.getElementById('notificationBtn');
             const closePopup = document.getElementById('closePopup');
             
-            notificationBtn.addEventListener('click', function(e) {
+            notificationBtn.addEventListener('click', e => {
                 e.stopPropagation();
                 notificationPopup.classList.add('active');
                 updatePopupHistoryList();
             });
             
-            closePopup.addEventListener('click', function() {
+            closePopup.addEventListener('click', () => {
                 notificationPopup.classList.remove('active');
             });
             
-            // Close popup when clicking outside
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', e => {
                 if (notificationPopup.classList.contains('active') && 
                     !notificationPopup.contains(e.target) && 
                     e.target !== notificationBtn) {
@@ -1147,41 +940,27 @@
                 }
             });
             
-            // Button click handlers
-            document.getElementById('getBotBtn').addEventListener('click', function() {
+            // Button actions
+            document.getElementById('getBotBtn').addEventListener('click', () => {
                 window.open('https://t.me/REDHAT_HACK1WIN_BOT', '_blank');
             });
             
-            document.getElementById('contactBtn').addEventListener('click', function() {
+            document.getElementById('contactBtn').addEventListener('click', () => {
                 window.open('https://t.me/ReDHaT4O4', '_blank');
             });
             
-            // Dark mode toggle - starts in light mode by default
+            // Dark mode
             const darkModeToggle = document.getElementById('darkModeToggle');
-            const body = document.body;
-            
-            darkModeToggle.addEventListener('click', function() {
-                body.classList.toggle('dark-mode');
-                const isDarkMode = body.classList.contains('dark-mode');
-                
-                if (isDarkMode) {
-                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                } else {
-                    darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                }
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
             });
             
-            // Ensure video loads properly
+            // Video fallback
             const video = document.querySelector('.video-background');
-            video.addEventListener('loadeddata', function() {
-                video.style.opacity = '0.4';
-            });
-            
-            // Handle video load errors
-            video.addEventListener('error', function() {
-                console.log('Video failed to load, using fallback background');
-                video.style.display = 'none';
-            });
+            video.addEventListener('error', () => video.style.display = 'none');
         });
     </script>
 </body>
