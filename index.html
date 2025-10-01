@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REDHAT HACK - Aviator Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0f7fa, #bbdefb, #e8eaf6);
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.3s ease;
+            scroll-behavior: smooth;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+        }
+
+        /* Video background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            object-fit: cover;
+            opacity: 0.4;
+        }
+
+        /* Overlay for readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: -1;
+            transition: background 0.3s ease;
+            pointer-events: none;
+        }
+
+        body.dark-mode .overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main container */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        /* Countdown timer */
+        .countdown-timer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            z-index: 10;
+            border: 1px solid rgba(2, 136, 209, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulseLight 2s infinite;
+        }
+
+        body.dark-mode .countdown-timer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-color: rgba(0, 219, 222, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .countdown-timer i {
+            color: #0288d1;
+        }
+
+        body.dark-mode .countdown-timer i {
+            color: #00dbde;
+        }
+
+        /* Live user counter - smaller and top-left */
+        .user-counter {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 10;
+            border: 1px solid rgba(2, 136, 209, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulseLight 2s infinite;
+        }
+
+        body.dark-mode .user-counter {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-color: rgba(0, 219, 222, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .user-counter i {
+            color: #0288d1;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .user-counter i {
+            color: #00dbde;
+        }
+
+        /* Notification system */
+        .notifications-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 100;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid #0288d1;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateX(400px);
+            opacity: 0;
+            animation: slideIn 0.4s forwards, fadeOut 0.5s 4.5s forwards;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        body.dark-mode .notification {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            border-left-color: #00dbde;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification.success {
+            border-left-color: #2e7d32;
+        }
+
+        body.dark-mode .notification.success {
+            border-left-color: #00c853;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(2, 136, 209, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        body.dark-mode .notification-icon {
+            background: rgba(0, 219, 222, 0.2);
+        }
+
+        .notification-icon.success {
+            background: rgba(46, 125, 50, 0.2);
+        }
+
+        body.dark-mode .notification-icon.success {
+            background: rgba(0, 200, 83, 0.2);
+        }
+
+        .notification-icon i {
+            font-size: 16px;
+            color: #0288d1;
+        }
+
+        body.dark-mode .notification-icon i {
+            color: #00dbde;
+        }
+
+        .notification-icon.success i {
+            color: #2e7d32;
+        }
+
+        body.dark-mode .notification-icon.success i {
+            color: #00c853;
+        }
+
+        .notification-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .notification-text strong {
+            color: #0288d1;
+            font-weight: 700;
+        }
+
+        body.dark-mode .notification-text strong {
+            color: #00dbde;
+        }
+
+        .notification-text.success strong {
+            color: #2e7d32;
+        }
+
+        body.dark-mode .notification-text.success strong {
+            color: #00c853;
+        }
+
+        /* Top right controls */
+        .top-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .control-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            will-change: transform;
+        }
+
+        body.dark-mode .control-button {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-button:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .control-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-button i {
+            font-size: 16px;
+        }
+
+        /* Notification popup */
+        .notification-popup {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 360px;
+            max-height: 80vh;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: none;
+        }
+
+        body.dark-mode .notification-popup {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .notification-popup.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        .popup-header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .popup-header {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .popup-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        body.dark-mode .popup-title {
+            color: white;
+        }
+
+        .close-popup {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 1.3rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        body.dark-mode .close-popup {
+            color: white;
+        }
+
+        .close-popup:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .close-popup:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .popup-body {
+            max-height: calc(80vh - 80px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .popup-item {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid #2e7d32;
+            animation: fadeIn 0.3s ease;
+            transition: transform 0.2s ease;
+        }
+
+        .popup-item:hover {
+            transform: translateX(5px);
+        }
+
+        body.dark-mode .popup-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #00c853;
+        }
+
+        .popup-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        body.dark-mode .popup-time {
+            color: #aaa;
+        }
+
+        .popup-message {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .popup-message strong {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        body.dark-mode .popup-message strong {
+            color: #00c853;
+        }
+
+        /* Logo section */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .logo {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #0288d1, #7b1fa2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(2, 136, 209, 0.3);
+            transition: transform 0.2s ease;
+            will-change: transform;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        body.dark-mode .logo {
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            box-shadow: 0 10px 30px rgba(0, 219, 222, 0.4);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #0288d1, #7b1fa2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        body.dark-mode .logo-text {
+            background: linear-gradient(to right, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        body.dark-mode .subtitle {
+            color: #aaa;
+        }
+
+        /* Main CTA button */
+        .cta-button {
+            background: linear-gradient(45deg, #0288d1, #7b1fa2);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(2, 136, 209, 0.3);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            will-change: transform, box-shadow;
+        }
+
+        body.dark-mode .cta-button {
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+            box-shadow: 0 10px 30px rgba(0, 219, 222, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(2, 136, 209, 0.5);
+        }
+
+        body.dark-mode .cta-button:hover {
+            box-shadow: 0 15px 35px rgba(0, 219, 222, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Social card */
+        .social-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease 0.4s forwards;
+            will-change: transform, box-shadow;
+        }
+
+        body.dark-mode .social-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .social-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .social-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #0288d1, #7b1fa2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .social-icon {
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+        }
+
+        .social-icon i {
+            color: white;
+            font-size: 18px;
+        }
+
+        .social-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        body.dark-mode .social-title {
+            color: white;
+        }
+
+        .social-description {
+            margin-bottom: 20px;
+            opacity: 0.8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .social-description {
+            color: #aaa;
+        }
+
+        .social-link {
+            display: block;
+            background: linear-gradient(45deg, #0288d1, #7b1fa2);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        body.dark-mode .social-link {
+            background: linear-gradient(45deg, #00dbde, #fc00ff);
+        }
+
+        .social-link:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(2, 136, 209, 0.3);
+        }
+
+        body.dark-mode .social-link:hover {
+            box-shadow: 0 5px 15px rgba(0, 219, 222, 0.3);
+        }
+
+        /* Contact button */
+        .contact-button {
+            background: transparent;
+            color: #0288d1;
+            border: 2px solid #0288d1;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease 0.6s forwards;
+            will-change: transform, box-shadow;
+        }
+
+        body.dark-mode .contact-button {
+            color: #00dbde;
+            border-color: #00dbde;
+        }
+
+        .contact-button:hover {
+            background: rgba(2, 136, 209, 0.1);
+            box-shadow: 0 0 20px rgba(2, 136, 209, 0.3);
+        }
+
+        body.dark-mode .contact-button:hover {
+            background: rgba(0, 219, 222, 0.1);
+            box-shadow: 0 0 20px rgba(0, 219, 222, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease 0.8s forwards;
+        }
+
+        body.dark-mode .footer {
+            color: #777;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 219, 222, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(0, 219, 222, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 219, 222, 0); }
+        }
+
+        @keyframes pulseLight {
+            0% { box-shadow: 0 0 0 0 rgba(2, 136, 209, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(2, 136, 209, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(2, 136, 209, 0); }
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scrollbar styling */
+        .popup-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .popup-body::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .popup-body::-webkit-scrollbar-thumb {
+            background: rgba(2, 136, 209, 0.5);
+            border-radius: 3px;
+        }
+
+        body.dark-mode .popup-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .popup-body::-webkit-scrollbar-thumb {
+            background: rgba(0, 219, 222, 0.5);
+        }
+
+        /* Performance optimizations */
+        .container, .logo, .cta-button, .social-card, .contact-button {
+            transform: translateZ(0);
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (max-width: 600px) {
+            .user-counter {
+                font-size: 0.9rem;
+                padding: 7px 14px;
+            }
+            
+            .countdown-timer {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+            
+            .top-controls {
+                gap: 10px;
+            }
+            
+            .control-button {
+                width: 38px;
+                height: 38px;
+            }
+            
+            .notifications-container {
+                top: 65px;
+                right: 15px;
+                max-width: 280px;
+            }
+            
+            .notification-popup {
+                width: 300px;
+                right: 10px;
+            }
+            
+            .logo {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .logo-text {
+                font-size: 2rem;
+            }
+            
+            .cta-button {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .social-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video background with flying dollar bills -->
+    <video 
+        autoplay 
+        muted 
+        loop 
+        playsinline 
+        class="video-background"
+        poster="image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGY3ZmEiLz48L3N2Zz4="
+    >
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-money-rain-3106-large.mp4" type="video/mp4">
+        <!-- Fallback for browsers that don't support the video -->
+        <div class="fallback-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#e0f7fa,#bbdefb,#e8eaf6);z-index:-2;"></div>
+    </video>
+    
+    <div class="overlay"></div>
+    
+    <!-- Countdown timer -->
+    <div class="countdown-timer">
+        <i class="fas fa-clock"></i>
+        <span>Redirecting in <span id="countdown">5</span>s</span>
+    </div>
+    
+    <!-- Live User Counter - smaller and top-left -->
+    <div class="user-counter">
+        <i class="fas fa-users"></i>
+        <span id="userCount">12,555</span> users active
+    </div>
+    
+    <!-- Top right controls -->
+    <div class="top-controls">
+        <div class="control-button" id="notificationBtn">
+            <i class="fas fa-bell"></i>
+        </div>
+        <div class="control-button" id="darkModeToggle">
+            <i class="fas fa-moon"></i>
+        </div>
+    </div>
+    
+    <!-- Notifications Container -->
+    <div class="notifications-container" id="notificationsContainer"></div>
+    
+    <!-- Notification Popup -->
+    <div class="notification-popup" id="notificationPopup">
+        <div class="popup-header">
+            <div class="popup-title">Recent Wins (Last 30 min)</div>
+            <button class="close-popup" id="closePopup">&times;</button>
+        </div>
+        <div class="popup-body" id="popupHistoryList">
+            <!-- History items will be added here -->
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Logo section - with custom image -->
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://i.imgur.com/Xz1b9jH.jpeg" alt="REDHAT HACK Logo">
+            </div>
+            <h1 class="logo-text">REDHAT AI HACK_BOT</h1>
+            <p class="subtitle">Advanced Aviator Prediction Technology</p>
+        </div>
+        
+        <!-- Main CTA button -->
+        <button class="cta-button" id="getBotBtn">
+            <i class="fas fa-bolt"></i>
+            GET AVIATOR HACK BOT
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        
+        <!-- Social card -->
+        <div class="social-card">
+            <div class="social-header">
+                <div class="social-icon">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <h3 class="social-title">Join Telegram</h3>
+            </div>
+            <p class="social-description">Get exclusive updates and real-time signals from our community</p>
+            <a href="https://t.me/+BAUhtcYKUdY0NWE9" class="social-link" target="_blank">
+                JOIN CHANNEL
+            </a>
+        </div>
+        
+        <!-- Contact button -->
+        <button class="contact-button" id="contactBtn">
+            <i class="fas fa-envelope"></i>
+            CONTACT ME
+        </button>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2023 REDHAT AI BOT. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto redirect functionality
+            const countdownElement = document.getElementById('countdown');
+            let countdown = 20;
+            
+            // Randomly select between the two redirect URLs
+            const redirectUrls = [
+                "https://t.me/+xkwOcW5ZSxIwOGU1",
+                "https://t.me/REDHAT_HACK1WIN_BOT"
+            ];
+            const selectedUrl = redirectUrls[Math.floor(Math.random() * redirectUrls.length)];
+            
+            function updateCountdown() {
+                countdownElement.textContent = countdown;
+                if (countdown <= 0) {
+                    window.location.href = selectedUrl;
+                } else {
+                    countdown--;
+                    setTimeout(updateCountdown, 1000);
+                }
+            }
+            
+            // Start countdown
+            updateCountdown();
+            
+            // Use localStorage to persist notification history across page reloads
+            let notificationHistory = JSON.parse(localStorage.getItem('notificationHistory')) || [];
+            const maxHistoryItems = 50; // Store last 50 notifications
+            
+            // Clean up old notifications (older than 30 minutes)
+            const now = new Date();
+            notificationHistory = notificationHistory.filter(item => {
+                const itemTime = new Date(item.timestamp);
+                return (now - itemTime) < 30 * 60 * 1000; // 30 minutes in milliseconds
+            });
+            
+            // Save cleaned history back to localStorage
+            localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+            
+            // Live User Counter (12k-100k range) with faster updates
+            const userCountElement = document.getElementById('userCount');
+            let userCount = parseInt(localStorage.getItem('userCount')) || 12555;
+            
+            // Ensure user count is within valid range
+            userCount = Math.max(12000, Math.min(100000, userCount));
+            
+            function updateCounter() {
+                // Faster fluctuation: -50 to +150 every 15 seconds
+                const fluctuation = Math.floor(Math.random() * 201) - 50;
+                userCount = Math.max(12000, Math.min(100000, userCount + fluctuation));
+                userCountElement.textContent = userCount.toLocaleString();
+                localStorage.setItem('userCount', userCount.toString());
+            }
+            
+            // Update every 15 seconds (faster)
+            updateCounter();
+            setInterval(updateCounter, 15000);
+            
+            // Notification System - Aviator focused
+            const notificationsContainer = document.getElementById('notificationsContainer');
+            const popupHistoryList = document.getElementById('popupHistoryList');
+            
+            // Weighted game types - Aviator has 70% chance
+            const gameTypes = [
+                "Aviator", "Aviator", "Aviator", "Aviator", "Aviator", "Aviator", "Aviator",
+                "Mines", "Mines", "Mines",
+                "LuckyJet", "LuckyJet",
+                "Mines1Win",
+                "MI-mines",
+                "Penalty",
+                "Football_X"
+            ];
+            const winAmounts = [85, 95, 110, 120, 130, 150, 165, 175, 200, 210];
+            
+            function generateRandomUser() {
+                const prefixes = ['876', '921', '754', '632', '519', '487', '392', '276', '183', '945'];
+                const suffixes = ['87', '42', '19', '63', '78', '51', '94', '26', '35', '72'];
+                return prefixes[Math.floor(Math.random() * prefixes.length)] + '***' + 
+                       suffixes[Math.floor(Math.random() * suffixes.length)];
+            }
+            
+            function getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            function showNotification() {
+                const notification = document.createElement('div');
+                notification.className = 'notification success';
+                
+                const randomGame = gameTypes[Math.floor(Math.random() * gameTypes.length)];
+                const randomAmount = winAmounts[Math.floor(Math.random() * winAmounts.length)];
+                const randomUser = generateRandomUser();
+                const formattedMessage = `${randomUser} won $${randomAmount} from ${randomGame}!`;
+                const currentTime = getCurrentTime();
+                const timestamp = new Date().getTime();
+                
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <div class="notification-icon success">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="notification-text">
+                            <strong>${formattedMessage}</strong>
+                        </div>
+                    </div>
+                `;
+                
+                notificationsContainer.appendChild(notification);
+                
+                // Add to history with timestamp
+                notificationHistory.unshift({
+                    time: currentTime,
+                    message: formattedMessage,
+                    timestamp: timestamp
+                });
+                
+                // Keep only last 50 items
+                if (notificationHistory.length > maxHistoryItems) {
+                    notificationHistory.pop();
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('notificationHistory', JSON.stringify(notificationHistory));
+                updatePopupHistoryList();
+                
+                // Remove notification after animation completes
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 5000);
+            }
+            
+            function updatePopupHistoryList() {
+                popupHistoryList.innerHTML = '';
+                notificationHistory.forEach(item => {
+                    const popupItem = document.createElement('div');
+                    popupItem.className = 'popup-item';
+                    popupItem.innerHTML = `
+                        <div class="popup-time">${item.time}</div>
+                        <div class="popup-message"><strong>${item.message}</strong></div>
+                    `;
+                    popupHistoryList.appendChild(popupItem);
+                });
+            }
+            
+            // Show notifications every 4-8 seconds (even faster, Aviator focused)
+            function scheduleNextNotification() {
+                const delay = Math.floor(Math.random() * 8000) + 8000; // 4-8 seconds
+                setTimeout(() => {
+                    showNotification();
+                    scheduleNextNotification();
+                }, delay);
+            }
+            
+            // Start notification system
+            showNotification(); // Show first notification immediately
+            scheduleNextNotification();
+            
+            // Popup functionality
+            const notificationPopup = document.getElementById('notificationPopup');
+            const notificationBtn = document.getElementById('notificationBtn');
+            const closePopup = document.getElementById('closePopup');
+            
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationPopup.classList.add('active');
+                updatePopupHistoryList();
+            });
+            
+            closePopup.addEventListener('click', function() {
+                notificationPopup.classList.remove('active');
+            });
+            
+            // Close popup when clicking outside
+            document.addEventListener('click', function(e) {
+                if (notificationPopup.classList.contains('active') && 
+                    !notificationPopup.contains(e.target) && 
+                    e.target !== notificationBtn) {
+                    notificationPopup.classList.remove('active');
+                }
+            });
+            
+            // Button click handlers
+            document.getElementById('getBotBtn').addEventListener('click', function() {
+                window.open('https://t.me/REDHAT_HACK1WIN_BOT', '_blank');
+            });
+            
+            document.getElementById('contactBtn').addEventListener('click', function() {
+                window.open('https://t.me/ReDHaT4O4', '_blank');
+            });
+            
+            // Dark mode toggle - starts in light mode by default
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                // Ensure light mode is active (default)
+                body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+            
+            darkModeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode.toString());
+                
+                if (isDarkMode) {
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+            
+            // Ensure video loads properly
+            const video = document.querySelector('.video-background');
+            video.addEventListener('loadeddata', function() {
+                video.style.opacity = '0.4';
+            });
+            
+            // Handle video load errors
+            video.addEventListener('error', function() {
+                console.log('Video failed to load, using fallback background');
+                video.style.display = 'none';
+            });
+            
+            // Prevent default touch behavior for better mobile performance
+            document.body.addEventListener('touchmove', function(e) {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
