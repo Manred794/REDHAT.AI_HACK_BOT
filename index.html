@@ -6,7 +6,7 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 META PIXEL CODE - REPLACE 'YOUR_PIXEL_ID' WITH YOUR ACTUAL PIXEL ID 🔹 -->
+    <!-- 🔹 META PIXEL CODE - YOUR PIXEL ID: 929777646251330 🔹 -->
     <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -16,12 +16,12 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'YOUR_PIXEL_ID'); // ← REPLACE THIS WITH YOUR PIXEL ID
+    fbq('init', '929777646251330');
     fbq('track', 'PageView');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none" 
-             src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+             src="https://www.facebook.com/tr?id=929777646251330&ev=PageView&noscript=1"/>
     </noscript>
     <!-- 🔹 END META PIXEL CODE 🔹 -->
     
@@ -220,26 +220,11 @@
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 25px 20px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .cta-button, .secondary-cta {
-                padding: 14px 24px;
-                font-size: 1.05rem;
-            }
-            
-            .features {
-                padding: 15px;
-            }
+            .container { padding: 25px 20px; }
+            h1 { font-size: 1.6rem; }
+            .subtitle { font-size: 1rem; }
+            .cta-button, .secondary-cta { padding: 14px 24px; font-size: 1.05rem; }
+            .features { padding: 15px; }
         }
     </style>
 </head>
@@ -302,7 +287,7 @@
         // 🔹 META PIXEL EVENT TRACKING 🔹
         document.addEventListener('DOMContentLoaded', function() {
             
-            // Track Telegram channel join clicks
+            // Track Telegram channel join clicks (PRIMARY CONVERSION)
             document.querySelectorAll('.track-telegram-join').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (typeof fbq !== 'undefined') {
@@ -313,7 +298,6 @@
                             currency: 'USD'
                         });
                     }
-                    console.log('📊 Pixel Event: Lead - Telegram Join');
                 });
             });
             
@@ -326,7 +310,6 @@
                             content_category: 'Engagement'
                         });
                     }
-                    console.log('📊 Pixel Event: ViewContent - Bot Click');
                 });
             });
             
@@ -339,24 +322,7 @@
                             content_category: 'Customer Service'
                         });
                     }
-                    console.log('📊 Pixel Event: Contact - Support Click');
                 });
-            });
-            
-            // Optional: Track scroll depth (50% and 90%)
-            let scrollTracked = {50: false, 90: false};
-            window.addEventListener('scroll', function() {
-                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-                
-                if (scrollPercent >= 90 && !scrollTracked[90] && typeof fbq !== 'undefined') {
-                    fbq('track', 'ScrollDepth', {content_name: '90% Scroll'});
-                    scrollTracked[90] = true;
-                    console.log('📊 Pixel Event: ScrollDepth - 90%');
-                } else if (scrollPercent >= 50 && !scrollTracked[50] && typeof fbq !== 'undefined') {
-                    fbq('track', 'ScrollDepth', {content_name: '50% Scroll'});
-                    scrollTracked[50] = true;
-                    console.log('📊 Pixel Event: ScrollDepth - 50%');
-                }
             });
         });
     </script>
