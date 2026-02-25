@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 🔹 META PIXEL CODE - REPLACE 'YOUR_PIXEL_ID' WITH YOUR ACTUAL PIXEL ID 🔹 -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID'); // ← REPLACE THIS WITH YOUR PIXEL ID
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none" 
+             src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- 🔹 END META PIXEL CODE 🔹 -->
+    
     <style>
         * {
             margin: 0;
@@ -241,11 +261,12 @@
             <i class="fab fa-telegram-plane"></i> Official Telegram Channel
         </div>
         
-        <a href="https://t.me/+BAUhtcYKUdY0NWE9" class="cta-button" target="_blank">
+        <!-- 🔹 TRACKED CTA BUTTONS 🔹 -->
+        <a href="https://t.me/+BAUhtcYKUdY0NWE9" class="cta-button track-telegram-join" target="_blank" data-event="JoinChannel">
             <i class="fab fa-telegram-plane"></i> JOIN TELEGRAM CHANNEL
         </a>
         
-        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta" target="_blank">
+        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta track-bot-click" target="_blank" data-event="TryBot">
             <i class="fas fa-robot"></i> TRY THE BOT
         </a>
         
@@ -266,7 +287,7 @@
             <div class="badge"><i class="fas fa-users"></i> 15K+ Members</div>
         </div>
         
-        <a href="https://t.me/ReDHaT4O4" class="secondary-cta" target="_blank">
+        <a href="https://t.me/ReDHaT4O4" class="secondary-cta track-support-click" target="_blank" data-event="ContactSupport">
             <i class="fas fa-envelope"></i> CONTACT SUPPORT
         </a>
         
@@ -278,11 +299,64 @@
     </div>
 
     <script>
-        // Simple click tracking for analytics (optional)
-        document.querySelectorAll('a[href*="t.me"]').forEach(link => {
-            link.addEventListener('click', function() {
-                // You can add analytics tracking here
-                console.log('Telegram link clicked:', this.href);
+        // 🔹 META PIXEL EVENT TRACKING 🔹
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Track Telegram channel join clicks
+            document.querySelectorAll('.track-telegram-join').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'Lead', {
+                            content_name: 'Telegram Channel Join',
+                            content_category: 'Conversion',
+                            value: 1.00,
+                            currency: 'USD'
+                        });
+                    }
+                    console.log('📊 Pixel Event: Lead - Telegram Join');
+                });
+            });
+            
+            // Track Bot click events
+            document.querySelectorAll('.track-bot-click').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'ViewContent', {
+                            content_name: 'Aviator Bot Launch',
+                            content_category: 'Engagement'
+                        });
+                    }
+                    console.log('📊 Pixel Event: ViewContent - Bot Click');
+                });
+            });
+            
+            // Track Support contact clicks
+            document.querySelectorAll('.track-support-click').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'Contact', {
+                            content_name: 'Support Contact',
+                            content_category: 'Customer Service'
+                        });
+                    }
+                    console.log('📊 Pixel Event: Contact - Support Click');
+                });
+            });
+            
+            // Optional: Track scroll depth (50% and 90%)
+            let scrollTracked = {50: false, 90: false};
+            window.addEventListener('scroll', function() {
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                
+                if (scrollPercent >= 90 && !scrollTracked[90] && typeof fbq !== 'undefined') {
+                    fbq('track', 'ScrollDepth', {content_name: '90% Scroll'});
+                    scrollTracked[90] = true;
+                    console.log('📊 Pixel Event: ScrollDepth - 90%');
+                } else if (scrollPercent >= 50 && !scrollTracked[50] && typeof fbq !== 'undefined') {
+                    fbq('track', 'ScrollDepth', {content_name: '50% Scroll'});
+                    scrollTracked[50] = true;
+                    console.log('📊 Pixel Event: ScrollDepth - 50%');
+                }
             });
         });
     </script>
