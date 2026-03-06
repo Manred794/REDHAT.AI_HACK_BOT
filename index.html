@@ -122,31 +122,50 @@
             font-size: 1.2rem;
         }
 
-        /* 🔹 ENHANCED "TRY THE BOT" BUTTON 🔹 */
+        /* 🔹 PREMIUM "TRY THE BOT" BUTTON - LIGHT SHADE + SHINE 🔹 */
         .secondary-cta {
+            position: relative;
+            overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: #6f42c1; /* Purple - stands out, premium feel */
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
             color: white;
-            border: none; /* Removed border for cleaner look */
+            border: none;
             padding: 14px 28px;
             font-size: 1.05rem;
-            font-weight: 700; /* Slightly bolder */
+            font-weight: 700;
             border-radius: 10px;
             text-decoration: none;
             width: 100%;
             max-width: 320px;
             margin: 0 auto 15px;
-            transition: background 0.2s;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.25); /* Subtle glow */
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Shine effect overlay */
+        .secondary-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transition: left 0.4s ease;
+            pointer-events: none;
+        }
+
+        .secondary-cta:hover::before {
+            left: 150%;
         }
 
         .secondary-cta:hover {
-            background: #5a32a3; /* Darker purple on hover */
-            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.55);
+            transform: translateY(-1px);
         }
 
         .features {
