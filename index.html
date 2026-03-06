@@ -112,6 +112,7 @@
             margin: 0 auto 25px;
             transition: background 0.2s;
             cursor: pointer;
+            position: relative;
         }
 
         .cta-button:hover {
@@ -120,6 +121,62 @@
 
         .cta-button i {
             font-size: 1.2rem;
+        }
+
+        /* 🔥 HIGH-CONVERSION "TRY THE BOT" BUTTON STYLES 🔥 */
+        .bot-cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 18px 36px !important;
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45) !important;
+            position: relative;
+            overflow: hidden;
+            margin: 10px auto 25px !important;
+            max-width: 340px !important;
+            transform: scale(1.02);
+        }
+
+        .bot-cta:hover {
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.65) !important;
+            transform: scale(1.03);
+        }
+
+        .bot-cta::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .bot-cta:hover::before {
+            left: 100%;
+        }
+
+        .bot-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            animation: none;
+            box-shadow: 0 3px 10px rgba(255, 71, 87, 0.4);
+        }
+
+        .bot-cta i {
+            font-size: 1.3rem !important;
+            margin-right: 6px;
         }
 
         .secondary-cta {
@@ -219,12 +276,38 @@
             font-size: 0.95rem;
         }
 
+        /* 🔥 URGENCY STRIP - Draws eye to bot button 🔥 */
+        .urgency-strip {
+            background: linear-gradient(135deg, #ff9a56, #ff6b6b);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 15px 0 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .urgency-strip i {
+            font-size: 1.1rem;
+        }
+
         @media (max-width: 480px) {
             .container { padding: 25px 20px; }
             h1 { font-size: 1.6rem; }
             .subtitle { font-size: 1rem; }
-            .cta-button, .secondary-cta { padding: 14px 24px; font-size: 1.05rem; }
+            .cta-button { padding: 14px 24px; font-size: 1.05rem; }
+            .bot-cta { 
+                padding: 16px 30px !important; 
+                font-size: 1.1rem !important;
+                max-width: 300px !important;
+            }
             .features { padding: 15px; }
+            .urgency-strip { font-size: 0.9rem; padding: 8px 16px; }
         }
     </style>
 </head>
@@ -246,13 +329,21 @@
             <i class="fab fa-telegram-plane"></i> Official Telegram Channel
         </div>
         
-        <!-- 🔹 TRACKED CTA BUTTONS 🔹 -->
+        <!-- 🔥 URGENCY STRIP - Creates FOMO 🔥 -->
+        <div class="urgency-strip">
+            <i class="fas fa-bolt"></i>
+            <span>🔥 Limited Access: Try the AI Bot FREE Now!</span>
+        </div>
+        
+        <!-- 🔥 PRIMARY CTA: Telegram Channel 🔥 -->
         <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="cta-button track-telegram-join" target="_blank" data-event="JoinChannel">
             <i class="fab fa-telegram-plane"></i> JOIN TELEGRAM CHANNEL
         </a>
         
-        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta track-bot-click" target="_blank" data-event="TryBot">
-            <i class="fas fa-robot"></i> TRY THE BOT
+        <!-- 🔥🔥 SUPER-CHARGED "TRY THE BOT" BUTTON 🔥🔥 -->
+        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="bot-cta track-bot-click" target="_blank" data-event="TryBot">
+            <span class="bot-badge">FREE</span>
+            <i class="fas fa-robot"></i> TRY THE BOT NOW
         </a>
         
         <div class="features">
