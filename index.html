@@ -6,7 +6,7 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 META PIXEL (ID: 929777646251330) 🔹 -->
+    <!-- 🔹 META PIXEL 🔹 -->
     <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -25,22 +25,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     
-    <!-- 🔹 FIREBASE CONFIG 🔹 -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCyCou5S6OzcklXi405mvHyclhEdqKkwuU",
             authDomain: "bynex-ai.firebaseapp.com",
-            databaseURL: "https://bynex-ai-default-rtdb.firebaseio.com",
             projectId: "bynex-ai",
             storageBucket: "bynex-ai.firebasestorage.app",
             messagingSenderId: "114344299762",
             appId: "1:114344299762:web:d9720a7d60ecc9a0bd146b",
             measurementId: "G-FFYFGQCRSZ"
         };
-        
-        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     </script>
     
     <style>
@@ -67,6 +62,7 @@
         .badge { background:#e9ecef; padding:8px 16px; border-radius:20px; font-size:0.9rem; color:#495057; }
         .footer { margin-top:30px; color:#6c757d; font-size:0.9rem; padding-top:20px; border-top:1px solid #e9ecef; }
         .telegram-badge { display:inline-flex; align-items:center; gap:8px; background:#0088cc; color:white; padding:6px 16px; border-radius:20px; font-weight:500; margin:15px 0; }
+        .country-badge { display:inline-block; background:#e9ecef; padding:4px 12px; border-radius:12px; font-size:0.85rem; color:#495057; margin:10px 0; }
         @media(max-width:480px) { .container{padding:25px 20px;} h1{font-size:1.6rem;} .cta-button,.secondary-cta{padding:14px 24px;font-size:1.05rem;} }
     </style>
 </head>
@@ -78,12 +74,13 @@
         <p class="description">Get real-time signals, exclusive strategies, and premium predictions for Aviator and other crash games. Join 15,000+ active users.</p>
         
         <div class="telegram-badge"><i class="fab fa-telegram-plane"></i> Official Telegram Channel</div>
+        <div class="country-badge" id="countryBadge"><i class="fas fa-globe"></i> Detecting location...</div>
         
         <!-- 🔹 TRACKED BUTTONS 🔹 -->
-        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="cta-button track-join" target="_blank">
+        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="cta-button track-join" target="_blank" id="joinBtn">
             <i class="fab fa-telegram-plane"></i> JOIN TELEGRAM CHANNEL
         </a>
-        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta track-bot" target="_blank">
+        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta track-bot" target="_blank" id="botBtn">
             <i class="fas fa-robot"></i> TRY THE BOT
         </a>
         
@@ -115,40 +112,68 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const db = firebase.firestore();
             const sessionId = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
             
-            // Track PageView
-            db.collection('events').add({
-                type: 'PageView',
+            // 🔹 Get Country Info
+            let country = 'Unknown', countryCode = 'XX';
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                country = data.country_name || 'Unknown';
+                countryCode = data.country_code || 'XX';
+                document.getElementById('countryBadge').innerHTML = `<i class="fas fa-flag"></i> ${country} (${countryCode})`;
+            } catch(e) {
+                console.log('Country detection failed:', e);
+            }
+            
+            const baseData = {
                 sessionId,
+                country,
+                countryCode,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 url: location.href,
                 referrer: document.referrer || 'direct',
-                platform: /android/i.test(navigator.userAgent) ? 'android' : /iphone|ipad/i.test(navigator.userAgent) ? 'ios' : 'web'
-            }).catch(e => console.log('Track error:', e));
+                platform: /android/i.test(navigator.userAgent) ? 'android' : /iphone|ipad/i.test(navigator.userAgent) ? 'ios' : 'web',
+                language: navigator.language
+            };
             
-            // Track button clicks
-            function track(type, label, url) {
+            // Track PageView
+            db.collection('events').add({ ...baseData, type: 'PageView' }).catch(e => console.log('Track error:', e));
+            
+            // Track button clicks with funnel step
+            function track(type, label, url, funnelStep) {
                 db.collection('events').add({
-                    type, label, targetUrl: url, sessionId,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    url: location.href,
-                    referrer: document.referrer || 'direct',
-                    platform: /android/i.test(navigator.userAgent) ? 'android' : /iphone|ipad/i.test(navigator.userAgent) ? 'ios' : 'web'
+                    ...baseData,
+                    type,
+                    label,
+                    targetUrl: url,
+                    funnelStep // 'click' | 'joined' | 'bot_opened' | 'started'
                 }).catch(e => console.log('Track error:', e));
                 
                 // Meta Pixel
                 if (typeof fbq !== 'undefined') {
                     const px = { 'JoinChannel':'Lead', 'TryBot':'ViewContent', 'ContactSupport':'Contact' };
-                    fbq('track', px[type] || 'Custom', { content_name: label, value: type==='JoinChannel'?1:0, currency:'USD' });
+                    fbq('track', px[type] || 'Custom', { content_name: label, value: type==='JoinChannel'?1:0, currency:'USD', country });
                 }
             }
             
-            document.querySelector('.track-join')?.addEventListener('click', e => track('JoinChannel', 'Telegram Join', e.currentTarget.href));
-            document.querySelector('.track-bot')?.addEventListener('click', e => track('TryBot', 'Bot Click', e.currentTarget.href));
-            document.querySelector('.track-support')?.addEventListener('click', e => track('ContactSupport', 'Support', e.currentTarget.href));
+            // Join Channel Click
+            document.getElementById('joinBtn')?.addEventListener('click', function(e) {
+                track('JoinChannel', 'Telegram Join Click', this.href, 'click');
+                // Note: Actual join verification needs Telegram API (see bot code below)
+            });
+            
+            // Bot Click
+            document.getElementById('botBtn')?.addEventListener('click', function(e) {
+                track('TryBot', 'Bot Open Click', this.href, 'bot_opened');
+            });
+            
+            // Support Click
+            document.querySelector('.track-support')?.addEventListener('click', function(e) {
+                track('ContactSupport', 'Support Click', this.href, 'click');
+            });
         });
     </script>
 </body>
