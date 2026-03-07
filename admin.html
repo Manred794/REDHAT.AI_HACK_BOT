@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 REDHAT Admin</title>
+    <title>🔐 REDHAT Admin | Live Analytics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- 🔹 Firebase Config - Web App (SAFE) 🔹 -->
     <script>
-        // ✅ Firebase Config - Web App (SAFE)
         const firebaseConfig = {
             apiKey: "AIzaSyCyCou5S6OzcklXi405mvHyclhEdqKkwuU",
             authDomain: "bynex-ai.firebaseapp.com",
@@ -21,119 +22,692 @@
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     </script>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-        body { background: #f0f2f5; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .auth { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .auth h2 { margin-bottom: 15px; color: #212529; }
-        .auth input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        .auth button { width: 100%; padding: 12px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
-        .auth button:hover { background: #0b5ed7; }
-        .err { color: #dc3545; margin-top: 10px; display: none; }
-        .dash { display: none; width: 100%; max-width: 1000px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: white; border-radius: 12px; margin-bottom: 20px; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat { background: white; padding: 15px; border-radius: 10px; text-align: center; }
-        .stat .val { font-size: 1.8rem; font-weight: 700; color: #0d6efd; margin: 5px 0; }
-        .log { background: white; border-radius: 12px; padding: 15px; max-height: 400px; overflow-y: auto; }
-        .log-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; display: flex; justify-content: space-between; }
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0b5ed7;
+            --success: #198754;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border: #e9ecef;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e9ecef 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 🔐 Auth Box */
+        .auth-container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .auth-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), #6f42c1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .auth-container h2 {
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .auth-container p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .auth-btn:hover { background: var(--primary-dark); }
+        
+        .error-msg {
+            color: var(--danger);
+            margin-top: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* 📊 Dashboard */
+        .dashboard {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dash-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dash-header h1 i { color: var(--primary); }
+        
+        .header-actions { display: flex; gap: 10px; }
+        
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary { background: var(--success); color: white; }
+        .btn-primary:hover { background: #157347; }
+        
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #b02a37; }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-card .label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-card.success .value { color: var(--success); }
+        .stat-card.warning .value { color: var(--warning); }
+        
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-card h3 i { color: var(--primary); }
+        
+        .chart-container { position: relative; height: 220px; }
+        
+        /* Activity Log */
+        .log-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .log-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .log-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .log-header select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+        }
+        
+        .log-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .log-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
         .log-item:last-child { border-bottom: none; }
-        .logout { background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+        
+        .log-item .event {
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .log-item .event.join { background: rgba(25,135,84,0.15); color: var(--success); }
+        .log-item .event.bot { background: rgba(13,110,253,0.15); color: var(--primary); }
+        .log-item .event.support { background: rgba(255,193,7,0.15); color: #856404; }
+        .log-item .event.page { background: rgba(108,117,125,0.15); color: var(--gray); }
+        
+        .log-item .meta { color: var(--gray); font-size: 0.85rem; }
+        .log-item .time { color: var(--gray); font-size: 0.85rem; }
+        
+        .log-empty {
+            padding: 30px;
+            text-align: center;
+            color: var(--gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dash-header { flex-direction: column; gap: 15px; text-align: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .log-item { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
-    <!-- 🔐 Login -->
-    <div class="auth" id="authBox">
-        <h2><i class="fas fa-lock"></i> Admin Login</h2>
-        <input type="password" id="passInput" placeholder="Enter password">
-        <button id="unlockBtn">Unlock</button>
-        <p class="err" id="errMsg">❌ Wrong password</p>
+    <!-- 🔐 Login Screen -->
+    <div class="auth-container" id="authScreen">
+        <div class="auth-icon"><i class="fas fa-shield-alt"></i></div>
+        <h2>Admin Access</h2>
+        <p>Enter your password to view analytics dashboard</p>
+        <input type="password" class="auth-input" id="passwordInput" placeholder="••••••••" autocomplete="off">
+        <button class="auth-btn" id="unlockBtn">Unlock Dashboard</button>
+        <p class="error-msg" id="errorMsg">❌ Incorrect password</p>
     </div>
 
     <!-- 📊 Dashboard -->
-    <div class="dash" id="dashBox">
-        <div class="header">
-            <h2><i class="fas fa-chart-line"></i> REDHAT Analytics</h2>
-            <button class="logout" id="logoutBtn">Logout</button>
+    <div class="dashboard" id="dashboardScreen">
+        <div class="dash-header">
+            <h1><i class="fas fa-chart-line"></i> REDHAT Live Analytics</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="exportBtn"><i class="fas fa-download"></i> Export CSV</button>
+                <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
         </div>
-        <div class="stats">
-            <div class="stat"><div>Views</div><div class="val" id="cntView">0</div></div>
-            <div class="stat"><div>Joins</div><div class="val" id="cntJoin">0</div></div>
-            <div class="stat"><div>Bot</div><div class="val" id="cntBot">0</div></div>
-            <div class="stat"><div>Support</div><div class="val" id="cntSup">0</div></div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Page Views</div>
+                <div class="value" id="statViews">0</div>
+            </div>
+            <div class="stat-card success">
+                <div class="label">Telegram Joins</div>
+                <div class="value" id="statJoins">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Bot Clicks</div>
+                <div class="value" id="statBot">0</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="label">Support Contacts</div>
+                <div class="value" id="statSupport">0</div>
+            </div>
         </div>
-        <div class="log" id="logBox"><div style="text-align:center;color:#6c757d;padding:20px;">Loading events...</div></div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar"></i> Events Timeline</h3>
+                <div class="chart-container"><canvas id="timelineChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-pie"></i> Event Distribution</h3>
+                <div class="chart-container"><canvas id="pieChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="log-card">
+            <div class="log-header">
+                <h3><i class="fas fa-list"></i> Live Activity Feed</h3>
+                <select id="filterSelect">
+                    <option value="all">All Events</option>
+                    <option value="JoinChannel">Telegram Joins</option>
+                    <option value="TryBot">Bot Clicks</option>
+                    <option value="ContactSupport">Support</option>
+                    <option value="PageView">Page Views</option>
+                </select>
+            </div>
+            <div class="log-list" id="activityLog">
+                <div class="log-empty"><i class="fas fa-spinner fa-spin"></i> Loading events...</div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 🔐 Config
-        const PASS = "REDHAT2024!"; // ⚠️ CHANGE THIS
-        
-        // ✅ DOM Elements
-        const authBox = document.getElementById('authBox');
-        const dashBox = document.getElementById('dashBox');
-        const passInput = document.getElementById('passInput');
-        const unlockBtn = document.getElementById('unlockBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const errMsg = document.getElementById('errMsg');
-        const logBox = document.getElementById('logBox');
+        // ========================================
+        // 🔐 CONFIGURATION
+        // ========================================
+        const CONFIG = {
+            ADMIN_PASSWORD: "REDHAT2024!",  // ⚠️ CHANGE THIS to your secure password
+            SESSION_KEY: "redhat_admin_auth",
+            MAX_LOG_ITEMS: 50
+        };
 
-        // ✅ Login Function
-        function handleLogin() {
-            if (passInput.value === PASS) {
-                authBox.style.display = 'none';
-                dashBox.style.display = 'block';
-                loadAnalytics();
-            } else {
-                errMsg.style.display = 'block';
-            }
-        }
-
-        // ✅ Logout Function
-        function handleLogout() {
-            dashBox.style.display = 'none';
-            authBox.style.display = 'block';
-            passInput.value = '';
-            errMsg.style.display = 'none';
-        }
-
-        // ✅ Load Analytics from Firebase
-        function loadAnalytics() {
-            const db = firebase.firestore();
+        // ========================================
+        // 📦 STATE MANAGEMENT
+        // ========================================
+        const State = {
+            isAuthenticated: false,
+            db: null,
+            unsubscribe: null,
+            charts: { timeline: null, pie: null },
+            events: [],
             
-            db.collection('events').orderBy('timestamp', 'desc').limit(50).onSnapshot(snapshot => {
-                const counts = { PageView: 0, JoinChannel: 0, TryBot: 0, ContactSupport: 0 };
-                let html = '';
+            init() {
+                // Check session on load
+                this.isAuthenticated = sessionStorage.getItem(CONFIG.SESSION_KEY) === 'true';
+                this.db = firebase.firestore();
                 
-                snapshot.forEach(doc => {
-                    const e = doc.data();
-                    if (counts[e.type] !== undefined) counts[e.type]++;
+                if (this.isAuthenticated) {
+                    UI.showDashboard();
+                    Dashboard.init();
+                } else {
+                    UI.showAuth();
+                }
+            },
+            
+            login() {
+                this.isAuthenticated = true;
+                sessionStorage.setItem(CONFIG.SESSION_KEY, 'true');
+            },
+            
+            logout() {
+                this.isAuthenticated = false;
+                sessionStorage.removeItem(CONFIG.SESSION_KEY);
+                if (this.unsubscribe) this.unsubscribe();
+            }
+        };
+
+        // ========================================
+        // 🎨 UI CONTROLLER
+        // ========================================
+        const UI = {
+            elements: {
+                auth: document.getElementById('authScreen'),
+                dash: document.getElementById('dashboardScreen'),
+                passInput: document.getElementById('passwordInput'),
+                unlockBtn: document.getElementById('unlockBtn'),
+                logoutBtn: document.getElementById('logoutBtn'),
+                exportBtn: document.getElementById('exportBtn'),
+                errorMsg: document.getElementById('errorMsg'),
+                filterSelect: document.getElementById('filterSelect'),
+                activityLog: document.getElementById('activityLog'),
+                stats: {
+                    views: document.getElementById('statViews'),
+                    joins: document.getElementById('statJoins'),
+                    bot: document.getElementById('statBot'),
+                    support: document.getElementById('statSupport')
+                }
+            },
+            
+            showAuth() {
+                this.elements.auth.style.display = 'block';
+                this.elements.dash.style.display = 'none';
+                this.elements.passInput.focus();
+            },
+            
+            showDashboard() {
+                this.elements.auth.style.display = 'none';
+                this.elements.dash.style.display = 'block';
+            },
+            
+            showError(msg) {
+                this.elements.errorMsg.textContent = msg;
+                this.elements.errorMsg.style.display = 'block';
+                setTimeout(() => this.elements.errorMsg.style.display = 'none', 3000);
+            },
+            
+            updateStats(counts) {
+                this.elements.stats.views.textContent = counts.PageView?.toLocaleString() || '0';
+                this.elements.stats.joins.textContent = counts.JoinChannel?.toLocaleString() || '0';
+                this.elements.stats.bot.textContent = counts.TryBot?.toLocaleString() || '0';
+                this.elements.stats.support.textContent = counts.ContactSupport?.toLocaleString() || '0';
+            },
+            
+            renderLog(events, filter = 'all') {
+                const list = this.elements.activityLog;
+                const filtered = filter === 'all' ? events : events.filter(e => e.type === filter);
+                
+                if (!filtered.length) {
+                    list.innerHTML = '<div class="log-empty">No events yet</div>';
+                    return;
+                }
+                
+                list.innerHTML = filtered.slice(0, CONFIG.MAX_LOG_ITEMS).map(e => {
+                    const time = e.timestamp ? new Date(e.timestamp.toDate()).toLocaleString() : 'Now';
+                    const typeClass = {
+                        'JoinChannel': 'join',
+                        'TryBot': 'bot', 
+                        'ContactSupport': 'support',
+                        'PageView': 'page'
+                    }[e.type] || 'page';
                     
-                    const time = e.timestamp ? new Date(e.timestamp.toDate()).toLocaleTimeString() : 'Now';
-                    html += '<div class="log-item"><span>' + e.type + ' - ' + (e.label||'') + '</span><span style="color:#6c757d">' + time + '</span></div>';
+                    return `<div class="log-item">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                            <span class="event ${typeClass}">${e.type}</span>
+                            <span class="meta">${e.label || ''}</span>
+                            <span class="meta">${e.platform || 'web'}</span>
+                        </div>
+                        <span class="time">${time}</span>
+                    </div>`;
+                }).join('');
+            }
+        };
+
+        // ========================================
+        // 📊 DASHBOARD LOGIC
+        // ========================================
+        const Dashboard = {
+            init() {
+                Charts.init();
+                Data.listen();
+            },
+            
+            updateCharts(timeBuckets, counts) {
+                Charts.updateTimeline(timeBuckets);
+                Charts.updatePie(counts);
+            }
+        };
+
+        // ========================================
+        // 📈 CHARTS
+        // ========================================
+        const Charts = {
+            init() {
+                // Timeline Chart
+                const ctx1 = document.getElementById('timelineChart').getContext('2d');
+                State.charts.timeline = new Chart(ctx1, {
+                    type: 'line',
+                     {
+                        labels: [],
+                        datasets: [{
+                            label: 'Events',
+                             [],
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13,110,253,0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                            x: { ticks: { maxRotation: 45, minRotation: 45, font: { size: 10 } } }
+                        }
+                    }
                 });
                 
-                // Update stats
-                document.getElementById('cntView').textContent = counts.PageView;
-                document.getElementById('cntJoin').textContent = counts.JoinChannel;
-                document.getElementById('cntBot').textContent = counts.TryBot;
-                document.getElementById('cntSup').textContent = counts.ContactSupport;
+                // Pie Chart
+                const ctx2 = document.getElementById('pieChart').getContext('2d');
+                State.charts.pie = new Chart(ctx2, {
+                    type: 'doughnut',
+                     {
+                        labels: ['Page Views', 'Telegram Joins', 'Bot Clicks', 'Support'],
+                        datasets: [{
+                             [0, 0, 0, 0],
+                            backgroundColor: ['#6c757d', '#198754', '#0d6efd', '#ffc107'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { position: 'bottom', labels: { font: { size: 10 } } } 
+                        }
+                    }
+                });
+            },
+            
+            updateTimeline(buckets) {
+                const chart = State.charts.timeline;
+                if (!chart) return;
+                const times = Object.keys(buckets).sort().slice(-12);
+                chart.data.labels = times;
+                chart.data.datasets[0].data = times.map(t => buckets[t]);
+                chart.update('none');
+            },
+            
+            updatePie(counts) {
+                const chart = State.charts.pie;
+                if (!chart) return;
+                chart.data.datasets[0].data = [
+                    counts.PageView || 0,
+                    counts.JoinChannel || 0,
+                    counts.TryBot || 0,
+                    counts.ContactSupport || 0
+                ];
+                chart.update('none');
+            }
+        };
+
+        // ========================================
+        // 🗄️ DATA LAYER
+        // ========================================
+        const Data = {
+            listen() {
+                State.unsubscribe = State.db.collection('events')
+                    .orderBy('timestamp', 'desc')
+                    .limit(100)
+                    .onSnapshot(snapshot => {
+                        State.events = [];
+                        const counts = { PageView: 0, JoinChannel: 0, TryBot: 0, ContactSupport: 0 };
+                        const timeBuckets = {};
+                        
+                        snapshot.forEach(doc => {
+                            const e = { id: doc.id, ...doc.data() };
+                            State.events.push(e);
+                            if (counts[e.type] !== undefined) counts[e.type]++;
+                            if (e.timestamp) {
+                                const d = e.timestamp.toDate();
+                                const key = d.toLocaleDateString() + ' ' + d.getHours() + ':00';
+                                timeBuckets[key] = (timeBuckets[key] || 0) + 1;
+                            }
+                        });
+                        
+                        UI.updateStats(counts);
+                        Dashboard.updateCharts(timeBuckets, counts);
+                        UI.renderLog(State.events, UI.elements.filterSelect.value);
+                    }, error => {
+                        console.error('Firestore error:', error);
+                        UI.elements.activityLog.innerHTML = '<div class="log-empty" style="color:#dc3545">❌ Error loading data</div>';
+                    });
+            }
+        };
+
+        // ========================================
+        // 🔧 ACTIONS
+        // ========================================
+        const Actions = {
+            login() {
+                const input = UI.elements.passInput.value;
+                if (input === CONFIG.ADMIN_PASSWORD) {
+                    State.login();
+                    UI.showDashboard();
+                    Dashboard.init();
+                    UI.elements.passInput.value = '';
+                } else {
+                    UI.showError('❌ Incorrect password');
+                }
+            },
+            
+            logout() {
+                State.logout();
+                UI.showAuth();
+            },
+            
+            exportCSV() {
+                if (!State.events.length) return alert('No data to export');
                 
-                // Update log
-                logBox.innerHTML = html || '<div style="text-align:center;color:#6c757d;padding:20px;">No events yet</div>';
-            }, error => {
-                console.error('Error:', error);
-                logBox.innerHTML = '<div style="color:#dc3545;padding:20px;">❌ Error loading data</div>';
+                const headers = ['Timestamp', 'Type', 'Label', 'Platform', 'Referrer', 'Session'];
+                const rows = State.events.map(e => [
+                    e.timestamp ? e.timestamp.toDate().toISOString() : '',
+                    e.type, e.label || '', e.platform || '', e.referrer || '', e.sessionId || ''
+                ]);
+                
+                const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `redhat-analytics-${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            },
+            
+            filterLog() {
+                UI.renderLog(State.events, UI.elements.filterSelect.value);
+            }
+        };
+
+        // ========================================
+        // 🎯 EVENT BINDINGS
+        // ========================================
+        function bindEvents() {
+            UI.elements.unlockBtn.addEventListener('click', () => Actions.login());
+            UI.elements.logoutBtn.addEventListener('click', () => Actions.logout());
+            UI.elements.exportBtn.addEventListener('click', () => Actions.exportCSV());
+            UI.elements.filterSelect.addEventListener('change', () => Actions.filterLog());
+            UI.elements.passInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') Actions.login();
             });
         }
 
-        // ✅ Attach Event Listeners (DOM ready)
-        document.addEventListener('DOMContentLoaded', function() {
-            unlockBtn.addEventListener('click', handleLogin);
-            logoutBtn.addEventListener('click', handleLogout);
-            passInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') handleLogin();
-            });
+        // ========================================
+        // 🚀 INIT
+        // ========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            State.init();
+            bindEvents();
         });
     </script>
 </body>
