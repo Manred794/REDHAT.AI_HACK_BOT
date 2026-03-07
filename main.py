@@ -47,7 +47,7 @@ db = firestore.client()
 # Telegram Bot
 # -------------------------
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "PUT_YOUR_TOKEN_HERE")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7800960438:AAHClKT7aYbZxSyRMNATYJDLenrsI-BOLrM")
 
 
 async def bot_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
