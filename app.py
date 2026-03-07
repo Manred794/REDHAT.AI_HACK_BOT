@@ -1,4 +1,4 @@
-# main.py - Complete All-in-One Solution
+# app.py - Production Ready for Render + Gunicorn
 import os
 import asyncio
 import threading
@@ -7,6 +7,11 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 import firebase_admin
 from firebase_admin import credentials, firestore
+
+# ========================================
+# 🔹 MUST BE AT MODULE LEVEL: Flask app named 'app'
+# ========================================
+app = Flask(__name__, static_folder='.', static_url_path='')
 
 # ========================================
 # 🔹 Firebase Setup (From Environment Variables)
@@ -25,20 +30,19 @@ firebase_config = {
     "universe_domain": "googleapis.com"
 }
 
+db = None
 try:
-    cred = credentials.Certificate(firebase_config)
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    print("✅ Firebase connected")
+    if all([os.getenv("FIREBASE_PRIVATE_KEY_ID"), os.getenv("FIREBASE_CLIENT_EMAIL")]):
+        cred = credentials.Certificate(firebase_config)
+        firebase_admin.initialize_app(cred)
+        db = firestore.client()
+        print("✅ Firebase connected")
 except Exception as e:
-    print(f"⚠️ Firebase error: {e}")
-    db = None
+    print(f"⚠️ Firebase init skipped: {e}")
 
 # ========================================
-# 🔹 Flask Web Server
+# 🔹 Flask Routes
 # ========================================
-app = Flask(__name__, static_folder='.', static_url_path='')
-
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
@@ -49,7 +53,11 @@ def admin():
 
 @app.route('/health')
 def health():
-    return jsonify({"status": "online", "firebase": "connected" if db else "disconnected"})
+    return jsonify({
+        "status": "online", 
+        "firebase": "connected" if db else "disconnected",
+        "bot": "running" if BOT_TOKEN else "disabled"
+    })
 
 # ========================================
 # 🔹 Telegram Bot
@@ -59,21 +67,23 @@ BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 async def bot_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     if db:
-        db.collection('events').add({
-            'type': 'TryBot',
-            'funnelStep': 'started',
-            'telegramUserId': user.id,
-            'username': user.username,
-            'firstName': user.first_name,
-            'language': user.language_code,
-            'timestamp': firestore.SERVER_TIMESTAMP,
-            'source': 'telegram_bot'
-        })
+        try:
+            db.collection('events').add({
+                'type': 'TryBot',
+                'funnelStep': 'started',
+                'telegramUserId': user.id,
+                'username': user.username,
+                'firstName': user.first_name,
+                'language': user.language_code,
+                'timestamp': firestore.SERVER_TIMESTAMP,
+                'source': 'telegram_bot'
+            })
+        except Exception as e:
+            print(f"Firestore error: {e}")
     await update.message.reply_text(
         f"👋 Welcome {user.first_name}!\n\n"
-        f"✅ Bot activated successfully!\n"
-        f"🎯 You'll now receive Aviator prediction signals.\n\n"
-        f"🔗 Join channel: https://t.me/+xkwOcW5ZSxIwOGU1"
+        f"✅ Bot activated!\n"
+        f"🔗 Channel: https://t.me/+xkwOcW5ZSxIwOGU1"
     )
 
 async def bot_main():
@@ -82,24 +92,32 @@ async def bot_main():
         return
     app_bot = Application.builder().token(BOT_TOKEN).build()
     app_bot.add_handler(CommandHandler("start", bot_start))
-    print("🤖 Bot started. Listening for /start commands...")
+    print("🤖 Bot started...")
     await app_bot.start()
     await app_bot.updater.start_polling(allowed_updates=Update.ALL_TYPES)
-    await asyncio.Event().wait()  # Keep running
+    await asyncio.Event().wait()
 
 def run_bot():
-    asyncio.run(bot_main())
+    try:
+        asyncio.run(bot_main())
+    except Exception as e:
+        print(f"Bot error: {e}")
 
 # ========================================
-# 🔹 Start Both Web + Bot
+# 🔹 Start Bot in Background Thread
 # ========================================
-if __name__ == '__main__':
-    # Start bot in background thread
+if os.getenv("RENDER") or os.getenv("PORT"):  # Running on Render
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
-    
-    # Start web server
+    print("🤖 Bot thread started")
+
+# ========================================
+# 🔹 Gunicorn Entry Point (DO NOT CHANGE)
+# ========================================
+# Gunicorn looks for: app.py → variable named 'app'
+# This is already defined at the TOP of this file ✅
+
+# For local development only:
+if __name__ == '__main__' and not os.getenv("RENDER"):
     port = int(os.getenv("PORT", 8080))
-    print(f"🌐 Web server running on port {port}")
-    print(f"📊 Admin panel: https://your-app.onrender.com/admin")
     app.run(host='0.0.0.0', port=port)
