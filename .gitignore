@@ -1,6 +1,6 @@
-# .gitignore
+# .gitignore - MUST HAVE:
 firebase-key.json
-*.pyc
-__pycache__/
+*.pem
+*.key
 .env
-venv/
+*.log
