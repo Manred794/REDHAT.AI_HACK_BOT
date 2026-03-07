@@ -1,100 +1,65 @@
 import os
 import asyncio
-import threading
 
 from flask import Flask, send_from_directory, jsonify
-
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-
-# -------------------------
-# Flask Setup
-# -------------------------
-
+# Flask
 app = Flask(__name__, static_folder='.', static_url_path='')
-
 
 @app.route("/")
 def index():
     return send_from_directory(".", "index.html")
 
-
 @app.route("/admin")
 def admin():
     return send_from_directory(".", "admin.html")
-
 
 @app.route("/health")
 def health():
     return jsonify({"status": "online"})
 
 
-# -------------------------
-# Firebase Setup
-# -------------------------
-
+# Firebase
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
-
 db = firestore.client()
 
 
-# -------------------------
 # Telegram Bot
-# -------------------------
-
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7800960438:AAHClKT7aYbZxSyRMNATYJDLenrsI-BOLrM")
 
-
 async def bot_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     user = update.effective_user
-
     db.collection("events").add({
         "type": "TryBot",
-        "funnelStep": "started",
         "telegramUserId": user.id,
         "username": user.username,
         "firstName": user.first_name,
-        "timestamp": firestore.SERVER_TIMESTAMP,
-        "source": "telegram_bot"
+        "timestamp": firestore.SERVER_TIMESTAMP
     })
+    await update.message.reply_text(f"👋 Welcome {user.first_name}! Bot activated!")
 
-    await update.message.reply_text(
-        f"👋 Welcome {user.first_name}!\n\n✅ Bot activated!"
-    )
-
-
-async def bot_main():
-
-    bot = Application.builder().token(BOT_TOKEN).build()
-
-    bot.add_handler(CommandHandler("start", bot_start))
-
-    print("Telegram bot started")
-
-    await bot.run_polling()
+async def start_bot():
+    app_bot = Application.builder().token(BOT_TOKEN).build()
+    app_bot.add_handler(CommandHandler("start", bot_start))
+    print("Telegram bot started...")
+    # Run bot forever in main thread
+    await app_bot.run_polling()
 
 
-def run_bot():
-    asyncio.run(bot_main())
+# Main async entrypoint
+async def main():
+    # Start Telegram bot
+    asyncio.create_task(start_bot())
+    # Start Flask server in background thread (non-blocking)
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, lambda: app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080))))
 
 
-# -------------------------
-# Run bot in background
-# -------------------------
-
-threading.Thread(target=run_bot, daemon=True).start()
-
-
-# -------------------------
-# Local run (dev only)
-# -------------------------
-
+# Run main
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+    asyncio.run(main())
