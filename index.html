@@ -6,10 +6,9 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 META PIXEL CODE - YOUR PIXEL ID: 929777646251330 🔹 -->
+    <!-- 🔹 META PIXEL CODE - Pixel ID: 929777646251330 🔹 -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
     n.queue=[];t=b.createElement(e);t.async=!0;
@@ -19,11 +18,35 @@
     fbq('init', '929777646251330');
     fbq('track', 'PageView');
     </script>
-    <noscript>
-        <img height="1" width="1" style="display:none" 
-             src="https://www.facebook.com/tr?id=929777646251330&ev=PageView&noscript=1"/>
-    </noscript>
+    <noscript><img height="1" width="1" style="display:none" 
+    src="https://www.facebook.com/tr?id=929777646251330&ev=PageView&noscript=1"/></noscript>
     <!-- 🔹 END META PIXEL CODE 🔹 -->
+    
+    <!-- 🔹 FIREBASE SDK (Client Side) 🔹 -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- 🔹 FIREBASE CONFIG - REPLACE WITH YOUR WEB APP CONFIG 🔹 -->
+    <script>
+        // ⚠️ সতর্কতা: উপরের private_key.json এখানে ব্যবহার করবেন না!
+        // Firebase Console > Project Settings > General > Your Apps > Web App
+        // সেখান থেকে 'firebaseConfig' কপি করে নিচে বসান
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAumnyP9OelLqNPh_CP4Eb1jqP7u7E66H0",
+            authDomain: "bynex-ai.firebaseapp.com",
+            projectId: "bynex-ai",
+            storageBucket: "bynex-ai.appspot.com",
+            messagingSenderId: "107878961002584724516",
+            appId: "1:107878961002584724516:web:XXXXXXXXXXXX"
+        };
+        
+        // Initialize Firebase
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+    </script>
     
     <style>
         * {
@@ -122,7 +145,7 @@
             font-size: 1.2rem;
         }
 
-        /* 🔹 PREMIUM "TRY THE BOT" BUTTON - LIGHT SHADE + SHINE 🔹 */
+        /* 🔹 PREMIUM "TRY THE BOT" BUTTON 🔹 */
         .secondary-cta {
             position: relative;
             overflow: hidden;
@@ -146,7 +169,6 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
 
-        /* Shine effect overlay */
         .secondary-cta::before {
             content: '';
             position: absolute;
@@ -306,44 +328,77 @@
     </div>
 
     <script>
-        // 🔹 META PIXEL EVENT TRACKING 🔹
+        // 🔹 TRACKING LOGIC: Firebase + Meta Pixel 🔹
         document.addEventListener('DOMContentLoaded', function() {
             
-            // Track Telegram channel join clicks (PRIMARY CONVERSION)
+            // Generate unique session ID
+            const sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const userAgent = navigator.userAgent;
+            const referrer = document.referrer || 'direct';
+            
+            // Track Page View
+            if (typeof db !== 'undefined') {
+                db.collection('events').add({
+                    type: 'PageView',
+                    sessionId,
+                    userAgent,
+                    referrer,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    url: window.location.href
+                }).catch(err => console.error('Error tracking page view:', err));
+            }
+            
+            // Helper function to track button clicks
+            function trackEvent(eventName, buttonLabel, targetUrl) {
+                // 1. Firebase Analytics
+                if (typeof db !== 'undefined') {
+                    db.collection('events').add({
+                        type: eventName,
+                        label: buttonLabel,
+                        targetUrl,
+                        sessionId,
+                        userAgent,
+                        referrer,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        url: window.location.href,
+                        platform: /Android/i.test(userAgent) ? 'android' : /iPhone|iPad|iPod/i.test(userAgent) ? 'ios' : 'desktop'
+                    }).catch(err => console.error('Error tracking event:', err));
+                }
+                
+                // 2. Meta Pixel Tracking
+                if (typeof fbq !== 'undefined') {
+                    const pixelEvents = {
+                        'JoinChannel': 'Lead',
+                        'TryBot': 'ViewContent', 
+                        'ContactSupport': 'Contact'
+                    };
+                    fbq('track', pixelEvents[eventName] || 'Custom', {
+                        content_name: buttonLabel,
+                        content_category: eventName,
+                        value: eventName === 'JoinChannel' ? 1.00 : 0,
+                        currency: 'USD'
+                    });
+                }
+                
+                console.log(`📊 Tracked: ${eventName} - ${buttonLabel}`);
+            }
+            
+            // Attach click listeners to tracked buttons
             document.querySelectorAll('.track-telegram-join').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (typeof fbq !== 'undefined') {
-                        fbq('track', 'Lead', {
-                            content_name: 'Telegram Channel Join',
-                            content_category: 'Conversion',
-                            value: 1.00,
-                            currency: 'USD'
-                        });
-                    }
+                    trackEvent('JoinChannel', 'Telegram Channel Join', this.href);
                 });
             });
             
-            // Track Bot click events
             document.querySelectorAll('.track-bot-click').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (typeof fbq !== 'undefined') {
-                        fbq('track', 'ViewContent', {
-                            content_name: 'Aviator Bot Launch',
-                            content_category: 'Engagement'
-                        });
-                    }
+                    trackEvent('TryBot', 'Try Bot Click', this.href);
                 });
             });
             
-            // Track Support contact clicks
             document.querySelectorAll('.track-support-click').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (typeof fbq !== 'undefined') {
-                        fbq('track', 'Contact', {
-                            content_name: 'Support Contact',
-                            content_category: 'Customer Service'
-                        });
-                    }
+                    trackEvent('ContactSupport', 'Support Contact', this.href);
                 });
             });
         });
