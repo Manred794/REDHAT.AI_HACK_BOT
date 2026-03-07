@@ -1,6 +1,5 @@
 import os
 import asyncio
-
 from flask import Flask, send_from_directory, jsonify
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
@@ -22,12 +21,10 @@ def admin():
 def health():
     return jsonify({"status": "online"})
 
-
 # Firebase
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-
 
 # Telegram Bot
 BOT_TOKEN = os.getenv("BOT_TOKEN", "7800960438:AAHClKT7aYbZxSyRMNATYJDLenrsI-BOLrM")
@@ -47,19 +44,15 @@ async def start_bot():
     app_bot = Application.builder().token(BOT_TOKEN).build()
     app_bot.add_handler(CommandHandler("start", bot_start))
     print("Telegram bot started...")
-    # Run bot forever in main thread
     await app_bot.run_polling()
 
 
-# Main async entrypoint
 async def main():
     # Start Telegram bot
     asyncio.create_task(start_bot())
-    # Start Flask server in background thread (non-blocking)
+    # Start Flask app in executor (non-blocking)
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, lambda: app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080))))
 
-
-# Run main
 if __name__ == "__main__":
     asyncio.run(main())
