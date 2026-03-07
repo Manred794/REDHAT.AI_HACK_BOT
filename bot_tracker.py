@@ -13,7 +13,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # 🔹 Bot Token
-BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"  # @BotFather থেকে নিন
+BOT_TOKEN = "7800960438:AAHClKT7aYbZxSyRMNATYJDLenrsI-BOLrM"  # @BotFather থেকে নিন
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
