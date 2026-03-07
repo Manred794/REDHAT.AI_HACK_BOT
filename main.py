@@ -1,5 +1,5 @@
 import os
-import asyncio
+import threading
 from flask import Flask, send_from_directory, jsonify
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
@@ -40,19 +40,17 @@ async def bot_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     })
     await update.message.reply_text(f"👋 Welcome {user.first_name}! Bot activated!")
 
-async def start_bot():
+def start_telegram_bot():
+    """Run the bot in a separate thread"""
     app_bot = Application.builder().token(BOT_TOKEN).build()
     app_bot.add_handler(CommandHandler("start", bot_start))
     print("Telegram bot started...")
-    await app_bot.run_polling()
-
-
-async def main():
-    # Start Telegram bot
-    asyncio.create_task(start_bot())
-    # Start Flask app in executor (non-blocking)
-    loop = asyncio.get_running_loop()
-    await loop.run_in_executor(None, lambda: app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080))))
+    app_bot.run_polling()  # blocking, but in a separate thread
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    # Start Telegram bot in a thread
+    threading.Thread(target=start_telegram_bot, daemon=True).start()
+
+    # Start Flask normally
+    port = int(os.getenv("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
