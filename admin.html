@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 REDHAT Admin | Live Analytics</title>
+    <title>🔐 REDHAT Admin | Advanced Analytics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -23,218 +23,79 @@
     </script>
     
     <style>
-        :root {
-            --primary: #0d6efd;
-            --success: #198754;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light: #f8f9fa;
-            --border: #e9ecef;
-        }
+        :root { --primary:#0d6efd; --success:#198754; --warning:#ffc107; --danger:#dc3545; --dark:#212529; --gray:#6c757d; --light:#f8f9fa; --border:#e9ecef; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background:linear-gradient(135deg,#f0f2f5,#e9ecef); min-height:100vh; padding:20px; }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        
-        body {
-            background: linear-gradient(135deg, #f0f2f5 0%, #e9ecef 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Login Box */
-        .login-box {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        
-        .login-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), #6f42c1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .login-box h2 { margin-bottom: 10px; color: var(--dark); }
-        .login-box p { color: var(--gray); margin-bottom: 25px; font-size: 0.95rem; }
-        
-        .login-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            margin-bottom: 15px;
-        }
-        
-        .login-input:focus { outline: none; border-color: var(--primary); }
-        
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .login-btn:hover { background: #0b5ed7; }
-        
-        .error-msg { color: var(--danger); margin-top: 12px; font-size: 0.9rem; display: none; }
+        /* Login */
+        .login-box { background:white; padding:40px 30px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); width:100%; max-width:400px; margin:100px auto; text-align:center; }
+        .login-icon { width:60px; height:60px; background:linear-gradient(135deg,var(--primary),#6f42c1); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; color:white; font-size:1.5rem; }
+        .login-box h2 { margin-bottom:10px; }
+        .login-box p { color:var(--gray); margin-bottom:25px; }
+        .login-input { width:100%; padding:12px; border:2px solid var(--border); border-radius:8px; font-size:1rem; margin-bottom:15px; }
+        .login-input:focus { outline:none; border-color:var(--primary); }
+        .login-btn { width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; }
+        .login-btn:hover { background:#0b5ed7; }
+        .error-msg { color:var(--danger); margin-top:12px; display:none; }
         
         /* Dashboard */
-        .dashboard { display: none; width: 100%; max-width: 1100px; }
+        .dashboard { display:none; max-width:1200px; margin:0 auto; }
+        .dash-header { display:flex; justify-content:space-between; align-items:center; padding:18px 24px; background:white; border-radius:12px; margin-bottom:20px; box-shadow:0 4px 20px rgba(0,0,0,0.08); }
+        .dash-header h1 { font-size:1.4rem; display:flex; align-items:center; gap:10px; }
+        .dash-header h1 i { color:var(--primary); }
+        .btn { padding:10px 18px; border:none; border-radius:8px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px; }
+        .btn-success { background:var(--success); color:white; }
+        .btn-success:hover { background:#157347; }
+        .btn-danger { background:var(--danger); color:white; }
+        .btn-danger:hover { background:#b02a37; }
         
-        .dash-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
+        /* Funnel */
+        .funnel-card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); margin-bottom:25px; }
+        .funnel-card h3 { margin-bottom:15px; display:flex; align-items:center; gap:8px; }
+        .funnel { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+        .funnel-step { flex:1; min-width:120px; text-align:center; padding:15px; background:var(--light); border-radius:8px; }
+        .funnel-step .count { font-size:1.8rem; font-weight:700; color:var(--primary); }
+        .funnel-step .label { font-size:0.85rem; color:var(--gray); margin-top:5px; }
+        .funnel-step .rate { font-size:0.8rem; color:var(--success); margin-top:3px; }
+        .funnel-arrow { color:var(--gray); font-size:1.2rem; }
         
-        .dash-header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
-        .dash-header h1 i { color: var(--primary); }
+        /* Stats Grid */
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-bottom:25px; }
+        .stat-card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); text-align:center; }
+        .stat-card .label { color:var(--gray); font-size:0.9rem; margin-bottom:8px; }
+        .stat-card .value { font-size:2rem; font-weight:700; color:var(--primary); }
+        .stat-card.success .value { color:var(--success); }
+        .stat-card.warning .value { color:var(--warning); }
         
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.95rem;
-        }
-        
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: #157347; }
-        
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { background: #b02a37; }
-        
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        
-        .stat-card .label { color: var(--gray); font-size: 0.9rem; margin-bottom: 8px; }
-        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary); }
-        .stat-card.success .value { color: var(--success); }
-        .stat-card.warning .value { color: var(--warning); }
-        
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .chart-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        
-        .chart-card h3 { margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        .chart-card h3 i { color: var(--primary); }
-        .chart-container { position: relative; height: 220px; }
+        /* Country Table */
+        .country-table { background:white; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); overflow:hidden; margin-bottom:25px; }
+        .table-header { padding:15px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+        .table-header h3 { display:flex; align-items:center; gap:8px; }
+        .table-body { max-height:300px; overflow-y:auto; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:12px 20px; text-align:left; border-bottom:1px solid var(--border); font-size:0.9rem; }
+        th { background:var(--light); font-weight:600; color:var(--dark); }
+        tr:hover { background:rgba(13,110,253,0.03); }
+        .flag { font-size:1.2rem; margin-right:8px; }
         
         /* Activity Log */
-        .log-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
+        .log-card { background:white; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.08); overflow:hidden; }
+        .log-header { padding:15px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+        .log-header h3 { display:flex; align-items:center; gap:8px; }
+        .log-header select { padding:8px 12px; border:1px solid var(--border); border-radius:6px; }
+        .log-list { max-height:350px; overflow-y:auto; }
+        .log-item { padding:12px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; font-size:0.95rem; flex-wrap:wrap; gap:10px; }
+        .log-item:last-child { border-bottom:none; }
+        .log-item .event { font-weight:600; padding:4px 10px; border-radius:20px; font-size:0.85rem; }
+        .log-item .event.join { background:rgba(25,135,84,0.15); color:var(--success); }
+        .log-item .event.bot { background:rgba(13,110,253,0.15); color:var(--primary); }
+        .log-item .event.support { background:rgba(255,193,7,0.15); color:#856404; }
+        .log-item .event.page { background:rgba(108,117,125,0.15); color:var(--gray); }
+        .log-item .meta { color:var(--gray); font-size:0.85rem; }
+        .log-item .country { display:flex; align-items:center; gap:5px; }
         
-        .log-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .log-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
-        
-        .log-header select {
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: white;
-        }
-        
-        .log-list { max-height: 350px; overflow-y: auto; }
-        
-        .log-item {
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-        }
-        
-        .log-item:last-child { border-bottom: none; }
-        
-        .log-item .event {
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-        
-        .log-item .event.join { background: rgba(25,135,84,0.15); color: var(--success); }
-        .log-item .event.bot { background: rgba(13,110,253,0.15); color: var(--primary); }
-        .log-item .event.support { background: rgba(255,193,7,0.15); color: #856404; }
-        .log-item .event.page { background: rgba(108,117,125,0.15); color: var(--gray); }
-        
-        .log-item .time { color: var(--gray); font-size: 0.85rem; }
-        .log-empty { padding: 30px; text-align: center; color: var(--gray); }
-        
-        @media (max-width: 768px) {
-            .dash-header { flex-direction: column; gap: 15px; text-align: center; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .charts-grid { grid-template-columns: 1fr; }
-        }
-        
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr; }
-        }
+        @media(max-width:768px) { .dash-header{flex-direction:column;gap:15px;text-align:center;} .stats-grid{grid-template-columns:repeat(2,1fr);} .funnel{flex-direction:column;} .funnel-arrow{transform:rotate(90deg);} }
+        @media(max-width:480px) { .stats-grid{grid-template-columns:1fr;} }
     </style>
 </head>
 <body>
@@ -251,43 +112,94 @@
     <!-- Dashboard -->
     <div class="dashboard" id="dashboardBox">
         <div class="dash-header">
-            <h1><i class="fas fa-chart-line"></i> REDHAT Analytics</h1>
+            <h1><i class="fas fa-chart-line"></i> REDHAT Advanced Analytics</h1>
             <div style="display:flex;gap:10px">
-                <button class="btn btn-success" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+                <button class="btn btn-success" id="exportBtn"><i class="fas fa-download"></i> Export CSV</button>
                 <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
 
+        <!-- 🔹 Funnel Stats 🔹 -->
+        <div class="funnel-card">
+            <h3><i class="fas fa-filter"></i> Telegram Conversion Funnel</h3>
+            <div class="funnel">
+                <div class="funnel-step">
+                    <div class="count" id="funnelPageViews">0</div>
+                    <div class="label">Page Views</div>
+                    <div class="rate">100%</div>
+                </div>
+                <div class="funnel-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="funnel-step">
+                    <div class="count" id="funnelJoinClicks">0</div>
+                    <div class="label">Join Clicks</div>
+                    <div class="rate" id="rateJoin">0%</div>
+                </div>
+                <div class="funnel-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="funnel-step">
+                    <div class="count" id="funnelBotClicks">0</div>
+                    <div class="label">Bot Clicks</div>
+                    <div class="rate" id="rateBot">0%</div>
+                </div>
+                <div class="funnel-arrow"><i class="fas fa-arrow-right"></i></div>
+                <div class="funnel-step">
+                    <div class="count" id="funnelStarted">0</div>
+                    <div class="label">/start Command</div>
+                    <div class="rate" id="rateStart">0%</div>
+                </div>
+            </div>
+            <p style="margin-top:15px;font-size:0.85rem;color:var(--gray);">
+                <i class="fas fa-info-circle"></i> Note: "/start" tracking requires bot-side code (see instructions below)
+            </p>
+        </div>
+
+        <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card"><div class="label">Page Views</div><div class="value" id="statViews">0</div></div>
-            <div class="stat-card success"><div class="label">Telegram Joins</div><div class="value" id="statJoins">0</div></div>
+            <div class="stat-card"><div class="label">Total Visitors</div><div class="value" id="statTotal">0</div></div>
+            <div class="stat-card success"><div class="label">Countries</div><div class="value" id="statCountries">0</div></div>
             <div class="stat-card"><div class="label">Bot Clicks</div><div class="value" id="statBot">0</div></div>
             <div class="stat-card warning"><div class="label">Support</div><div class="value" id="statSupport">0</div></div>
         </div>
 
-        <div class="charts-grid">
-            <div class="chart-card">
-                <h3><i class="fas fa-chart-bar"></i> Timeline</h3>
-                <div class="chart-container"><canvas id="chart1"></canvas></div>
+        <!-- Country Table -->
+        <div class="country-table">
+            <div class="table-header">
+                <h3><i class="fas fa-globe"></i> Traffic by Country</h3>
+                <select id="countryFilter" onchange="renderCountryTable()">
+                    <option value="all">All Countries</option>
+                    <option value="clicks">By Clicks</option>
+                    <option value="joins">By Joins</option>
+                </select>
             </div>
-            <div class="chart-card">
-                <h3><i class="fas fa-chart-pie"></i> Distribution</h3>
-                <div class="chart-container"><canvas id="chart2"></canvas></div>
+            <div class="table-body">
+                <table>
+                    <thead>
+                        <tr><th>Country</th><th>Visitors</th><th>Join Clicks</th><th>Bot Clicks</th><th>Conv. Rate</th></tr>
+                    </thead>
+                    <tbody id="countryTableBody">
+                        <tr><td colspan="5" style="text-align:center;color:var(--gray);">Loading...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
+        <!-- Activity Log -->
         <div class="log-card">
             <div class="log-header">
-                <h3><i class="fas fa-list"></i> Activity Feed</h3>
-                <select id="filterSelect">
-                    <option value="all">All</option>
-                    <option value="JoinChannel">Joins</option>
-                    <option value="TryBot">Bot</option>
-                    <option value="ContactSupport">Support</option>
-                    <option value="PageView">Views</option>
-                </select>
+                <h3><i class="fas fa-list"></i> Live Activity Feed</h3>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <select id="filterType" onchange="renderLog()">
+                        <option value="all">All Events</option>
+                        <option value="JoinChannel">Join Clicks</option>
+                        <option value="TryBot">Bot Clicks</option>
+                        <option value="ContactSupport">Support</option>
+                        <option value="PageView">Page Views</option>
+                    </select>
+                    <select id="filterCountry" onchange="renderLog()">
+                        <option value="all">All Countries</option>
+                    </select>
+                </div>
             </div>
-            <div class="log-list" id="logList"><div class="log-empty">Loading...</div></div>
+            <div class="log-list" id="logList"><div style="padding:30px;text-align:center;color:var(--gray);">Loading events...</div></div>
         </div>
     </div>
 
@@ -297,13 +209,9 @@
         const SESSION_KEY = "redhat_admin_session";
         
         // State
-        let db = null;
-        let unsubscribe = null;
-        let chart1 = null;
-        let chart2 = null;
-        let eventsData = [];
-
-        // DOM Elements
+        let db = null, unsubscribe = null, allEvents = [], countries = {};
+        
+        // DOM
         const loginBox = document.getElementById('loginBox');
         const dashboardBox = document.getElementById('dashboardBox');
         const passwordInput = document.getElementById('passwordInput');
@@ -311,178 +219,189 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const exportBtn = document.getElementById('exportBtn');
         const errorMsg = document.getElementById('errorMsg');
-        const filterSelect = document.getElementById('filterSelect');
         const logList = document.getElementById('logList');
+        const filterType = document.getElementById('filterType');
+        const filterCountry = document.getElementById('filterCountry');
+        const countryFilter = document.getElementById('countryFilter');
 
-        // Check session on load
+        // Session Check
         function checkSession() {
             if (sessionStorage.getItem(SESSION_KEY) === 'true') {
-                showDashboard();
+                loginBox.style.display = 'none';
+                dashboardBox.style.display = 'block';
+                initDashboard();
             }
         }
 
-        // Show Dashboard
-        function showDashboard() {
-            loginBox.style.display = 'none';
-            dashboardBox.style.display = 'block';
-            initDashboard();
-        }
-
-        // Show Login
-        function showLogin() {
-            loginBox.style.display = 'block';
-            dashboardBox.style.display = 'none';
-            passwordInput.value = '';
-            errorMsg.style.display = 'none';
-        }
-
-        // Login
+        // Login/Logout
         function doLogin() {
             if (passwordInput.value === ADMIN_PASS) {
                 sessionStorage.setItem(SESSION_KEY, 'true');
-                showDashboard();
+                loginBox.style.display = 'none';
+                dashboardBox.style.display = 'block';
+                initDashboard();
             } else {
                 errorMsg.style.display = 'block';
             }
         }
 
-        // Logout
         function doLogout() {
             sessionStorage.removeItem(SESSION_KEY);
             if (unsubscribe) unsubscribe();
-            showLogin();
+            dashboardBox.style.display = 'none';
+            loginBox.style.display = 'block';
+            passwordInput.value = '';
+            errorMsg.style.display = 'none';
         }
 
         // Init Dashboard
         function initDashboard() {
             db = firebase.firestore();
-            initCharts();
             loadData();
         }
 
-        // Init Charts
-        function initCharts() {
-            const ctx1 = document.getElementById('chart1').getContext('2d');
-            chart1 = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Events',
-                        data: [],
-                        borderColor: '#0d6efd',
-                        backgroundColor: 'rgba(13,110,253,0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
-            });
-
-            const ctx2 = document.getElementById('chart2').getContext('2d');
-            chart2 = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Views', 'Joins', 'Bot', 'Support'],
-                    datasets: [{
-                        data: [0, 0, 0, 0],
-                        backgroundColor: ['#6c757d', '#198754', '#0d6efd', '#ffc107'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
-        }
-
-        // Load Data
+        // Load Data from Firestore
         function loadData() {
-            unsubscribe = db.collection('events')
-                .orderBy('timestamp', 'desc')
-                .limit(100)
-                .onSnapshot(snapshot => {
-                    eventsData = [];
-                    const counts = { PageView: 0, JoinChannel: 0, TryBot: 0, ContactSupport: 0 };
-                    const buckets = {};
-
-                    snapshot.forEach(doc => {
-                        const e = { id: doc.id, ...doc.data() };
-                        eventsData.push(e);
-                        if (counts[e.type] !== undefined) counts[e.type]++;
-                        if (e.timestamp) {
-                            const d = e.timestamp.toDate();
-                            const key = d.toLocaleDateString() + ' ' + d.getHours() + ':00';
-                            buckets[key] = (buckets[key] || 0) + 1;
-                        }
-                    });
-
-                    // Update stats
-                    document.getElementById('statViews').textContent = counts.PageView.toLocaleString();
-                    document.getElementById('statJoins').textContent = counts.JoinChannel.toLocaleString();
-                    document.getElementById('statBot').textContent = counts.TryBot.toLocaleString();
-                    document.getElementById('statSupport').textContent = counts.ContactSupport.toLocaleString();
-
-                    // Update charts
-                    updateCharts(buckets, counts);
-
-                    // Update log
-                    renderLog();
-                }, error => {
-                    console.error('Error:', error);
-                    logList.innerHTML = '<div class="log-empty" style="color:#dc3545">❌ Error loading data</div>';
+            unsubscribe = db.collection('events').orderBy('timestamp', 'desc').limit(200).onSnapshot(snapshot => {
+                allEvents = [];
+                countries = {};
+                const funnel = { pageViews: 0, joinClicks: 0, botClicks: 0, started: 0 };
+                
+                snapshot.forEach(doc => {
+                    const e = { id: doc.id, ...doc.data() };
+                    allEvents.push(e);
+                    
+                    // Funnel counts
+                    if (e.type === 'PageView') funnel.pageViews++;
+                    if (e.type === 'JoinChannel' && e.funnelStep === 'click') funnel.joinClicks++;
+                    if (e.type === 'TryBot' && e.funnelStep === 'bot_opened') funnel.botClicks++;
+                    if (e.funnelStep === 'started') funnel.started++;
+                    
+                    // Country aggregation
+                    const c = e.countryCode || 'XX';
+                    if (!countries[c]) countries[c] = { name: e.country || 'Unknown', visitors: 0, joins: 0, bots: 0 };
+                    countries[c].visitors++;
+                    if (e.type === 'JoinChannel') countries[c].joins++;
+                    if (e.type === 'TryBot') countries[c].bots++;
                 });
+                
+                // Update funnel UI
+                document.getElementById('funnelPageViews').textContent = funnel.pageViews.toLocaleString();
+                document.getElementById('funnelJoinClicks').textContent = funnel.joinClicks.toLocaleString();
+                document.getElementById('funnelBotClicks').textContent = funnel.botClicks.toLocaleString();
+                document.getElementById('funnelStarted').textContent = funnel.started.toLocaleString();
+                
+                // Calculate rates
+                const rJoin = funnel.pageViews ? Math.round(funnel.joinClicks / funnel.pageViews * 100) : 0;
+                const rBot = funnel.pageViews ? Math.round(funnel.botClicks / funnel.pageViews * 100) : 0;
+                const rStart = funnel.botClicks ? Math.round(funnel.started / funnel.botClicks * 100) : 0;
+                document.getElementById('rateJoin').textContent = rJoin + '%';
+                document.getElementById('rateBot').textContent = rBot + '%';
+                document.getElementById('rateStart').textContent = rStart + '%';
+                
+                // Update stats
+                document.getElementById('statTotal').textContent = funnel.pageViews.toLocaleString();
+                document.getElementById('statCountries').textContent = Object.keys(countries).length;
+                document.getElementById('statBot').textContent = funnel.botClicks.toLocaleString();
+                document.getElementById('statSupport').textContent = allEvents.filter(e => e.type === 'ContactSupport').length.toLocaleString();
+                
+                // Update country filter dropdown
+                updateCountryFilter();
+                
+                // Render tables
+                renderCountryTable();
+                renderLog();
+            }, error => {
+                console.error('Firestore error:', error);
+                logList.innerHTML = '<div style="padding:30px;text-align:center;color:#dc3545">❌ Error loading data</div>';
+            });
         }
 
-        // Update Charts
-        function updateCharts(buckets, counts) {
-            if (!chart1 || !chart2) return;
-            const times = Object.keys(buckets).sort().slice(-12);
-            chart1.data.labels = times;
-            chart1.data.datasets[0].data = times.map(t => buckets[t]);
-            chart1.update();
-            chart2.data.datasets[0].data = [counts.PageView, counts.JoinChannel, counts.TryBot, counts.ContactSupport];
-            chart2.update();
+        // Update Country Filter Dropdown
+        function updateCountryFilter() {
+            const sel = document.getElementById('filterCountry');
+            const current = sel.value;
+            sel.innerHTML = '<option value="all">All Countries</option>';
+            Object.entries(countries).sort((a,b) => b[1].visitors - a[1].visitors).slice(0, 20).forEach(([code, data]) => {
+                const flag = getFlagEmoji(code);
+                sel.innerHTML += `<option value="${code}">${flag} ${data.name}</option>`;
+            });
+            sel.value = current;
         }
 
-        // Render Log
-        function renderLog() {
-            const filter = filterSelect.value;
-            const data = filter === 'all' ? eventsData : eventsData.filter(e => e.type === filter);
+        // Flag Emoji Helper
+        function getFlagEmoji(countryCode) {
+            if (!countryCode || countryCode === 'XX') return '🌍';
+            const code = countryCode.toUpperCase();
+            return String.fromCodePoint(...[...code].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+        }
 
+        // Render Country Table
+        function renderCountryTable() {
+            const filter = countryFilter.value;
+            const tbody = document.getElementById('countryTableBody');
+            let data = Object.entries(countries);
+            
+            if (filter === 'clicks') data.sort((a,b) => b[1].joins - a[1].joins);
+            else if (filter === 'joins') data.sort((a,b) => (b[1].joins/b[1].visitors||0) - (a[1].joins/a[1].visitors||0));
+            else data.sort((a,b) => b[1].visitors - a[1].visitors);
+            
             if (!data.length) {
-                logList.innerHTML = '<div class="log-empty">No events yet</div>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray);">No country data</td></tr>';
                 return;
             }
+            
+            tbody.innerHTML = data.slice(0, 15).map(([code, c]) => {
+                const flag = getFlagEmoji(code);
+                const rate = c.visitors ? Math.round(c.joins / c.visitors * 100) : 0;
+                return `<tr>
+                    <td><span class="flag">${flag}</span> ${c.name} <span style="color:var(--gray);font-size:0.8rem">(${code})</span></td>
+                    <td>${c.visitors.toLocaleString()}</td>
+                    <td>${c.joins.toLocaleString()}</td>
+                    <td>${c.bots.toLocaleString()}</td>
+                    <td><span style="color:${rate > 20 ? '#198754' : rate > 10 ? '#ffc107' : '#dc3545'}">${rate}%</span></td>
+                </tr>`;
+            }).join('');
+        }
 
+        // Render Activity Log
+        function renderLog() {
+            const typeFilter = filterType.value;
+            const countryFilterVal = filterCountry.value;
+            let data = allEvents;
+            
+            if (typeFilter !== 'all') data = data.filter(e => e.type === typeFilter);
+            if (countryFilterVal !== 'all') data = data.filter(e => e.countryCode === countryFilterVal);
+            
+            if (!data.length) {
+                logList.innerHTML = '<div style="padding:30px;text-align:center;color:var(--gray);">No events</div>';
+                return;
+            }
+            
             logList.innerHTML = data.slice(0, 50).map(e => {
                 const time = e.timestamp ? new Date(e.timestamp.toDate()).toLocaleString() : 'Now';
                 const cls = e.type === 'JoinChannel' ? 'join' : e.type === 'TryBot' ? 'bot' : e.type === 'ContactSupport' ? 'support' : 'page';
-                return '<div class="log-item">' +
-                    '<div><span class="event ' + cls + '">' + e.type + '</span> <span style="color:#6c757d;font-size:0.85rem">' + (e.label || '') + '</span></div>' +
-                    '<span class="time">' + time + '</span>' +
-                    '</div>';
+                const flag = getFlagEmoji(e.countryCode);
+                const step = e.funnelStep ? `<span style="background:var(--light);padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-left:5px">${e.funnelStep}</span>` : '';
+                return `<div class="log-item">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                        <span class="event ${cls}">${e.type}</span>
+                        <span class="meta">${e.label || ''}${step}</span>
+                        <span class="country">${flag} ${e.country || 'Unknown'}</span>
+                    </div>
+                    <span style="color:var(--gray);font-size:0.85rem;text-align:right">${time}<br><span class="meta">${e.platform || 'web'}</span></span>
+                </div>`;
             }).join('');
         }
 
         // Export CSV
         function exportCSV() {
-            if (!eventsData.length) return alert('No data');
-            const rows = [['Timestamp','Type','Label','Platform','Session'], ...eventsData.map(e => [e.timestamp?.toDate().toISOString()||'', e.type, e.label||'', e.platform||'', e.sessionId||''])];
-            const csv = rows.map(r => r.map(c => '"'+c+'"').join(',')).join('\n');
-            const blob = new Blob([csv], {type:'text/csv'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'redhat-' + new Date().toISOString().split('T')[0] + '.csv';
-            a.click();
+            if (!allEvents.length) return alert('No data');
+            const headers = ['Timestamp','Type','Label','Country','CountryCode','Platform','FunnelStep','Session'];
+            const rows = allEvents.map(e => [e.timestamp?.toDate().toISOString()||'', e.type, e.label||'', e.country||'', e.countryCode||'', e.platform||'', e.funnelStep||'', e.sessionId||'']);
+            const csv = [headers, ...rows].map(r => r.map(c => '"'+c+'"').join(',')).join('\n');
+            const blob = new Blob([csv], {type:'text/csv'}), url = URL.createObjectURL(blob), a = document.createElement('a');
+            a.href = url; a.download = 'redhat-analytics-' + new Date().toISOString().split('T')[0] + '.csv'; a.click();
             URL.revokeObjectURL(url);
         }
 
@@ -490,12 +409,12 @@
         unlockBtn.addEventListener('click', doLogin);
         logoutBtn.addEventListener('click', doLogout);
         exportBtn.addEventListener('click', exportCSV);
-        filterSelect.addEventListener('change', renderLog);
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') doLogin();
-        });
+        filterType.addEventListener('change', renderLog);
+        filterCountry.addEventListener('change', renderLog);
+        countryFilter.addEventListener('change', renderCountryTable);
+        passwordInput.addEventListener('keypress', e => { if (e.key === 'Enter') doLogin(); });
 
-        // Init on load
+        // Init
         checkSession();
     </script>
 </body>
