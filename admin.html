@@ -9,7 +9,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     
-    <!-- 🔹 Firebase Config - Web App (SAFE) 🔹 -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCyCou5S6OzcklXi405mvHyclhEdqKkwuU",
@@ -26,23 +25,19 @@
     <style>
         :root {
             --primary: #0d6efd;
-            --primary-dark: #0b5ed7;
             --success: #198754;
             --warning: #ffc107;
             --danger: #dc3545;
             --dark: #212529;
-            --light: #f8f9fa;
             --gray: #6c757d;
+            --light: #f8f9fa;
             --border: #e9ecef;
-            --shadow: 0 4px 20px rgba(0,0,0,0.08);
-            --radius: 12px;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
         body {
             background: linear-gradient(135deg, #f0f2f5 0%, #e9ecef 100%);
-            color: var(--dark);
             min-height: 100vh;
             padding: 20px;
             display: flex;
@@ -50,26 +45,20 @@
             justify-content: center;
         }
         
-        /* 🔐 Auth Box */
-        .auth-container {
+        /* Login Box */
+        .login-box {
             background: white;
             padding: 40px 30px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             text-align: center;
-            animation: slideUp 0.3s ease;
         }
         
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .auth-icon {
-            width: 70px;
-            height: 70px;
+        .login-icon {
+            width: 60px;
+            height: 60px;
             background: linear-gradient(135deg, var(--primary), #6f42c1);
             border-radius: 50%;
             display: flex;
@@ -77,70 +66,41 @@
             justify-content: center;
             margin: 0 auto 20px;
             color: white;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
         
-        .auth-container h2 {
-            margin-bottom: 8px;
-            color: var(--dark);
-            font-weight: 700;
-        }
+        .login-box h2 { margin-bottom: 10px; color: var(--dark); }
+        .login-box p { color: var(--gray); margin-bottom: 25px; font-size: 0.95rem; }
         
-        .auth-container p {
-            color: var(--gray);
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
-        
-        .auth-input {
+        .login-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 16px;
             border: 2px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 1rem;
             margin-bottom: 15px;
-            transition: border-color 0.2s;
         }
         
-        .auth-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        .login-input:focus { outline: none; border-color: var(--primary); }
         
-        .auth-btn {
+        .login-btn {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1.05rem;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
         }
         
-        .auth-btn:hover { background: var(--primary-dark); }
+        .login-btn:hover { background: #0b5ed7; }
         
-        .error-msg {
-            color: var(--danger);
-            margin-top: 12px;
-            font-size: 0.9rem;
-            display: none;
-        }
+        .error-msg { color: var(--danger); margin-top: 12px; font-size: 0.9rem; display: none; }
         
-        /* 📊 Dashboard */
-        .dashboard {
-            display: none;
-            width: 100%;
-            max-width: 1100px;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        /* Dashboard */
+        .dashboard { display: none; width: 100%; max-width: 1100px; }
         
         .dash-header {
             display: flex;
@@ -148,22 +108,13 @@
             align-items: center;
             padding: 18px 24px;
             background: white;
-            border-radius: var(--radius);
+            border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
-        .dash-header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
+        .dash-header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
         .dash-header h1 i { color: var(--primary); }
-        
-        .header-actions { display: flex; gap: 10px; }
         
         .btn {
             padding: 10px 18px;
@@ -175,16 +126,15 @@
             align-items: center;
             gap: 6px;
             font-size: 0.95rem;
-            transition: all 0.2s;
         }
         
-        .btn-primary { background: var(--success); color: white; }
-        .btn-primary:hover { background: #157347; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #157347; }
         
         .btn-danger { background: var(--danger); color: white; }
         .btn-danger:hover { background: #b02a37; }
         
-        /* Stats Grid */
+        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -195,23 +145,13 @@
         .stat-card {
             background: white;
             padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             text-align: center;
         }
         
-        .stat-card .label {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-        
-        .stat-card .value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
+        .stat-card .label { color: var(--gray); font-size: 0.9rem; margin-bottom: 8px; }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary); }
         .stat-card.success .value { color: var(--success); }
         .stat-card.warning .value { color: var(--warning); }
         
@@ -226,27 +166,19 @@
         .chart-card {
             background: white;
             padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
-        .chart-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
+        .chart-card h3 { margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         .chart-card h3 i { color: var(--primary); }
-        
         .chart-container { position: relative; height: 220px; }
         
         /* Activity Log */
         .log-card {
             background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             overflow: hidden;
         }
         
@@ -256,39 +188,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
         }
         
-        .log-header h3 {
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .log-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
         
         .log-header select {
             padding: 8px 12px;
             border: 1px solid var(--border);
             border-radius: 6px;
             background: white;
-            font-size: 0.9rem;
         }
         
-        .log-list {
-            max-height: 350px;
-            overflow-y: auto;
-        }
+        .log-list { max-height: 350px; overflow-y: auto; }
         
         .log-item {
             padding: 12px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.95rem;
-            flex-wrap: wrap;
-            gap: 10px;
         }
         
         .log-item:last-child { border-bottom: none; }
@@ -305,16 +223,9 @@
         .log-item .event.support { background: rgba(255,193,7,0.15); color: #856404; }
         .log-item .event.page { background: rgba(108,117,125,0.15); color: var(--gray); }
         
-        .log-item .meta { color: var(--gray); font-size: 0.85rem; }
         .log-item .time { color: var(--gray); font-size: 0.85rem; }
+        .log-empty { padding: 30px; text-align: center; color: var(--gray); }
         
-        .log-empty {
-            padding: 30px;
-            text-align: center;
-            color: var(--gray);
-        }
-        
-        /* Responsive */
         @media (max-width: 768px) {
             .dash-header { flex-direction: column; gap: 15px; text-align: center; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -323,392 +234,269 @@
         
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
-            .log-item { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
-    <!-- 🔐 Login Screen -->
-    <div class="auth-container" id="authScreen">
-        <div class="auth-icon"><i class="fas fa-shield-alt"></i></div>
+    <!-- Login -->
+    <div class="login-box" id="loginBox">
+        <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
         <h2>Admin Access</h2>
-        <p>Enter your password to view analytics dashboard</p>
-        <input type="password" class="auth-input" id="passwordInput" placeholder="••••••••" autocomplete="off">
-        <button class="auth-btn" id="unlockBtn">Unlock Dashboard</button>
-        <p class="error-msg" id="errorMsg">❌ Incorrect password</p>
+        <p>Enter password to view analytics</p>
+        <input type="password" class="login-input" id="passwordInput" placeholder="Enter password">
+        <button class="login-btn" id="unlockBtn">Unlock Dashboard</button>
+        <p class="error-msg" id="errorMsg">❌ Wrong password</p>
     </div>
 
-    <!-- 📊 Dashboard -->
-    <div class="dashboard" id="dashboardScreen">
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboardBox">
         <div class="dash-header">
-            <h1><i class="fas fa-chart-line"></i> REDHAT Live Analytics</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary" id="exportBtn"><i class="fas fa-download"></i> Export CSV</button>
+            <h1><i class="fas fa-chart-line"></i> REDHAT Analytics</h1>
+            <div style="display:flex;gap:10px">
+                <button class="btn btn-success" id="exportBtn"><i class="fas fa-download"></i> Export</button>
                 <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="label">Page Views</div>
-                <div class="value" id="statViews">0</div>
-            </div>
-            <div class="stat-card success">
-                <div class="label">Telegram Joins</div>
-                <div class="value" id="statJoins">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Bot Clicks</div>
-                <div class="value" id="statBot">0</div>
-            </div>
-            <div class="stat-card warning">
-                <div class="label">Support Contacts</div>
-                <div class="value" id="statSupport">0</div>
-            </div>
+            <div class="stat-card"><div class="label">Page Views</div><div class="value" id="statViews">0</div></div>
+            <div class="stat-card success"><div class="label">Telegram Joins</div><div class="value" id="statJoins">0</div></div>
+            <div class="stat-card"><div class="label">Bot Clicks</div><div class="value" id="statBot">0</div></div>
+            <div class="stat-card warning"><div class="label">Support</div><div class="value" id="statSupport">0</div></div>
         </div>
 
-        <!-- Charts -->
         <div class="charts-grid">
             <div class="chart-card">
-                <h3><i class="fas fa-chart-bar"></i> Events Timeline</h3>
-                <div class="chart-container"><canvas id="timelineChart"></canvas></div>
+                <h3><i class="fas fa-chart-bar"></i> Timeline</h3>
+                <div class="chart-container"><canvas id="chart1"></canvas></div>
             </div>
             <div class="chart-card">
-                <h3><i class="fas fa-chart-pie"></i> Event Distribution</h3>
-                <div class="chart-container"><canvas id="pieChart"></canvas></div>
+                <h3><i class="fas fa-chart-pie"></i> Distribution</h3>
+                <div class="chart-container"><canvas id="chart2"></canvas></div>
             </div>
         </div>
 
-        <!-- Activity Log -->
         <div class="log-card">
             <div class="log-header">
-                <h3><i class="fas fa-list"></i> Live Activity Feed</h3>
+                <h3><i class="fas fa-list"></i> Activity Feed</h3>
                 <select id="filterSelect">
-                    <option value="all">All Events</option>
-                    <option value="JoinChannel">Telegram Joins</option>
-                    <option value="TryBot">Bot Clicks</option>
+                    <option value="all">All</option>
+                    <option value="JoinChannel">Joins</option>
+                    <option value="TryBot">Bot</option>
                     <option value="ContactSupport">Support</option>
-                    <option value="PageView">Page Views</option>
+                    <option value="PageView">Views</option>
                 </select>
             </div>
-            <div class="log-list" id="activityLog">
-                <div class="log-empty"><i class="fas fa-spinner fa-spin"></i> Loading events...</div>
-            </div>
+            <div class="log-list" id="logList"><div class="log-empty">Loading...</div></div>
         </div>
     </div>
 
     <script>
-        // ========================================
-        // 🔐 CONFIGURATION
-        // ========================================
-        const CONFIG = {
-            ADMIN_PASSWORD: "REDHAT2024!",  // ⚠️ CHANGE THIS to your secure password
-            SESSION_KEY: "redhat_admin_auth",
-            MAX_LOG_ITEMS: 50
-        };
+        // Config
+        const ADMIN_PASS = "REDHAT2024!";
+        const SESSION_KEY = "redhat_admin_session";
+        
+        // State
+        let db = null;
+        let unsubscribe = null;
+        let chart1 = null;
+        let chart2 = null;
+        let eventsData = [];
 
-        // ========================================
-        // 📦 STATE MANAGEMENT
-        // ========================================
-        const State = {
-            isAuthenticated: false,
-            db: null,
-            unsubscribe: null,
-            charts: { timeline: null, pie: null },
-            events: [],
-            
-            init() {
-                // Check session on load
-                this.isAuthenticated = sessionStorage.getItem(CONFIG.SESSION_KEY) === 'true';
-                this.db = firebase.firestore();
-                
-                if (this.isAuthenticated) {
-                    UI.showDashboard();
-                    Dashboard.init();
-                } else {
-                    UI.showAuth();
+        // DOM Elements
+        const loginBox = document.getElementById('loginBox');
+        const dashboardBox = document.getElementById('dashboardBox');
+        const passwordInput = document.getElementById('passwordInput');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const filterSelect = document.getElementById('filterSelect');
+        const logList = document.getElementById('logList');
+
+        // Check session on load
+        function checkSession() {
+            if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+                showDashboard();
+            }
+        }
+
+        // Show Dashboard
+        function showDashboard() {
+            loginBox.style.display = 'none';
+            dashboardBox.style.display = 'block';
+            initDashboard();
+        }
+
+        // Show Login
+        function showLogin() {
+            loginBox.style.display = 'block';
+            dashboardBox.style.display = 'none';
+            passwordInput.value = '';
+            errorMsg.style.display = 'none';
+        }
+
+        // Login
+        function doLogin() {
+            if (passwordInput.value === ADMIN_PASS) {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                showDashboard();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Logout
+        function doLogout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            if (unsubscribe) unsubscribe();
+            showLogin();
+        }
+
+        // Init Dashboard
+        function initDashboard() {
+            db = firebase.firestore();
+            initCharts();
+            loadData();
+        }
+
+        // Init Charts
+        function initCharts() {
+            const ctx1 = document.getElementById('chart1').getContext('2d');
+            chart1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Events',
+                        data: [],
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13,110,253,0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
                 }
-            },
-            
-            login() {
-                this.isAuthenticated = true;
-                sessionStorage.setItem(CONFIG.SESSION_KEY, 'true');
-            },
-            
-            logout() {
-                this.isAuthenticated = false;
-                sessionStorage.removeItem(CONFIG.SESSION_KEY);
-                if (this.unsubscribe) this.unsubscribe();
-            }
-        };
+            });
 
-        // ========================================
-        // 🎨 UI CONTROLLER
-        // ========================================
-        const UI = {
-            elements: {
-                auth: document.getElementById('authScreen'),
-                dash: document.getElementById('dashboardScreen'),
-                passInput: document.getElementById('passwordInput'),
-                unlockBtn: document.getElementById('unlockBtn'),
-                logoutBtn: document.getElementById('logoutBtn'),
-                exportBtn: document.getElementById('exportBtn'),
-                errorMsg: document.getElementById('errorMsg'),
-                filterSelect: document.getElementById('filterSelect'),
-                activityLog: document.getElementById('activityLog'),
-                stats: {
-                    views: document.getElementById('statViews'),
-                    joins: document.getElementById('statJoins'),
-                    bot: document.getElementById('statBot'),
-                    support: document.getElementById('statSupport')
+            const ctx2 = document.getElementById('chart2').getContext('2d');
+            chart2 = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Views', 'Joins', 'Bot', 'Support'],
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#6c757d', '#198754', '#0d6efd', '#ffc107'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
                 }
-            },
-            
-            showAuth() {
-                this.elements.auth.style.display = 'block';
-                this.elements.dash.style.display = 'none';
-                this.elements.passInput.focus();
-            },
-            
-            showDashboard() {
-                this.elements.auth.style.display = 'none';
-                this.elements.dash.style.display = 'block';
-            },
-            
-            showError(msg) {
-                this.elements.errorMsg.textContent = msg;
-                this.elements.errorMsg.style.display = 'block';
-                setTimeout(() => this.elements.errorMsg.style.display = 'none', 3000);
-            },
-            
-            updateStats(counts) {
-                this.elements.stats.views.textContent = counts.PageView?.toLocaleString() || '0';
-                this.elements.stats.joins.textContent = counts.JoinChannel?.toLocaleString() || '0';
-                this.elements.stats.bot.textContent = counts.TryBot?.toLocaleString() || '0';
-                this.elements.stats.support.textContent = counts.ContactSupport?.toLocaleString() || '0';
-            },
-            
-            renderLog(events, filter = 'all') {
-                const list = this.elements.activityLog;
-                const filtered = filter === 'all' ? events : events.filter(e => e.type === filter);
-                
-                if (!filtered.length) {
-                    list.innerHTML = '<div class="log-empty">No events yet</div>';
-                    return;
-                }
-                
-                list.innerHTML = filtered.slice(0, CONFIG.MAX_LOG_ITEMS).map(e => {
-                    const time = e.timestamp ? new Date(e.timestamp.toDate()).toLocaleString() : 'Now';
-                    const typeClass = {
-                        'JoinChannel': 'join',
-                        'TryBot': 'bot', 
-                        'ContactSupport': 'support',
-                        'PageView': 'page'
-                    }[e.type] || 'page';
-                    
-                    return `<div class="log-item">
-                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                            <span class="event ${typeClass}">${e.type}</span>
-                            <span class="meta">${e.label || ''}</span>
-                            <span class="meta">${e.platform || 'web'}</span>
-                        </div>
-                        <span class="time">${time}</span>
-                    </div>`;
-                }).join('');
-            }
-        };
-
-        // ========================================
-        // 📊 DASHBOARD LOGIC
-        // ========================================
-        const Dashboard = {
-            init() {
-                Charts.init();
-                Data.listen();
-            },
-            
-            updateCharts(timeBuckets, counts) {
-                Charts.updateTimeline(timeBuckets);
-                Charts.updatePie(counts);
-            }
-        };
-
-        // ========================================
-        // 📈 CHARTS
-        // ========================================
-        const Charts = {
-            init() {
-                // Timeline Chart
-                const ctx1 = document.getElementById('timelineChart').getContext('2d');
-                State.charts.timeline = new Chart(ctx1, {
-                    type: 'line',
-                     {
-                        labels: [],
-                        datasets: [{
-                            label: 'Events',
-                             [],
-                            borderColor: '#0d6efd',
-                            backgroundColor: 'rgba(13,110,253,0.1)',
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                            x: { ticks: { maxRotation: 45, minRotation: 45, font: { size: 10 } } }
-                        }
-                    }
-                });
-                
-                // Pie Chart
-                const ctx2 = document.getElementById('pieChart').getContext('2d');
-                State.charts.pie = new Chart(ctx2, {
-                    type: 'doughnut',
-                     {
-                        labels: ['Page Views', 'Telegram Joins', 'Bot Clicks', 'Support'],
-                        datasets: [{
-                             [0, 0, 0, 0],
-                            backgroundColor: ['#6c757d', '#198754', '#0d6efd', '#ffc107'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { 
-                            legend: { position: 'bottom', labels: { font: { size: 10 } } } 
-                        }
-                    }
-                });
-            },
-            
-            updateTimeline(buckets) {
-                const chart = State.charts.timeline;
-                if (!chart) return;
-                const times = Object.keys(buckets).sort().slice(-12);
-                chart.data.labels = times;
-                chart.data.datasets[0].data = times.map(t => buckets[t]);
-                chart.update('none');
-            },
-            
-            updatePie(counts) {
-                const chart = State.charts.pie;
-                if (!chart) return;
-                chart.data.datasets[0].data = [
-                    counts.PageView || 0,
-                    counts.JoinChannel || 0,
-                    counts.TryBot || 0,
-                    counts.ContactSupport || 0
-                ];
-                chart.update('none');
-            }
-        };
-
-        // ========================================
-        // 🗄️ DATA LAYER
-        // ========================================
-        const Data = {
-            listen() {
-                State.unsubscribe = State.db.collection('events')
-                    .orderBy('timestamp', 'desc')
-                    .limit(100)
-                    .onSnapshot(snapshot => {
-                        State.events = [];
-                        const counts = { PageView: 0, JoinChannel: 0, TryBot: 0, ContactSupport: 0 };
-                        const timeBuckets = {};
-                        
-                        snapshot.forEach(doc => {
-                            const e = { id: doc.id, ...doc.data() };
-                            State.events.push(e);
-                            if (counts[e.type] !== undefined) counts[e.type]++;
-                            if (e.timestamp) {
-                                const d = e.timestamp.toDate();
-                                const key = d.toLocaleDateString() + ' ' + d.getHours() + ':00';
-                                timeBuckets[key] = (timeBuckets[key] || 0) + 1;
-                            }
-                        });
-                        
-                        UI.updateStats(counts);
-                        Dashboard.updateCharts(timeBuckets, counts);
-                        UI.renderLog(State.events, UI.elements.filterSelect.value);
-                    }, error => {
-                        console.error('Firestore error:', error);
-                        UI.elements.activityLog.innerHTML = '<div class="log-empty" style="color:#dc3545">❌ Error loading data</div>';
-                    });
-            }
-        };
-
-        // ========================================
-        // 🔧 ACTIONS
-        // ========================================
-        const Actions = {
-            login() {
-                const input = UI.elements.passInput.value;
-                if (input === CONFIG.ADMIN_PASSWORD) {
-                    State.login();
-                    UI.showDashboard();
-                    Dashboard.init();
-                    UI.elements.passInput.value = '';
-                } else {
-                    UI.showError('❌ Incorrect password');
-                }
-            },
-            
-            logout() {
-                State.logout();
-                UI.showAuth();
-            },
-            
-            exportCSV() {
-                if (!State.events.length) return alert('No data to export');
-                
-                const headers = ['Timestamp', 'Type', 'Label', 'Platform', 'Referrer', 'Session'];
-                const rows = State.events.map(e => [
-                    e.timestamp ? e.timestamp.toDate().toISOString() : '',
-                    e.type, e.label || '', e.platform || '', e.referrer || '', e.sessionId || ''
-                ]);
-                
-                const csv = [headers, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `redhat-analytics-${new Date().toISOString().split('T')[0]}.csv`;
-                a.click();
-                URL.revokeObjectURL(url);
-            },
-            
-            filterLog() {
-                UI.renderLog(State.events, UI.elements.filterSelect.value);
-            }
-        };
-
-        // ========================================
-        // 🎯 EVENT BINDINGS
-        // ========================================
-        function bindEvents() {
-            UI.elements.unlockBtn.addEventListener('click', () => Actions.login());
-            UI.elements.logoutBtn.addEventListener('click', () => Actions.logout());
-            UI.elements.exportBtn.addEventListener('click', () => Actions.exportCSV());
-            UI.elements.filterSelect.addEventListener('change', () => Actions.filterLog());
-            UI.elements.passInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') Actions.login();
             });
         }
 
-        // ========================================
-        // 🚀 INIT
-        // ========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            State.init();
-            bindEvents();
+        // Load Data
+        function loadData() {
+            unsubscribe = db.collection('events')
+                .orderBy('timestamp', 'desc')
+                .limit(100)
+                .onSnapshot(snapshot => {
+                    eventsData = [];
+                    const counts = { PageView: 0, JoinChannel: 0, TryBot: 0, ContactSupport: 0 };
+                    const buckets = {};
+
+                    snapshot.forEach(doc => {
+                        const e = { id: doc.id, ...doc.data() };
+                        eventsData.push(e);
+                        if (counts[e.type] !== undefined) counts[e.type]++;
+                        if (e.timestamp) {
+                            const d = e.timestamp.toDate();
+                            const key = d.toLocaleDateString() + ' ' + d.getHours() + ':00';
+                            buckets[key] = (buckets[key] || 0) + 1;
+                        }
+                    });
+
+                    // Update stats
+                    document.getElementById('statViews').textContent = counts.PageView.toLocaleString();
+                    document.getElementById('statJoins').textContent = counts.JoinChannel.toLocaleString();
+                    document.getElementById('statBot').textContent = counts.TryBot.toLocaleString();
+                    document.getElementById('statSupport').textContent = counts.ContactSupport.toLocaleString();
+
+                    // Update charts
+                    updateCharts(buckets, counts);
+
+                    // Update log
+                    renderLog();
+                }, error => {
+                    console.error('Error:', error);
+                    logList.innerHTML = '<div class="log-empty" style="color:#dc3545">❌ Error loading data</div>';
+                });
+        }
+
+        // Update Charts
+        function updateCharts(buckets, counts) {
+            if (!chart1 || !chart2) return;
+            const times = Object.keys(buckets).sort().slice(-12);
+            chart1.data.labels = times;
+            chart1.data.datasets[0].data = times.map(t => buckets[t]);
+            chart1.update();
+            chart2.data.datasets[0].data = [counts.PageView, counts.JoinChannel, counts.TryBot, counts.ContactSupport];
+            chart2.update();
+        }
+
+        // Render Log
+        function renderLog() {
+            const filter = filterSelect.value;
+            const data = filter === 'all' ? eventsData : eventsData.filter(e => e.type === filter);
+
+            if (!data.length) {
+                logList.innerHTML = '<div class="log-empty">No events yet</div>';
+                return;
+            }
+
+            logList.innerHTML = data.slice(0, 50).map(e => {
+                const time = e.timestamp ? new Date(e.timestamp.toDate()).toLocaleString() : 'Now';
+                const cls = e.type === 'JoinChannel' ? 'join' : e.type === 'TryBot' ? 'bot' : e.type === 'ContactSupport' ? 'support' : 'page';
+                return '<div class="log-item">' +
+                    '<div><span class="event ' + cls + '">' + e.type + '</span> <span style="color:#6c757d;font-size:0.85rem">' + (e.label || '') + '</span></div>' +
+                    '<span class="time">' + time + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+
+        // Export CSV
+        function exportCSV() {
+            if (!eventsData.length) return alert('No data');
+            const rows = [['Timestamp','Type','Label','Platform','Session'], ...eventsData.map(e => [e.timestamp?.toDate().toISOString()||'', e.type, e.label||'', e.platform||'', e.sessionId||''])];
+            const csv = rows.map(r => r.map(c => '"'+c+'"').join(',')).join('\n');
+            const blob = new Blob([csv], {type:'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'redhat-' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Event Listeners
+        unlockBtn.addEventListener('click', doLogin);
+        logoutBtn.addEventListener('click', doLogout);
+        exportBtn.addEventListener('click', exportCSV);
+        filterSelect.addEventListener('change', renderLog);
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') doLogin();
         });
+
+        // Init on load
+        checkSession();
     </script>
 </body>
 </html>
