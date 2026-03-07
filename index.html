@@ -46,24 +46,124 @@
         .logo img { width: 100%; height: 100%; object-fit: cover; }
         h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: #1a1a1a; }
         .subtitle { color: #495057; font-size: 1.1rem; margin-bottom: 25px; }
-        .description { color: #495057; margin-bottom: 30px; font-size: 1.05rem; }
-        .cta-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #0d6efd; color: white; border: none; padding: 16px 32px; font-size: 1.15rem; font-weight: 600; border-radius: 10px; text-decoration: none; width: 100%; max-width: 320px; margin: 0 auto 25px; cursor: pointer; transition: background 0.2s; }
-        .cta-button:hover { background: #0b5ed7; }
-        .secondary-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #a78bfa, #8b5cf6); color: white; border: none; padding: 14px 28px; font-size: 1.05rem; font-weight: 700; border-radius: 10px; text-decoration: none; width: 100%; max-width: 320px; margin: 0 auto 15px; cursor: pointer; box-shadow: 0 4px 14px rgba(139,92,246,0.35); }
-        .secondary-cta::before { content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent); transition:left 0.4s ease; pointer-events:none; }
-        .secondary-cta:hover::before { left:150%; }
-        .secondary-cta:hover { box-shadow:0 6px 20px rgba(139,92,246,0.55); transform:translateY(-1px); }
-        .features { text-align:left; margin:30px 0; padding:20px; background:#f8f9fa; border-radius:10px; }
+        .description { color: #495057; margin-bottom: 20px; font-size: 1.05rem; }
+        
+        /* 🔹 PRIMARY CTA: TRY THE BOT (MAIN FOCUS) 🔹 */
+        .bot-cta {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7, #c084fc);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            border-radius: 14px;
+            text-decoration: none;
+            width: 100%;
+            max-width: 360px;
+            margin: 10px auto 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5), 0 0 0 0 rgba(124, 58, 237, 0.4);
+            animation: pulse-glow 2s infinite, float 3s ease-in-out infinite;
+            z-index: 2;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .bot-cta:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.7), 0 0 20px rgba(124, 58, 237, 0.6);
+        }
+        
+        .bot-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 2.5s infinite;
+            pointer-events: none;
+            border-radius: 14px;
+        }
+        
+        .bot-cta i { font-size: 1.4rem; }
+        
+        /* 🔹 SECONDARY CTA: Join Channel (Less Prominent) 🔹 */
+        .channel-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            color: #0d6efd;
+            border: 2px solid #0d6efd;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.9;
+        }
+        
+        .channel-cta:hover {
+            background: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        
+        /* 🔹 Animations 🔹 */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 8px 25px rgba(124,58,237,0.5), 0 0 0 0 rgba(124,58,237,0.4); }
+            50% { box-shadow: 0 8px 25px rgba(124,58,237,0.5), 0 0 25px 5px rgba(124,58,237,0.2); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 150%; }
+        }
+        
+        /* 🔹 Visual Priority Indicators 🔹 */
+        .bot-label {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .features { text-align:left; margin:25px 0; padding:20px; background:#f8f9fa; border-radius:10px; }
         .features h3 { margin-bottom:15px; color:#1a1a1a; }
         .features ul { list-style:none; padding-left:10px; }
         .features li { padding:8px 0; padding-left:25px; position:relative; color:#495057; }
         .features li::before { content:"✓"; position:absolute; left:0; color:#0d6efd; font-weight:bold; }
         .trust-badges { display:flex; justify-content:center; gap:15px; margin:25px 0; flex-wrap:wrap; }
         .badge { background:#e9ecef; padding:8px 16px; border-radius:20px; font-size:0.9rem; color:#495057; }
-        .footer { margin-top:30px; color:#6c757d; font-size:0.9rem; padding-top:20px; border-top:1px solid #e9ecef; }
-        .telegram-badge { display:inline-flex; align-items:center; gap:8px; background:#0088cc; color:white; padding:6px 16px; border-radius:20px; font-weight:500; margin:15px 0; }
+        .footer { margin-top:25px; color:#6c757d; font-size:0.9rem; padding-top:20px; border-top:1px solid #e9ecef; }
+        .telegram-badge { display:inline-flex; align-items:center; gap:8px; background:#0088cc; color:white; padding:6px 16px; border-radius:20px; font-weight:500; margin:10px 0; }
         .country-badge { display:inline-block; background:#e9ecef; padding:4px 12px; border-radius:12px; font-size:0.85rem; color:#495057; margin:10px 0; }
-        @media(max-width:480px) { .container{padding:25px 20px;} h1{font-size:1.6rem;} .cta-button,.secondary-cta{padding:14px 24px;font-size:1.05rem;} }
+        
+        @media(max-width:480px) { 
+            .container{padding:25px 20px;} 
+            h1{font-size:1.6rem;} 
+            .bot-cta{padding:16px 30px;font-size:1.15rem;} 
+            .channel-cta{padding:10px 20px;font-size:0.95rem;} 
+        }
     </style>
 </head>
 <body>
@@ -76,12 +176,16 @@
         <div class="telegram-badge"><i class="fab fa-telegram-plane"></i> Official Telegram Channel</div>
         <div class="country-badge" id="countryBadge"><i class="fas fa-globe"></i> Detecting location...</div>
         
-        <!-- 🔹 TRACKED BUTTONS 🔹 -->
-        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="cta-button track-join" target="_blank" id="joinBtn">
-            <i class="fab fa-telegram-plane"></i> JOIN TELEGRAM CHANNEL
-        </a>
-        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="secondary-cta track-bot" target="_blank" id="botBtn">
+        <!-- 🔹 MAIN FOCUS: TRY THE BOT (Primary CTA) 🔹 -->
+        <div class="bot-label">🔥 MOST POPULAR</div>
+        <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="bot-cta track-bot" target="_blank" id="botBtn">
             <i class="fas fa-robot"></i> TRY THE BOT
+            <i class="fas fa-bolt"></i>
+        </a>
+        
+        <!-- 🔹 Secondary: Join Channel (Less Prominent) 🔹 -->
+        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="channel-cta track-join" target="_blank" id="joinBtn">
+            <i class="fab fa-telegram-plane"></i> Join Telegram Channel
         </a>
         
         <div class="features">
@@ -101,8 +205,8 @@
             <div class="badge"><i class="fas fa-users"></i> 15K+ Members</div>
         </div>
         
-        <a href="https://t.me/ReDHaT4O4" class="secondary-cta track-support" target="_blank" style="background:linear-gradient(135deg,#6c757d,#495057);box-shadow:0 4px 14px rgba(108,117,125,0.35);">
-            <i class="fas fa-envelope"></i> CONTACT SUPPORT
+        <a href="https://t.me/ReDHaT4O4" class="channel-cta track-support" target="_blank" style="background:white;color:#6c757d;border-color:#6c757d;opacity:0.85;">
+            <i class="fas fa-envelope"></i> Contact Support
         </a>
         
         <div class="footer">
@@ -149,7 +253,7 @@
                     type,
                     label,
                     targetUrl: url,
-                    funnelStep // 'click' | 'joined' | 'bot_opened' | 'started'
+                    funnelStep
                 }).catch(e => console.log('Track error:', e));
                 
                 // Meta Pixel
@@ -159,15 +263,14 @@
                 }
             }
             
+            // Bot Click (MAIN FOCUS)
+            document.getElementById('botBtn')?.addEventListener('click', function(e) {
+                track('TryBot', 'Bot Open Click', this.href, 'bot_opened');
+            });
+            
             // Join Channel Click
             document.getElementById('joinBtn')?.addEventListener('click', function(e) {
                 track('JoinChannel', 'Telegram Join Click', this.href, 'click');
-                // Note: Actual join verification needs Telegram API (see bot code below)
-            });
-            
-            // Bot Click
-            document.getElementById('botBtn')?.addEventListener('click', function(e) {
-                track('TryBot', 'Bot Open Click', this.href, 'bot_opened');
             });
             
             // Support Click
