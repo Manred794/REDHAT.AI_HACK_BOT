@@ -72,67 +72,28 @@
             z-index: 2;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        
-        .bot-cta:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.7), 0 0 20px rgba(124, 58, 237, 0.6);
-        }
-        
+        .bot-cta:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 35px rgba(124, 58, 237, 0.7), 0 0 20px rgba(124, 58, 237, 0.6); }
         .bot-cta::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 60%; height: 100%;
+            content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shine 2.5s infinite;
-            pointer-events: none;
-            border-radius: 14px;
+            animation: shine 2.5s infinite; pointer-events: none; border-radius: 14px;
         }
-        
         .bot-cta i { font-size: 1.4rem; }
         
-        /* 🔹 SECONDARY CTA: Join Channel (Less Prominent) 🔹 */
+        /* 🔹 SECONDARY CTA: Join Channel 🔹 */
         .channel-cta {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: white;
-            color: #0d6efd;
-            border: 2px solid #0d6efd;
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            text-decoration: none;
-            width: 100%;
-            max-width: 320px;
-            margin: 0 auto 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            opacity: 0.9;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            background: white; color: #0d6efd; border: 2px solid #0d6efd;
+            padding: 12px 24px; font-size: 1rem; font-weight: 600; border-radius: 10px;
+            text-decoration: none; width: 100%; max-width: 320px; margin: 0 auto 15px;
+            cursor: pointer; transition: all 0.2s; opacity: 0.9;
         }
-        
-        .channel-cta:hover {
-            background: #f0f7ff;
-            transform: translateY(-2px);
-        }
+        .channel-cta:hover { background: #f0f7ff; transform: translateY(-2px); }
         
         /* 🔹 Animations 🔹 */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 8px 25px rgba(124,58,237,0.5), 0 0 0 0 rgba(124,58,237,0.4); }
-            50% { box-shadow: 0 8px 25px rgba(124,58,237,0.5), 0 0 25px 5px rgba(124,58,237,0.2); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
-        
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 150%; }
-        }
+        @keyframes pulse-glow { 0%,100%{box-shadow:0 8px 25px rgba(124,58,237,0.5),0 0 0 0 rgba(124,58,237,0.4)} 50%{box-shadow:0 8px 25px rgba(124,58,237,0.5),0 0 25px 5px rgba(124,58,237,0.2)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+        @keyframes shine { 0%{left:-100%} 100%{left:150%} }
         
         .features { text-align:left; margin:25px 0; padding:20px; background:#f8f9fa; border-radius:10px; }
         .features h3 { margin-bottom:15px; color:#1a1a1a; }
@@ -145,8 +106,7 @@
         .telegram-badge { display:inline-flex; align-items:center; gap:8px; background:#0088cc; color:white; padding:6px 16px; border-radius:20px; font-weight:500; margin:10px 0; }
         
         @media(max-width:480px) { 
-            .container{padding:25px 20px;} 
-            h1{font-size:1.6rem;} 
+            .container{padding:25px 20px;} h1{font-size:1.6rem;} 
             .bot-cta{padding:16px 30px;font-size:1.15rem;} 
             .channel-cta{padding:10px 20px;font-size:0.95rem;} 
         }
@@ -160,15 +120,13 @@
         <p class="description">Get real-time signals, exclusive strategies, and premium predictions for Aviator and other crash games. Join 15,000+ active users.</p>
         
         <div class="telegram-badge"><i class="fab fa-telegram-plane"></i> Official Telegram Channel</div>
-        <!-- 🔹 Country badge removed from UI (tracking still works in backend) 🔹 -->
         
-        <!-- 🔹 MAIN FOCUS: TRY THE BOT (Primary CTA) 🔹 -->
+        <!-- 🔹 MAIN FOCUS: TRY THE BOT 🔹 -->
         <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="bot-cta track-bot" target="_blank" id="botBtn">
-            <i class="fas fa-robot"></i> TRY THE BOT
-            <i class="fas fa-bolt"></i>
+            <i class="fas fa-robot"></i> TRY THE BOT <i class="fas fa-bolt"></i>
         </a>
         
-        <!-- 🔹 Secondary: Join Channel (Less Prominent) 🔹 -->
+        <!-- 🔹 Secondary: Join Channel 🔹 -->
         <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="channel-cta track-join" target="_blank" id="joinBtn">
             <i class="fab fa-telegram-plane"></i> Join Telegram Channel
         </a>
@@ -205,23 +163,20 @@
             const db = firebase.firestore();
             const sessionId = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
             
-            // 🔹 Backend: Get Country Info (UI badge removed, but tracking kept)
+            // 🔹 Backend: Get Country Info (accurate tracking)
             let country = 'Unknown', countryCode = 'XX';
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
                 country = data.country_name || 'Unknown';
                 countryCode = data.country_code || 'XX';
-                // 🔹 Country data stored in backend only (not shown in UI)
-            } catch(e) {
-                console.log('Country detection failed:', e);
-            }
+            } catch(e) { console.log('Country detection:', e); }
             
             const baseData = {
                 sessionId,
                 country,
                 countryCode,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(), // ✅ Server time = 100% accurate
                 url: location.href,
                 referrer: document.referrer || 'direct',
                 platform: /android/i.test(navigator.userAgent) ? 'android' : /iphone|ipad/i.test(navigator.userAgent) ? 'ios' : 'web',
@@ -231,14 +186,10 @@
             // Track PageView
             db.collection('events').add({ ...baseData, type: 'PageView' }).catch(e => console.log('Track error:', e));
             
-            // Track button clicks with funnel step
+            // Track button clicks
             function track(type, label, url, funnelStep) {
                 db.collection('events').add({
-                    ...baseData,
-                    type,
-                    label,
-                    targetUrl: url,
-                    funnelStep
+                    ...baseData, type, label, targetUrl: url, funnelStep
                 }).catch(e => console.log('Track error:', e));
                 
                 // Meta Pixel
@@ -248,17 +199,13 @@
                 }
             }
             
-            // Bot Click (MAIN FOCUS)
+            // Event listeners
             document.getElementById('botBtn')?.addEventListener('click', function(e) {
                 track('TryBot', 'Bot Open Click', this.href, 'bot_opened');
             });
-            
-            // Join Channel Click
             document.getElementById('joinBtn')?.addEventListener('click', function(e) {
                 track('JoinChannel', 'Telegram Join Click', this.href, 'click');
             });
-            
-            // Support Click
             document.querySelector('.track-support')?.addEventListener('click', function(e) {
                 track('ContactSupport', 'Support Click', this.href, 'click');
             });
