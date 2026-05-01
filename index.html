@@ -6,7 +6,7 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 META PIXEL 🔹 -->
+    <!-- 🔹 NEW META PIXEL (Updated ID: 1738232597343464) 🔹 -->
     <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -15,11 +15,11 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '929777646251330');
+    fbq('init', '1738232597343464');
     fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none" 
-    src="https://www.facebook.com/tr?id=929777646251330&ev=PageView&noscript=1"/></noscript>
+    src="https://www.facebook.com/tr?id=1738232597343464&ev=PageView&noscript=1"/></noscript>
     
     <!-- 🔹 FIREBASE SDK 🔹 -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -90,6 +90,15 @@
         }
         .channel-cta:hover { background: #f0f7ff; transform: translateY(-2px); }
         
+        /* 🔹 CLICKABLE TELEGRAM BADGE 🔹 */
+        .telegram-badge { 
+            display:inline-flex; align-items:center; gap:8px; 
+            background:#0088cc; color:white; padding:6px 16px; 
+            border-radius:20px; font-weight:500; margin:10px 0; 
+            text-decoration: none; cursor: pointer; transition: all 0.2s;
+        }
+        .telegram-badge:hover { background:#0077b5; transform: translateY(-1px); }
+        
         /* 🔹 Animations 🔹 */
         @keyframes pulse-glow { 0%,100%{box-shadow:0 8px 25px rgba(124,58,237,0.5),0 0 0 0 rgba(124,58,237,0.4)} 50%{box-shadow:0 8px 25px rgba(124,58,237,0.5),0 0 25px 5px rgba(124,58,237,0.2)} }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
@@ -103,7 +112,6 @@
         .trust-badges { display:flex; justify-content:center; gap:15px; margin:25px 0; flex-wrap:wrap; }
         .badge { background:#e9ecef; padding:8px 16px; border-radius:20px; font-size:0.9rem; color:#495057; }
         .footer { margin-top:25px; color:#6c757d; font-size:0.9rem; padding-top:20px; border-top:1px solid #e9ecef; }
-        .telegram-badge { display:inline-flex; align-items:center; gap:8px; background:#0088cc; color:white; padding:6px 16px; border-radius:20px; font-weight:500; margin:10px 0; }
         
         @media(max-width:480px) { 
             .container{padding:25px 20px;} h1{font-size:1.6rem;} 
@@ -119,7 +127,10 @@
         <p class="subtitle">Advanced Aviator Prediction Technology</p>
         <p class="description">Get real-time signals, exclusive strategies, and premium predictions for Aviator and other crash games. Join 15,000+ active users.</p>
         
-        <div class="telegram-badge"><i class="fab fa-telegram-plane"></i> Official Telegram Channel</div>
+        <!-- 🔹 CLICKABLE TELEGRAM BADGE (Now links to channel) 🔹 -->
+        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="telegram-badge track-join-badge" target="_blank">
+            <i class="fab fa-telegram-plane"></i> Official Telegram Channel
+        </a>
         
         <!-- 🔹 MAIN FOCUS: TRY THE BOT 🔹 -->
         <a href="https://t.me/REDHAT_HACK1WIN_BOT" class="bot-cta track-bot" target="_blank" id="botBtn">
@@ -176,7 +187,7 @@
                 sessionId,
                 country,
                 countryCode,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(), // ✅ Server time = 100% accurate
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 url: location.href,
                 referrer: document.referrer || 'direct',
                 platform: /android/i.test(navigator.userAgent) ? 'android' : /iphone|ipad/i.test(navigator.userAgent) ? 'ios' : 'web',
@@ -192,7 +203,7 @@
                     ...baseData, type, label, targetUrl: url, funnelStep
                 }).catch(e => console.log('Track error:', e));
                 
-                // Meta Pixel
+                // Meta Pixel (Updated ID)
                 if (typeof fbq !== 'undefined') {
                     const px = { 'JoinChannel':'Lead', 'TryBot':'ViewContent', 'ContactSupport':'Contact' };
                     fbq('track', px[type] || 'Custom', { content_name: label, value: type==='JoinChannel'?1:0, currency:'USD', country });
@@ -208,6 +219,10 @@
             });
             document.querySelector('.track-support')?.addEventListener('click', function(e) {
                 track('ContactSupport', 'Support Click', this.href, 'click');
+            });
+            // 🔹 NEW: Track Telegram Badge Click 🔹
+            document.querySelector('.track-join-badge')?.addEventListener('click', function(e) {
+                track('JoinChannel', 'Telegram Badge Click', this.href, 'badge_click');
             });
         });
     </script>
