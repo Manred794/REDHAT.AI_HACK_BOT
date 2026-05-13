@@ -40,6 +40,10 @@ def index():
 def admin():
     return send_from_directory('.', 'admin.html')
 
+@app.route('/trading')  # ✅ New route for trading.html
+def trading():
+    return send_from_directory('.', 'trading.html')
+
 @app.route('/health')
 def health():
     return jsonify({"status": "online", "firebase": "connected" if db else "disconnected"})
