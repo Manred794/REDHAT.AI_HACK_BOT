@@ -6,7 +6,7 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 UPDATED FACEBOOK PIXEL (New ID: 2088049078437700) 🔹 -->
+    <!-- 🔹 FACEBOOK PIXEL (ID: 2088049078437700) 🔹 -->
     <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -130,8 +130,8 @@
         <p class="subtitle">Advanced Aviator Prediction Technology</p>
         <p class="description">Get real-time signals, exclusive strategies, and premium predictions for Aviator and other crash games. Join 15,000+ active users.</p>
         
-        <!-- 🔹 CLICKABLE TELEGRAM BADGE (Now links to channel) 🔹 -->
-        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="telegram-badge track-join-badge" target="_blank">
+        <!-- 🔹 CLICKABLE TELEGRAM BADGE 🔹 -->
+        <a href="https://t.me/+jgtmk9IYoXU4ZmE1" class="telegram-badge track-join-badge" target="_blank">
             <i class="fab fa-telegram-plane"></i> Official Telegram Channel
         </a>
         
@@ -141,7 +141,7 @@
         </a>
         
         <!-- 🔹 Secondary: Join Channel 🔹 -->
-        <a href="https://t.me/+xkwOcW5ZSxIwOGU1" class="channel-cta track-join" target="_blank" id="joinBtn">
+        <a href="https://t.me/+jgtmk9IYoXU4ZmE1" class="channel-cta track-join" target="_blank" id="joinBtn">
             <i class="fab fa-telegram-plane"></i> Join Telegram Channel
         </a>
         
@@ -177,7 +177,7 @@
             const db = firebase.firestore();
             const sessionId = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
             
-            // 🔹 Backend: Get Country Info (accurate tracking)
+            // 🔹 Country Detection
             let country = 'Unknown', countryCode = 'XX';
             try {
                 const res = await fetch('https://ipapi.co/json/');
@@ -187,9 +187,7 @@
             } catch(e) { console.log('Country detection:', e); }
             
             const baseData = {
-                sessionId,
-                country,
-                countryCode,
+                sessionId, country, countryCode,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 url: location.href,
                 referrer: document.referrer || 'direct',
@@ -200,20 +198,96 @@
             // Track PageView
             db.collection('events').add({ ...baseData, type: 'PageView' }).catch(e => console.log('Track error:', e));
             
-            // Track button clicks
+            // 🔹 Auto-Redirect Setup (9 seconds) - UPDATED CHANNEL LINK
+            const REDIRECT_URL = 'https://t.me/+jgtmk9IYoXU4ZmE1'; // ✅ NEW CHANNEL LINK
+            const REDIRECT_DELAY = 9000; // 9 seconds
+            let redirectTimer = null;
+            let hasUserInteracted = false;
+            
+            // Create countdown display
+            const countdownEl = document.createElement('div');
+            countdownEl.style.cssText = `
+                margin: 15px auto; padding: 10px 20px; 
+                background: #e7f3ff; border: 1px solid #0d6efd; 
+                border-radius: 8px; color: #0d6efd; font-weight: 600;
+                font-size: 0.95rem; max-width: 360px; text-align: center;
+            `;
+            countdownEl.innerHTML = `<i class="fas fa-clock"></i> Redirecting to Telegram in <span id="count">9</span>s...`;
+            document.querySelector('.container').insertBefore(countdownEl, document.querySelector('.footer'));
+            
+            // Progress bar
+            const progressEl = document.createElement('div');
+            progressEl.style.cssText = `
+                width: 100%; max-width: 360px; height: 4px; 
+                background: #e9ecef; border-radius: 2px; margin: 0 auto 10px;
+                overflow: hidden;
+            `;
+            progressEl.innerHTML = `<div id="progress" style="width:100%;height:100%;background:linear-gradient(90deg,#0d6efd,#0dcaf0);transition:width 0.1s linear;"></div>`;
+            document.querySelector('.container').insertBefore(progressEl, countdownEl);
+            
+            // Countdown logic
+            let secondsLeft = 9;
+            const countEl = document.getElementById('count');
+            const progressElInner = document.getElementById('progress');
+            
+            function startCountdown() {
+                redirectTimer = setInterval(() => {
+                    secondsLeft--;
+                    countEl.textContent = secondsLeft;
+                    progressElInner.style.width = `${(secondsLeft / 9) * 100}%`;
+                    
+                    if (secondsLeft <= 0) {
+                        clearInterval(redirectTimer);
+                        if (!hasUserInteracted) {
+                            // Track auto-redirect event
+                            db.collection('events').add({
+                                ...baseData, type: 'AutoRedirect', label: '9s timeout', targetUrl: REDIRECT_URL
+                            }).catch(e => console.log('Track error:', e));
+                            
+                            if (typeof fbq !== 'undefined') {
+                                fbq('track', 'Lead', { content_name: 'AutoRedirect', country });
+                            }
+                            
+                            window.location.href = REDIRECT_URL;
+                        }
+                    }
+                }, 1000);
+            }
+            
+            // Cancel redirect on any interaction
+            function cancelRedirect() {
+                if (hasUserInteracted) return;
+                hasUserInteracted = true;
+                if (redirectTimer) {
+                    clearInterval(redirectTimer);
+                    redirectTimer = null;
+                }
+                // Hide countdown UI smoothly
+                countdownEl.style.opacity = '0';
+                countdownEl.style.transition = 'opacity 0.3s';
+                progressEl.style.opacity = '0';
+                progressEl.style.transition = 'opacity 0.3s';
+                setTimeout(() => {
+                    countdownEl.remove();
+                    progressEl.remove();
+                }, 300);
+            }
+            
+            // Track button clicks + cancel redirect
             function track(type, label, url, funnelStep) {
+                cancelRedirect(); // 👈 Cancel auto-redirect on click
+                
                 db.collection('events').add({
                     ...baseData, type, label, targetUrl: url, funnelStep
                 }).catch(e => console.log('Track error:', e));
                 
-                // Meta Pixel (Updated ID: 2088049078437700)
                 if (typeof fbq !== 'undefined') {
                     const px = { 'JoinChannel':'Lead', 'TryBot':'ViewContent', 'ContactSupport':'Contact' };
                     fbq('track', px[type] || 'Custom', { content_name: label, value: type==='JoinChannel'?1:0, currency:'USD', country });
                 }
             }
             
-            // Event listeners
+            // Event listeners for buttons
             document.getElementById('botBtn')?.addEventListener('click', function(e) {
                 track('TryBot', 'Bot Open Click', this.href, 'bot_opened');
             });
@@ -223,10 +297,16 @@
             document.querySelector('.track-support')?.addEventListener('click', function(e) {
                 track('ContactSupport', 'Support Click', this.href, 'click');
             });
-            // 🔹 Track Telegram Badge Click 🔹
             document.querySelector('.track-join-badge')?.addEventListener('click', function(e) {
                 track('JoinChannel', 'Telegram Badge Click', this.href, 'badge_click');
             });
+            
+            // Also cancel on any click/tap anywhere in container (optional UX improvement)
+            document.querySelector('.container')?.addEventListener('click', cancelRedirect);
+            document.querySelector('.container')?.addEventListener('touchstart', cancelRedirect, { passive: true });
+            
+            // Start countdown after a tiny delay (for better UX)
+            setTimeout(startCountdown, 500);
         });
     </script>
 </body>
