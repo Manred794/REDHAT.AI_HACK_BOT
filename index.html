@@ -226,7 +226,8 @@
         </p>
 
         <div style="width:100%;display:flex;flex-direction:column;gap:16px;margin-bottom:40px">
-          <a id="btn-join-telegram" href="https://t.me/+XgaPKnXZMpk0NTdl" class="telegram-blue" style="width:100%;height:56px;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:16px;font-weight:700;color:#fff;padding:0 16px" target="_blank">
+          <!-- ✅ UPDATED CHANNEL LINK -->
+          <a id="btn-join-telegram" href="https://t.me/+ORi-o6IfFJVlMmE1" class="telegram-blue" style="width:100%;height:56px;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:16px;font-weight:700;color:#fff;padding:0 16px" target="_blank">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
               <path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/>
             </svg>
@@ -313,7 +314,6 @@
   </div>
 
   <script>
-    // Track page view
     const track = (eventName, params = {}) => {
       if(typeof window.fbq !== 'undefined') {
         const code = window.fbTestEventCode || 'TEST319';
@@ -326,7 +326,8 @@
       document.getElementById(`page-${page}`).classList.add('active');
       if(page === 'home') {
         clearTimeout(window._redirectTimer);
-        window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+XgaPKnXZMpk0NTdl', 10000);
+        // ✅ UPDATED AUTO-REDIRECT LINK
+        window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
       } else {
         clearTimeout(window._redirectTimer);
       }
@@ -352,13 +353,15 @@
       if(backBtn) backBtn.onclick = () => { navigate('home'); track('PageView', { page: 'home' }); };
 
       const joinBtn = document.getElementById('btn-join-telegram');
-      if(joinBtn) joinBtn.onclick = (e) => handleLinkClick(e, 'https://t.me/+XgaPKnXZMpk0NTdl', 'Join Telegram');
+      // ✅ UPDATED CHANNEL LINK IN CLICK HANDLER
+      if(joinBtn) joinBtn.onclick = (e) => handleLinkClick(e, 'https://t.me/+ORi-o6IfFJVlMmE1', 'Join Telegram');
       
       const signalBtn = document.getElementById('btn-get-signal');
       if(signalBtn) signalBtn.onclick = (e) => handleLinkClick(e, 'https://t.me/EliXsignalSOFT_BOT?start=', 'Get Signal');
 
       track('PageView', { page: 'home' });
-      window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+XgaPKnXZMpk0NTdl', 10000);
+      // ✅ UPDATED AUTO-REDIRECT
+      window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
     });
 
     window.addEventListener('popstate', () => {
