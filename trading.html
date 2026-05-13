@@ -1,765 +1,805 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-    
-    <!-- Meta Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EliX Signal Bot</title>
+  
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s){
+    if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
     n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    
-    fbq('init', '2813135899035813'); 
-
-    try {
-      var urlParams = new URLSearchParams(window.location.search);
-      var testEventCode = urlParams.get('test_event_code') || urlParams.get('event_code');
-      if (!testEventCode) {
-        var hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
-        testEventCode = hashParams.get('test_event_code') || hashParams.get('event_code');
-      }
-      
-      if (testEventCode) {
-        window.fbTestEventCode = testEventCode;
-        sessionStorage.setItem('fb_test_event_code', testEventCode);
-      } else {
-        window.fbTestEventCode = sessionStorage.getItem('fb_test_event_code') || 'TEST319';
-      }
-    } catch (e) {
-      window.fbTestEventCode = '';
+    s.parentNode.insertBefore(t,s)
+  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  
+  fbq('init', '2813135899035813');
+  try {
+    var urlParams = new URLSearchParams(window.location.search);
+    var testEventCode = urlParams.get('test_event_code') || urlParams.get('event_code');
+    if (!testEventCode) {
+      var hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+      testEventCode = hashParams.get('test_event_code') || hashParams.get('event_code');
     }
-
-    var trackOptions = {};
-    if (window.fbTestEventCode) {
-      trackOptions.test_event_code = window.fbTestEventCode;
+    if (testEventCode) {
+      window.fbTestEventCode = testEventCode;
+      sessionStorage.setItem('fb_test_event_code', testEventCode);
+    } else {
+      window.fbTestEventCode = sessionStorage.getItem('fb_test_event_code') || 'TEST319';
     }
-    fbq('track', 'PageView', {}, trackOptions);
-    </script>
-    <!-- End Meta Pixel Code -->
+  } catch (e) { window.fbTestEventCode = ''; }
+  var trackOptions = {};
+  if (window.fbTestEventCode) trackOptions.test_event_code = window.fbTestEventCode;
+  fbq('track', 'PageView', {}, trackOptions);
+  </script>
+  <!-- End Meta Pixel Code -->
 
-    <!-- React & Dependencies via CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/react-router-dom@6.20.0/umd/react-router-dom.production.min.js"></script>
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    
-    <!-- Tailwind CSS via CDN with custom config -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'brand-primary': '#0088cc',
-              'brand-purple': '#8b5cf6',
-              'brand-pink': '#d946ef',
-              'brand-premium': '#7c3aed',
-              'bg-dark': '#0a0a0b',
-            },
-            fontFamily: {
-              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-              mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-            },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-out',
-              'shimmer': 'shimmer 2.5s infinite',
-            },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0', transform: 'scale(0.95)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              },
-              shimmer: {
-                '0%': { transform: 'translateX(-100%)' },
-                '100%': { transform: 'translateX(100%)' },
-              }
-            }
-          }
-        }
-      }
-    </script>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
-    <style>
-      @keyframes shimmer {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-      }
-      .animate-shimmer {
-        animation: shimmer 2.5s infinite;
-      }
-      .gradient-button {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #8b5cf6, #7c3aed, #d946ef);
-        box-shadow: 0 0 30px rgba(124,58,237,0.4);
-        border: 1px solid rgba(255,255,255,0.2);
-      }
-      .gradient-button::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transform: translateX(-100%);
-        animation: shimmer 2.5s infinite;
-      }
-      .glass-card {
-        background: rgba(255,255,255,0.05);
-        backdrop-filter: blur(24px);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 32px;
-      }
-      .telegram-blue {
-        background: #0088cc;
-        transition: background 0.2s;
-      }
-      .telegram-blue:hover {
-        background: #0077b5;
-      }
-      body {
-        background: #0a0a0b;
-        color: #f3f4f6;
-        font-family: 'Inter', system-ui, sans-serif;
-        -webkit-font-smoothing: antialiased;
-      }
-      .font-mono {
-        font-family: 'JetBrains Mono', monospace;
-      }
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      /* Hide scrollbar for IE, Edge and Firefox */
-      .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-      }
-    </style>
-  </head>
-  <body>
-    <noscript>
-      <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2813135899035813&ev=PageView&noscript=1"/>
-    </noscript>
-    <div id="root"></div>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- Main Application Code -->
-    <script type="text/babel">
-      const { useState, useEffect, useRef } = React;
-      const { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } = ReactRouterDOM;
-      const { motion, AnimatePresence } = window.Motion;
+  <style>
+    /* ===== CSS VARIABLES & RESET ===== */
+    :root {
+      --brand-primary: #0088cc;
+      --brand-purple: #8b5cf6;
+      --brand-pink: #d946ef;
+      --brand-premium: #7c3aed;
+      --bg-dark: #0a0a0b;
+      --text-white: #f3f4f6;
+      --text-gray-100: #e5e7eb;
+      --text-gray-300: #d1d5db;
+      --text-gray-400: #9ca3af;
+      --text-gray-500: #6b7280;
+      --text-gray-600: #4b5563;
+      --white-5: rgba(255,255,255,0.05);
+      --white-10: rgba(255,255,255,0.1);
+      --white-20: rgba(255,255,255,0.2);
+      --black-20: rgba(0,0,0,0.2);
+      --black-35: rgba(0,0,0,0.35);
+      --black-40: rgba(0,0,0,0.4);
+      --black-60: rgba(0,0,0,0.6);
+      --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,0.75);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .uppercase { text-transform: uppercase; }
+    .tracking-tight { letter-spacing: -0.025em; }
+    .tracking-wide { letter-spacing: 0.025em; }
+    .tracking-widest { letter-spacing: 0.1em; }
+    .font-bold { font-weight: 700; }
+    .font-black { font-weight: 900; }
+    .font-medium { font-weight: 500; }
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-1\.5 { gap: 0.375rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-2\.5 { gap: 0.625rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .space-y-1 > * + * { margin-top: 0.25rem; }
+    .space-y-1\.5 > * + * { margin-top: 0.375rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .space-y-6 > * + * { margin-top: 1.5rem; }
+    .w-full { width: 100%; }
+    .h-5 { height: 1.25rem; }
+    .h-9 { height: 2.25rem; }
+    .h-10 { height: 2.5rem; }
+    .h-11 { height: 2.75rem; }
+    .h-14 { height: 3.5rem; }
+    .h-24 { height: 6rem; }
+    .min-h-screen { min-height: 100vh; }
+    .max-w-\[320px\] { max-width: 320px; }
+    .max-w-\[480px\] { max-width: 480px; }
+    .max-h-\[80px\] { max-height: 80px; }
+    .max-h-\[85px\] { max-height: 85px; }
+    .max-h-\[160px\] { max-height: 160px; }
+    .max-h-\[460px\] { max-height: 460px; }
+    .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+    .px-1\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+    .pb-2 { padding-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-10 { margin-bottom: 2.5rem; }
+    .mt-0\.5 { margin-top: 0.125rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-10 { margin-top: 2.5rem; }
+    .ml-2 { margin-left: 0.5rem; }
+    .mr-0\.5 { margin-right: 0.125rem; }
+    .rounded { border-radius: 0.25rem; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .rounded-\[24px\] { border-radius: 24px; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-3xl { border-radius: 1.5rem; }
+    .rounded-full { border-radius: 9999px; }
+    .border { border-width: 1px; }
+    .border-none { border: none; }
+    .border-white\/5 { border-color: rgba(255,255,255,0.05); }
+    .border-white\/10 { border-color: rgba(255,255,255,0.1); }
+    .border-white\/20 { border-color: rgba(255,255,255,0.2); }
+    .border-brand-primary\/20 { border-color: rgba(0,136,204,0.2); }
+    .border-brand-purple\/10 { border-color: rgba(139,92,246,0.1); }
+    .border-green-500\/10 { border-color: rgba(34,197,94,0.1); }
+    .border-red-900\/30 { border-color: rgba(127,29,29,0.3); }
+    .border-dashed { border-style: dashed; }
+    .bg-bg-dark { background-color: var(--bg-dark); }
+    .bg-white\/5 { background-color: var(--white-5); }
+    .bg-white\/10 { background-color: var(--white-10); }
+    .bg-black\/20 { background-color: var(--black-20); }
+    .bg-black\/35 { background-color: var(--black-35); }
+    .bg-black\/40 { background-color: var(--black-40); }
+    .bg-black\/60 { background-color: var(--black-60); }
+    .bg-brand-primary { background-color: var(--brand-primary); }
+    .bg-brand-primary\/10 { background-color: rgba(139,92,246,0.1); }
+    .bg-brand-primary\/20 { background-color: rgba(0,136,204,0.2); }
+    .bg-brand-purple\/5 { background-color: rgba(139,92,246,0.05); }
+    .bg-brand-purple\/10 { background-color: rgba(139,92,246,0.1); }
+    .bg-green-500\/10 { background-color: rgba(34,197,94,0.1); }
+    .bg-red-950 { background-color: #0c0a0a; }
+    .text-white { color: var(--text-white); }
+    .text-gray-300 { color: var(--text-gray-300); }
+    .text-gray-400 { color: var(--text-gray-400); }
+    .text-gray-500 { color: var(--text-gray-500); }
+    .text-gray-600 { color: var(--text-gray-600); }
+    .text-brand-primary { color: var(--brand-primary); }
+    .text-brand-purple { color: var(--brand-purple); }
+    .text-green-400 { color: #4ade80; }
+    .text-red-300 { color: #fca5a5; }
+    .text-slate-300 { color: #cbd5e1; }
+    .text-\[8px\] { font-size: 8px; }
+    .text-\[9px\] { font-size: 9px; }
+    .text-\[10px\] { font-size: 10px; }
+    .text-\[10\.5px\] { font-size: 10.5px; }
+    .text-\[11px\] { font-size: 11px; }
+    .text-sm { font-size: 0.875rem; }
+    .text-base { font-size: 1rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .leading-relaxed { line-height: 1.625; }
+    .opacity-30 { opacity: 0.3; }
+    .blur-md { filter: blur(12px); }
+    .blur-\[150px\] { filter: blur(150px); }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-y-auto { overflow-y: auto; }
+    .overflow-x-auto { overflow-x: auto; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .fixed { position: fixed; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .top-\[-20\%\] { top: -20%; }
+    .left-\[-20\%\] { left: -20%; }
+    .bottom-\[-20\%\] { bottom: -20%; }
+    .right-\[-20\%\] { right: -20%; }
+    .w-\[60\%\] { width: 60%; }
+    .h-\[60\%\] { height: 60%; }
+    .z-10 { z-index: 10; }
+    .z-50 { z-index: 50; }
+    .-z-10 { z-index: -10; }
+    .cursor-pointer { cursor: pointer; }
+    .cursor-help { cursor: help; }
+    .select-none { user-select: none; }
+    .object-cover { object-fit: cover; }
+    .whitespace-pre-wrap { white-space: pre-wrap; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .max-w-\[140px\] { max-width: 140px; }
+    .flex-shrink-0 { flex-shrink: 0; }
+    .self-start { align-self: flex-start; }
+    .normal-case { text-transform: none; }
+    .backdrop-blur-xl { backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    .shadow-2xl { box-shadow: var(--shadow-2xl); }
+    .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5), 0 8px 10px -6px rgba(0,0,0,0.3); }
 
-      // --- META PIXEL TRACKING FRAMEWORK ---
-      let loggedEvents = [];
-      let eventListeners = [];
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+    .animate-shimmer { animation: shimmer 2.5s infinite; }
+    .animate-pulse-slow { animation: pulse 3s infinite; }
 
-      const notifyListeners = () => {
-        eventListeners.forEach(l => l());
-      };
+    /* ===== COMPONENTS ===== */
+    .glass-card {
+      background: var(--white-5);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--white-10);
+      border-radius: 32px;
+    }
+    .gradient-button {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--brand-purple), var(--brand-premium), var(--brand-pink));
+      box-shadow: 0 0 30px rgba(124,58,237,0.4);
+      border: 1px solid var(--white-20);
+      transition: transform 0.1s ease;
+    }
+    .gradient-button:active { transform: scale(0.98); }
+    .gradient-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 2.5s infinite;
+    }
+    .telegram-blue {
+      background: var(--brand-primary);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .telegram-blue:hover { background: #0077b5; }
+    .telegram-blue:active { transform: scale(0.98); }
+    .hover\:bg-white\/5:hover { background: var(--white-5); }
+    .hover\:bg-white\/10:hover { background: var(--white-10); }
+    .hover\:bg-red-900:hover { background: #1a1212; }
+    .hover\:text-white:hover { color: var(--text-white); }
+    .hover\:text-brand-primary:hover { color: var(--brand-primary); }
+    .focus\:outline-none:focus { outline: none; }
+    .focus\:border-brand-primary:focus { border-color: var(--brand-primary); }
+    .active\:scale-95:active { transform: scale(0.95); }
+    .rotate-90 { transform: rotate(90deg); }
+    .transition { transition: all 0.2s ease; }
+    .transition-transform { transition: transform 0.2s ease; }
+    .transition-colors { transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease; }
+    .transition-all { transition: all 0.2s ease; }
 
-      const subscribeToPixelEvents = (listener) => {
-        eventListeners.push(listener);
-        return () => {
-          eventListeners = eventListeners.filter(l => l !== listener);
-        };
-      };
+    /* ===== UTILITIES ===== */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .hidden { display: none; }
+    .block { display: block; }
+    .inline-flex { display: inline-flex; }
+    .items-start { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
 
-      const getLoggedEvents = () => loggedEvents;
+    /* ===== ICONS (SVG) ===== */
+    .icon { display: inline-flex; align-items: center; justify-content: center; }
+    .icon svg { width: 1em; height: 1em; }
 
-      const getTestEventCode = () => {
-        if (typeof window === "undefined") return undefined;
-        const params = new URLSearchParams(window.location.search);
-        let code = params.get("test_event_code") || params.get("_fb_test_code") || params.get("test") || undefined;
-        
-        if (code) {
-          sessionStorage.setItem("test_event_code", code);
-        } else {
-          code = sessionStorage.getItem("test_event_code") || sessionStorage.getItem("fb_test_event_code") || "TEST319";
-        }
-        return code;
-      };
+    /* ===== PAGE CONTAINER ===== */
+    .page { display: none; }
+    .page.active { display: block; }
 
-      const setTestEventCode = (code) => {
-        if (typeof window === "undefined") return;
-        if (code) {
-          const trimmed = code.trim();
-          sessionStorage.setItem("test_event_code", trimmed);
-          const params = new URLSearchParams(window.location.search);
-          params.set("test_event_code", trimmed);
-          const newUrl = `${window.location.pathname}?${params.toString()}`;
-          window.history.replaceState({ path: newUrl }, "", newUrl);
-        } else {
-          sessionStorage.removeItem("test_event_code");
-          const params = new URLSearchParams(window.location.search);
-          params.delete("test_event_code");
-          params.delete("_fb_test_code");
-          params.delete("test");
-          const searchString = params.toString();
-          const newUrl = `${window.location.pathname}${searchString ? "?" + searchString : ""}`;
-          window.history.replaceState({ path: newUrl }, "", newUrl);
-        }
-        notifyListeners();
-      };
+    /* ===== DEBUGGER PANEL ===== */
+    .debugger-trigger { transition: transform 0.1s; }
+    .debugger-trigger:active { transform: scale(0.95); }
+    .event-item { transition: background 0.15s; }
+    .event-item:hover { background: rgba(255,255,255,0.05) !important; }
+    .expand-icon { transition: transform 0.2s; }
+    .expand-icon.expanded { transform: rotate(90deg); }
 
-      const addLoggedPixelEvent = (name, params = {}, isCustom = false) => {
-        const newEvent = {
-          id: Math.random().toString(36).substring(2, 9),
-          timestamp: new Date().toLocaleTimeString(),
-          name,
-          params,
-          isCustom,
-          testCodeUsed: getTestEventCode(),
-        };
-        loggedEvents = [newEvent, ...loggedEvents].slice(0, 50);
-        notifyListeners();
-      };
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 768px) {
+      .md\:h-12 { height: 3rem; }
+      .md\:h-16 { height: 4rem; }
+      .md\:h-32 { height: 8rem; }
+      .md\:w-32 { width: 8rem; }
+      .md\:p-10 { padding: 2.5rem; }
+      .md\:rounded-3xl { border-radius: 1.5rem; }
+      .md\:rounded-\[24px\] { border-radius: 24px; }
+      .md\:text-base { font-size: 1rem; }
+      .md\:text-lg { font-size: 1.125rem; }
+      .md\:text-3xl { font-size: 1.875rem; }
+      .md\:w-\[360px\] { width: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Meta Pixel Noscript -->
+  <noscript>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2813135899035813&ev=PageView&noscript=1"/>
+  </noscript>
 
-      const trackPixelEvent = (eventName, params = {}) => {
-        if (typeof window !== "undefined") {
-          if (typeof window.fbq !== "undefined") {
-            const testCode = getTestEventCode();
-            const options = testCode ? { test_event_code: testCode } : undefined;
-            
-            window.fbq("track", eventName, params, options);
-            console.log(`[Pixel] Fired event: ${eventName}`, params, options);
-            addLoggedPixelEvent(eventName, params, false);
-          } else {
-            console.warn(`[Pixel] fbq SDK is not initialized/loaded yet. Buffering event: ${eventName}`, params);
-            addLoggedPixelEvent(eventName, { ...params, _warning: "Buffered (SDK not initialized)" }, false);
-          }
-        }
-      };
+  <!-- Background Decorations -->
+  <div class="fixed inset-0 -z-10 bg-bg-dark overflow-hidden pointer-events-none">
+    <div class="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-brand-purple/5 blur-[150px] rounded-full"></div>
+    <div class="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-brand-primary/5 blur-[150px] rounded-full"></div>
+  </div>
 
-      // --- ICONS (Inline SVG Components) ---
-      const Icons = {
-        Send: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>,
-        Bot: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>,
-        TrendingUp: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>,
-        Zap: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
-        ShieldCheck: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>,
-        BarChart3: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>,
-        ChevronRight: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>,
-        Target: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
-        Clock: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-        ArrowLeft: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>,
-        Activity: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
-        Code: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-        CheckCircle2: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>,
-        Settings: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>,
-        Flame: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.1.2-2.2.5-3.3.3-1.1.8-2.1 1.5-3.1.5.8.8 1.7.8 2.6 0 1.4-.6 2.5-1.3 3.3Z"/></svg>,
-        Copy: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
-        Check: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>,
-        Trash2: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>,
-        HelpCircle: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>,
-        Terminal: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>,
-        ExternalLink: (props) => <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>,
-      };
+  <!-- PAGE: LANDING -->
+  <div id="page-home" class="page active min-h-screen flex flex-col items-center py-10 px-4">
+    <div class="w-full max-w-[480px] glass-card p-6 md:p-10 flex flex-col items-center text-center shadow-2xl animate-fade-in">
+      <!-- Logo -->
+      <div class="relative mb-6">
+        <div class="absolute inset-0 bg-brand-purple blur-md opacity-30 rounded-full"></div>
+        <img 
+          src="https://plain-apac-prod-public.komododecks.com/202605/07/9LinBLakLiPHKfydZ6z8/image.jpg" 
+          alt="EliX Signal Logo" 
+          class="h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-white/10 relative z-10 object-cover"
+          referrerpolicy="no-referrer"
+          onerror="this.src='https://via.placeholder.com/128/8b5cf6/ffffff?text=ELIX'"
+        />
+      </div>
 
-      // --- LANDING PAGE COMPONENT ---
-      function LandingPage() {
-        const TELEGRAM_LINK = "https://t.me/+XgaPKnXZMpk0NTdl";
-        const BOT_LINK = "https://t.me/EliXsignalSOFT_BOT?start=";
-        const LOGO_URL = "https://plain-apac-prod-public.komododecks.com/202605/07/9LinBLakLiPHKfydZ6z8/image.jpg";
-        const navigate = useNavigate();
+      <!-- Title & Desc -->
+      <h1 class="text-2xl md:text-3xl font-black tracking-tight mb-2 uppercase">ELIX SIGNAL BOT</h1>
+      <p class="text-gray-400 font-medium mb-4 text-sm md:text-base">Advanced Market Analysis Tools</p>
+      <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-8 max-w-[320px]">
+        Join a community of 50,000+ traders. Access market trends, educational strategies, and community-driven insights for improved trading awareness.
+      </p>
 
-        useEffect(() => {
-          const timer = setTimeout(() => {
-            window.location.href = TELEGRAM_LINK;
-          }, 10000);
-          return () => clearTimeout(timer);
-        }, [TELEGRAM_LINK]);
-
-        const handleLinkClick = (e, url, name) => {
-          e.preventDefault();
-          trackPixelEvent("Lead", { content_name: name });
-          setTimeout(() => {
-            window.location.href = url;
-          }, 500);
-        };
-
-        const TelegramIcon = ({ size = "20" }) => (
-          <svg 
-            width={size} 
-            height={size} 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-            className="flex-shrink-0"
-          >
-            <path 
-              d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z" 
-              fill="currentColor"
-            />
+      <!-- Buttons -->
+      <div class="w-full space-y-4 mb-10">
+        <a 
+          id="btn-join-telegram"
+          href="https://t.me/+XgaPKnXZMpk0NTdl"
+          class="w-full h-14 md:h-16 flex items-center justify-center gap-4 telegram-blue rounded-2xl md:rounded-3xl font-bold text-white transition-transform active:scale-95 px-4"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+            <path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/>
           </svg>
-        );
+          <span class="uppercase tracking-wide text-sm md:text-base">JOIN FREE TELEGRAM</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+            <path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/>
+          </svg>
+        </a>
 
-        return (
-          <div className="min-h-screen bg-bg-dark flex flex-col items-center py-10 px-4">
-            <div className="fixed inset-0 -z-10 bg-bg-dark overflow-hidden">
-              <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-brand-purple/5 blur-[150px] rounded-full" />
-              <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-brand-primary/5 blur-[150px] rounded-full" />
+        <a 
+          id="btn-get-signal"
+          href="https://t.me/EliXsignalSOFT_BOT?start="
+          class="w-full h-10 md:h-12 flex items-center justify-center gap-3 gradient-button rounded-2xl md:rounded-[24px] font-black text-base md:text-lg text-white transition-transform active:scale-95 px-4"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+            <path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/>
+          </svg>
+          <span class="relative z-10 uppercase tracking-widest font-black">GET SIGNAL</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+            <path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- What You Get -->
+      <div class="w-full bg-white/5 rounded-[24px] p-6 text-left border border-white/5">
+        <h2 class="text-lg font-bold mb-4 ml-2 border-b border-white/5 pb-2">What You Get</h2>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-5 h-5 rounded-md bg-brand-primary/20 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-primary">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>
+              </svg>
             </div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="w-full max-w-[480px] glass-card p-6 md:p-10 flex flex-col items-center text-center shadow-2xl animate-fade-in"
-            >
-              <div className="relative mb-6">
-                <div className="absolute inset-0 bg-brand-purple blur-md opacity-30 rounded-full" />
-                <img 
-                  src={LOGO_URL} 
-                  alt="EliX Signal Logo" 
-                  className="h-24 w-24 md:h-32 md:w-32 rounded-full border-4 border-white/10 relative z-10 object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight mb-2 uppercase">
-                ELIX SIGNAL BOT
-              </h1>
-              <p className="text-gray-400 font-medium mb-4 text-sm md:text-base">
-                Advanced Market Analysis Tools
-              </p>
-              <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-8 max-w-[320px]">
-                Join a community of 50,000+ traders. Access market trends, educational strategies, and community-driven insights for improved trading awareness.
-              </p>
-
-              <div className="w-full space-y-4 mb-10">
-                <a 
-                  id="btn-join-telegram"
-                  href={TELEGRAM_LINK}
-                  onClick={(e) => handleLinkClick(e, TELEGRAM_LINK, "Join Telegram")}
-                  className="w-full h-14 md:h-16 flex items-center justify-center gap-4 telegram-blue rounded-2xl md:rounded-3xl font-bold text-white transition-transform active:scale-95 px-4"
-                >
-                  <TelegramIcon />
-                  <span className="uppercase tracking-wide text-sm md:text-base">JOIN FREE TELEGRAM</span>
-                  <TelegramIcon />
-                </a>
-
-                <a 
-                  id="btn-get-signal"
-                  href={BOT_LINK}
-                  onClick={(e) => handleLinkClick(e, BOT_LINK, "Get Signal")}
-                  className="w-full h-10 md:h-12 flex items-center justify-center gap-3 gradient-button rounded-2xl md:rounded-[24px] font-black text-base md:text-lg text-white transition-transform active:scale-95 group px-4"
-                >
-                  <TelegramIcon size="16" />
-                  <span className="relative z-10 uppercase tracking-widest font-black">GET SIGNAL</span>
-                  <TelegramIcon size="16" />
-                </a>
-              </div>
-
-              <div className="w-full bg-white/5 rounded-[24px] p-6 text-left border border-white/5">
-                <h2 className="text-lg font-bold mb-4 ml-2 border-b border-white/5 pb-2">What You Get</h2>
-                <div className="space-y-4">
-                  {[
-                    "Real-time market insights",
-                    "Educational strategy guides",
-                    "24/7 community support"
-                  ].map((text, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-md bg-brand-primary/20 flex items-center justify-center">
-                        <Icons.ShieldCheck size={14} className="text-brand-primary" />
-                      </div>
-                      <span className="text-gray-300 text-sm font-medium">{text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            <footer className="mt-10 py-6 flex flex-col items-center gap-4 text-gray-500 text-[10px] uppercase tracking-widest font-bold">
-              <button 
-                id="link-privacy-policy"
-                onClick={() => navigate('/policy')}
-                className="hover:text-brand-primary transition-colors bg-transparent border-none cursor-pointer p-0 text-inherit font-inherit"
-              >
-                Privacy Policy
-              </button>
-              <span>© {new Date().getFullYear()} ELIX • EDUCATIONAL TRADING RESOURCES</span>
-            </footer>
+            <span class="text-gray-300 text-sm font-medium">Real-time market insights</span>
           </div>
-        );
-      }
-
-      // --- POLICY PAGE COMPONENT ---
-      function PolicyPage() {
-        const navigate = useNavigate();
-        
-        return (
-          <div className="min-h-screen bg-bg-dark flex flex-col items-center py-10 px-4">
-            <div className="fixed inset-0 -z-10 bg-bg-dark overflow-hidden">
-              <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] bg-brand-purple/5 blur-[150px] rounded-full" />
-              <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] bg-brand-primary/5 blur-[150px] rounded-full" />
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-5 h-5 rounded-md bg-brand-primary/20 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-primary">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>
+              </svg>
             </div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="w-full max-w-[480px] glass-card p-6 md:p-10 flex flex-col items-center text-center shadow-2xl"
-            >
-              <div className="flex items-center gap-3 mb-8 self-start">
-                <button 
-                  id="btn-back-home"
-                  onClick={() => navigate('/')}
-                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border-none cursor-pointer"
-                >
-                  <Icons.ArrowLeft size={20} className="text-white" />
-                </button>
-                <span className="text-gray-300 font-bold uppercase tracking-widest text-sm">Back</span>
-              </div>
-
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight mb-6 uppercase text-white">
-                Privacy Policy
-              </h1>
-              
-              <div className="text-gray-400 text-sm md:text-base leading-relaxed text-left space-y-6">
-                <p>
-                  We collect user information only for educational updates and community access. We do not sell or share personal data with third parties.
-                </p>
-                <p>
-                  Your trust is important to us. Any data collected is used strictly to improve your experience within our trading community and to provide relevant market insights.
-                </p>
-              </div>
-            </motion.div>
-
-            <footer className="mt-10 py-6 text-gray-500 text-[10px] uppercase tracking-widest font-bold">
-              © {new Date().getFullYear()} ELIX • EDUCATIONAL TRADING RESOURCES
-            </footer>
+            <span class="text-gray-300 text-sm font-medium">Educational strategy guides</span>
           </div>
-        );
-      }
-
-      // --- ROUTE TRACKER ---
-      function PixelRouteTracker() {
-        const location = useLocation();
-        useEffect(() => {
-          trackPixelEvent("PageView");
-        }, [location.pathname]);
-        return null;
-      }
-
-      // --- PIXEL DEBUGGER COMPONENT ---
-      function PixelDebugger() {
-        const [isOpen, setIsOpen] = useState(false);
-        const [testCodeInput, setTestCodeInput] = useState(getTestEventCode() || "");
-        const [events, setEvents] = useState([]);
-        const [copied, setCopied] = useState(false);
-        const [fbqStatus, setFbqStatus] = useState("loading");
-        const [expandedEventId, setExpandedEventId] = useState(null);
-
-        useEffect(() => {
-          setEvents(getLoggedEvents());
-          const unsubscribe = subscribeToPixelEvents(() => {
-            setEvents(getLoggedEvents());
-            setTestCodeInput(getTestEventCode() || "");
-          });
-
-          const interval = setInterval(() => {
-            if (typeof window !== "undefined" && typeof window.fbq !== "undefined" && window.fbq.loaded) {
-              setFbqStatus("ready");
-              clearInterval(interval);
-            }
-          }, 500);
-
-          const timeout = setTimeout(() => {
-            if (typeof window !== "undefined" && (typeof window.fbq === "undefined" || !window.fbq.loaded)) {
-              setFbqStatus("failed");
-            }
-          }, 12000);
-
-          return () => {
-            unsubscribe();
-            clearInterval(interval);
-            clearTimeout(timeout);
-          };
-        }, []);
-
-        const handleApply = (e) => {
-          e.preventDefault();
-          if (testCodeInput.trim()) {
-            setTestEventCode(testCodeInput.trim());
-          } else {
-            setTestEventCode(undefined);
-          }
-        };
-
-        const handleClear = () => {
-          setTestCodeInput("");
-          setTestEventCode(undefined);
-        };
-
-        const copyTestUrl = () => {
-          if (typeof window === "undefined") return;
-          const currentCode = getTestEventCode();
-          const url = new URL(window.location.href);
-          if (currentCode) {
-            url.searchParams.set("test_event_code", currentCode);
-          } else {
-            url.searchParams.delete("test_event_code");
-          }
-          
-          navigator.clipboard.writeText(url.toString()).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-          });
-        };
-
-        if (!isOpen) {
-          return (
-            <div className="fixed bottom-4 left-4 z-50 font-sans text-white select-none">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(true)}
-                className="h-11 px-4 flex items-center gap-2.5 rounded-full bg-[#161a2b]/95 border border-white/10 shadow-xl text-xs font-bold cursor-pointer relative group overflow-hidden"
-                id="btn-pixel-debugger-trigger"
-              >
-                <span className={`w-2 h-2 rounded-full ${fbqStatus === "ready" ? "bg-green-500 animate-pulse" : "bg-amber-500 animate-pulse"}`} />
-                <span className="text-gray-200">Meta Pixel Helper</span>
-                {getTestEventCode() ? (
-                  <span className="bg-brand-primary/20 text-brand-primary px-2 py-0.5 rounded-full text-[9px] font-black tracking-wide border border-brand-primary/20">
-                    {getTestEventCode()}
-                  </span>
-                ) : (
-                  <span className="text-[9px] text-gray-500 font-normal">Offline Test</span>
-                )}
-              </motion.button>
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-5 h-5 rounded-md bg-brand-primary/20 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-primary">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>
+              </svg>
             </div>
-          );
+            <span class="text-gray-300 text-sm font-medium">24/7 community support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-10 py-6 flex flex-col items-center gap-4 text-gray-500 text-[10px] uppercase tracking-widest font-bold">
+      <button id="link-privacy-policy" class="hover:text-brand-primary transition-colors bg-transparent border-none cursor-pointer p-0 text-inherit font-inherit">
+        Privacy Policy
+      </button>
+      <span>© <span id="year"></span> ELIX • EDUCATIONAL TRADING RESOURCES</span>
+    </footer>
+  </div>
+
+  <!-- PAGE: POLICY -->
+  <div id="page-policy" class="page min-h-screen flex flex-col items-center py-10 px-4">
+    <div class="w-full max-w-[480px] glass-card p-6 md:p-10 flex flex-col items-center text-center shadow-2xl animate-fade-in-up">
+      <!-- Back Button -->
+      <div class="flex items-center gap-3 mb-8 self-start">
+        <button id="btn-back-home" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border-none cursor-pointer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white">
+            <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+          </svg>
+        </button>
+        <span class="text-gray-300 font-bold uppercase tracking-widest text-sm">Back</span>
+      </div>
+
+      <h1 class="text-2xl md:text-3xl font-black tracking-tight mb-6 uppercase text-white">Privacy Policy</h1>
+      
+      <div class="text-gray-400 text-sm md:text-base leading-relaxed text-left space-y-6">
+        <p>We collect user information only for educational updates and community access. We do not sell or share personal data with third parties.</p>
+        <p>Your trust is important to us. Any data collected is used strictly to improve your experience within our trading community and to provide relevant market insights.</p>
+      </div>
+    </div>
+
+    <footer class="mt-10 py-6 text-gray-500 text-[10px] uppercase tracking-widest font-bold">
+      © <span id="year2"></span> ELIX • EDUCATIONAL TRADING RESOURCES
+    </footer>
+  </div>
+
+  <!-- PIXEL DEBUGGER PANEL -->
+  <div id="debugger-root"></div>
+
+  <!-- MAIN JAVASCRIPT -->
+  <script>
+    // ===== GLOBAL STATE =====
+    const loggedEvents = [];
+    const eventListeners = [];
+    let currentPage = 'home';
+    let debuggerExpanded = null;
+    let debuggerCopied = false;
+
+    // ===== UTILITY FUNCTIONS =====
+    const $ = (sel, ctx = document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+    const notifyListeners = () => eventListeners.forEach(fn => fn());
+    const subscribe = (fn) => { eventListeners.push(fn); return () => { const i = eventListeners.indexOf(fn); if(i>-1) eventListeners.splice(i,1); }; };
+    
+    const getTestCode = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        let code = params.get('test_event_code') || params.get('_fb_test_code') || params.get('test');
+        if(code) sessionStorage.setItem('test_event_code', code);
+        else code = sessionStorage.getItem('test_event_code') || sessionStorage.getItem('fb_test_event_code') || 'TEST319';
+        return code;
+      } catch(e) { return 'TEST319'; }
+    };
+
+    const setTestCode = (code) => {
+      try {
+        if(code) {
+          const trimmed = code.trim();
+          sessionStorage.setItem('test_event_code', trimmed);
+          const params = new URLSearchParams(window.location.search);
+          params.set('test_event_code', trimmed);
+          const newUrl = `${window.location.pathname}?${params.toString()}`;
+          window.history.replaceState({}, '', newUrl);
+        } else {
+          sessionStorage.removeItem('test_event_code');
+          const params = new URLSearchParams(window.location.search);
+          params.delete('test_event_code'); params.delete('_fb_test_code'); params.delete('test');
+          const qs = params.toString();
+          window.history.replaceState({}, '', `${window.location.pathname}${qs?'?'+qs:''}`);
         }
+        notifyListeners();
+      } catch(e) { console.warn('setTestCode error:', e); }
+    };
 
-        return (
-          <div className="fixed bottom-4 left-4 z-50 font-sans text-white select-none">
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.92 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              className="w-[340px] md:w-[360px] bg-[#0c0f1d]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-stone-950/80 shadow-2xl overflow-hidden flex flex-col max-h-[460px]"
-            >
-              <div className="bg-white/5 border-b border-white/10 px-4 py-3 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="p-1 rounded bg-brand-primary/10">
-                    <Icons.Activity size={16} className="text-brand-primary" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-extrabold text-[11px] uppercase tracking-widest text-white">Meta Pixel Logs</h3>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className={`w-1.5 h-1.5 rounded-full ${fbqStatus === "ready" ? "bg-green-500" : "bg-amber-400"}`} />
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">
-                        {fbqStatus === "ready" ? "Integrations Online" : "Loading Tracker SDK..."}
-                      </span>
+    const addEvent = (name, params = {}, isCustom = false) => {
+      const evt = {
+        id: Math.random().toString(36).slice(2,9),
+        timestamp: new Date().toLocaleTimeString(),
+        name, params, isCustom,
+        testCodeUsed: getTestCode()
+      };
+      loggedEvents.unshift(evt);
+      if(loggedEvents.length > 50) loggedEvents.pop();
+      notifyListeners();
+      renderDebugger();
+    };
+
+    const track = (eventName, params = {}) => {
+      if(typeof window.fbq !== 'undefined') {
+        const code = getTestCode();
+        const opts = code ? { test_event_code: code } : undefined;
+        try { window.fbq('track', eventName, params, opts); } catch(e) {}
+        console.log(`[Pixel] ${eventName}`, params, opts);
+      } else {
+        console.warn(`[Pixel] fbq not ready: ${eventName}`);
+      }
+      addEvent(eventName, params, false);
+    };
+
+    // ===== ROUTING =====
+    const navigate = (page) => {
+      $$('.page').forEach(p => p.classList.remove('active'));
+      $(`#page-${page}`).classList.add('active');
+      currentPage = page;
+      track('PageView', { page });
+      if(page === 'home') {
+        // Auto-redirect to Telegram after 10s on home
+        clearTimeout(window._redirectTimer);
+        window._redirectTimer = setTimeout(() => {
+          window.location.href = 'https://t.me/+XgaPKnXZMpk0NTdl';
+        }, 10000);
+      } else {
+        clearTimeout(window._redirectTimer);
+      }
+    };
+
+    // ===== EVENT HANDLERS =====
+    const handleLinkClick = (e, url, name) => {
+      e.preventDefault();
+      track('Lead', { content_name: name });
+      setTimeout(() => { window.location.href = url; }, 500);
+    };
+
+    // ===== DEBUGGER RENDER =====
+    const renderDebugger = () => {
+      const root = $('#debugger-root');
+      const isOpen = root.dataset.open === 'true';
+      const code = getTestCode();
+      const fbqReady = typeof window.fbq !== 'undefined' && window.fbq?.loaded;
+      const statusColor = fbqReady ? 'bg-green-500' : 'bg-amber-500';
+      const statusText = fbqReady ? 'Integrations Online' : 'Loading Tracker...';
+
+      if(!isOpen) {
+        root.innerHTML = `
+          <div class="fixed bottom-4 left-4 z-50 font-sans text-white select-none">
+            <button id="debugger-trigger" class="debugger-trigger h-11 px-4 flex items-center gap-2.5 rounded-full bg-[#161a2b]/95 border border-white/10 shadow-xl text-xs font-bold cursor-pointer">
+              <span class="w-2 h-2 rounded-full ${statusColor} animate-pulse-slow"></span>
+              <span class="text-gray-200">Meta Pixel Helper</span>
+              ${code ? `<span class="bg-brand-primary/20 text-brand-primary px-2 py-0.5 rounded-full text-[9px] font-black tracking-wide border border-brand-primary/20">${code}</span>` : `<span class="text-[9px] text-gray-500 font-normal">Offline Test</span>`}
+            </button>
+          </div>
+        `;
+        $('#debugger-trigger').onclick = () => {
+          root.dataset.open = 'true';
+          renderDebugger();
+        };
+        return;
+      }
+
+      // Build events list
+      const eventsHTML = loggedEvents.length === 0 
+        ? `<div class="text-center py-6 border border-dashed border-white/5 rounded-xl text-gray-500 text-[10px] font-bold uppercase">No events yet<br><span class="font-medium text-[9px] text-gray-600 normal-case">Interact with the page to see logs</span></div>`
+        : `<div class="space-y-1.5 max-h-[160px] overflow-y-auto no-scrollbar">
+            ${loggedEvents.map(evt => {
+              const expanded = debuggerExpanded === evt.id;
+              const badge = evt.isCustom 
+                ? `<span class="bg-brand-purple/10 text-brand-purple border border-brand-purple/10 px-1 rounded text-[7px] font-black uppercase">Custom</span>`
+                : `<span class="bg-green-500/10 text-green-400 border border-green-500/10 px-1 rounded text-[7px] font-black uppercase">Pixel</span>`;
+              return `
+                <div class="bg-black/35 border border-white/5 rounded-lg overflow-hidden event-item">
+                  <div class="p-2 flex items-center justify-between cursor-pointer" data-event-id="${evt.id}">
+                    <div class="flex flex-col items-start gap-0.5 text-left">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-extrabold text-[10.5px] font-mono text-white uppercase">${evt.name}</span>
+                        ${badge}
+                      </div>
+                      <span class="text-[8px] text-gray-500 font-mono">${evt.timestamp}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      ${evt.testCodeUsed ? `<span class="bg-white/10 px-1.5 py-0.5 rounded text-[8px] font-mono text-gray-300">${evt.testCodeUsed}</span>` : ''}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-500 expand-icon ${expanded?'expanded':''}">
+                        <path d="m9 18 6-6-6-6"/>
+                      </svg>
                     </div>
                   </div>
+                  ${expanded ? `
+                    <div class="p-2.5 border-t border-white/5 bg-black/60 text-[9px] font-mono text-gray-300 space-y-1">
+                      <div>
+                        <span class="text-gray-500 font-bold uppercase text-[8px]">Params:</span>
+                        <pre class="text-[9px] text-gray-400 whitespace-pre-wrap max-h-[80px] overflow-y-auto mt-1 p-1 bg-black/30 rounded">${JSON.stringify(evt.params, null, 2)}</pre>
+                      </div>
+                      ${evt.testCodeUsed ? `<div class="text-[9px]"><span class="text-gray-500 uppercase">Test Code:</span> <span class="text-brand-primary font-bold">${evt.testCodeUsed}</span></div>` : ''}
+                    </div>
+                  ` : ''}
                 </div>
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-white text-[10px] font-bold uppercase py-1 px-2.5 hover:bg-white/5 rounded-lg transition-all cursor-pointer bg-transparent border-none"
-                >
-                  Minimize
+              `;
+            }).join('')}
+          </div>`;
+
+      root.innerHTML = `
+        <div class="fixed bottom-4 left-4 z-50 font-sans text-white select-none">
+          <div class="w-[340px] md:w-[360px] bg-[#0c0f1d]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[460px]">
+            <!-- Header -->
+            <div class="bg-white/5 border-b border-white/10 px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="p-1 rounded bg-brand-primary/10">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-primary">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                </div>
+                <div class="text-left">
+                  <h3 class="font-extrabold text-[11px] uppercase tracking-widest text-white">Meta Pixel Logs</h3>
+                  <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full ${statusColor}"></span>
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">${statusText}</span>
+                  </div>
+                </div>
+              </div>
+              <button id="debugger-minimize" class="text-gray-400 hover:text-white text-[10px] font-bold uppercase py-1 px-2.5 hover:bg-white/5 rounded-lg transition-all cursor-pointer bg-transparent border-none">Minimize</button>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+              <!-- Test Code Input -->
+              <div class="bg-white/5 border border-white/5 rounded-xl p-3 text-left">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-1.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-purple">
+                      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <h4 class="font-bold text-[10px] uppercase tracking-widest text-gray-400">Target Test Code</h4>
+                  </div>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-500 cursor-help" title="Test code from Meta Events Manager">
+                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+                  </svg>
+                </div>
+                <form id="test-code-form" class="flex gap-2">
+                  <input type="text" id="test-code-input" value="${code||''}" placeholder="e.g. TEST319" class="flex-1 h-9 bg-black/40 border border-white/10 rounded-lg px-3 text-xs placeholder:text-gray-600 focus:outline-none focus:border-brand-primary font-mono text-white">
+                  ${code ? 
+                    `<button type="button" id="test-code-clear" class="px-3 h-9 bg-red-950 hover:bg-red-900 border border-red-900/30 text-red-300 rounded-lg text-xs font-bold cursor-pointer">Clear</button>` : 
+                    `<button type="submit" class="px-4 h-9 bg-brand-primary hover:bg-opacity-90 rounded-lg text-xs font-extrabold cursor-pointer uppercase">Set</button>`
+                  }
+                </form>
+                <p class="mt-2 text-[9px] text-gray-400 leading-relaxed">
+                  ${code ? 
+                    `<span class="text-green-400 flex items-center gap-1"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400"><polyline points="20 6 9 17 4 12"/></svg> Using test code: <strong>${code}</strong></span>` : 
+                    `Paste test code from Meta Event Manager to enable test tracking.`
+                  }
+                </p>
+              </div>
+
+              <!-- Copy URL -->
+              <div class="flex items-center justify-between gap-2 p-2 bg-black/20 rounded-lg">
+                <span class="text-[9px] text-gray-500 font-bold font-mono truncate uppercase max-w-[140px]">
+                  ${code ? `?test_event_code=${code}` : 'Local Mode'}
+                </span>
+                <button id="copy-url-btn" class="flex items-center gap-1.5 px-3 py-1 bg-white/5 hover:bg-white/10 border border-white/5 rounded text-[9px] font-bold cursor-pointer uppercase text-slate-300">
+                  ${debuggerCopied ? 
+                    `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-400"><polyline points="20 6 9 17 4 12"/></svg><span>Copied</span>` : 
+                    `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy URL</span>`
+                  }
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
-                <div className="bg-white/5 border border-white/5 rounded-xl p-3 text-left">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
-                      <Icons.Settings size={12} className="text-brand-purple" />
-                      <h4 className="font-bold text-[10px] uppercase tracking-widest text-gray-400">Target Test Code</h4>
-                    </div>
-                    <Icons.HelpCircle size={12} className="text-gray-500 cursor-help" title="Input the test event code displaying in your Facebook events testing tab." />
+              <!-- Events List -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-primary">
+                      <polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/>
+                    </svg>
+                    <h4 class="font-extrabold text-[10px] uppercase tracking-widest text-gray-400">Events (${loggedEvents.length})</h4>
                   </div>
-                  
-                  <form onSubmit={handleApply} className="flex gap-2">
-                    <input
-                      type="text"
-                      value={testCodeInput}
-                      onChange={(e) => setTestCodeInput(e.target.value)}
-                      placeholder="e.g. TEST319"
-                      className="flex-1 h-9 bg-black/40 border border-white/10 rounded-lg px-3 text-xs placeholder:text-gray-600 focus:outline-none focus:border-brand-primary font-mono text-white"
-                    />
-                    {getTestEventCode() ? (
-                      <button
-                        type="button"
-                        onClick={handleClear}
-                        className="px-3 h-9 bg-red-950 hover:bg-red-900 border border-red-900/30 text-red-300 rounded-lg text-xs font-bold transition-colors cursor-pointer bg-transparent"
-                      >
-                        Clear
-                      </button>
-                    ) : (
-                      <button
-                        type="submit"
-                        className="px-4 h-9 bg-brand-primary hover:bg-opacity-90 rounded-lg text-xs font-extrabold transition-colors cursor-pointer uppercase tracking-wider bg-transparent border-none"
-                      >
-                        Set
-                      </button>
-                    )}
-                  </form>
-                  
-                  <p className="mt-2 text-[9px] text-gray-400 leading-relaxed font-medium">
-                    {getTestEventCode() ? (
-                      <span className="text-green-400 flex items-center gap-1">
-                        <Icons.Check size={10} /> Forwarding all events using testing parameter <strong>{getTestEventCode()}</strong>.
-                      </span>
-                    ) : (
-                      "Paste the test code from your Meta Event Manager tab. This updates the URL dynamically to route all events correctly."
-                    )}
-                  </p>
+                  ${loggedEvents.length > 0 ? 
+                    `<button id="clear-events" class="text-[9px] text-gray-500 hover:text-white cursor-pointer font-bold uppercase flex items-center gap-1">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg> Clear
+                    </button>` : ''
+                  }
                 </div>
-
-                <div className="flex items-center justify-between gap-2 p-2 bg-black/20 rounded-lg">
-                  <span className="text-[9px] text-gray-500 font-bold font-mono truncate uppercase text-left max-w-[140px]">
-                    {getTestEventCode() ? `?test_event_code=${getTestEventCode()}` : "Local Environment Mode"}
-                  </span>
-                  <button
-                    onClick={copyTestUrl}
-                    className="flex items-center gap-1.5 px-3 py-1 bg-white/5 hover:bg-white/10 border border-white/5 rounded text-[9px] font-bold transition-all cursor-pointer uppercase tracking-widest text-slate-300 bg-transparent border-none"
-                  >
-                    {copied ? <Icons.Check size={10} className="text-green-400" /> : <Icons.Copy size={10} />}
-                    <span>{copied ? "Copied" : "Copy Shared URL"}</span>
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <Icons.Terminal size={12} className="text-brand-primary" />
-                      <h4 className="font-extrabold text-[10px] uppercase tracking-widest text-gray-400">Trigger Stream ({events.length})</h4>
-                    </div>
-                    {events.length > 0 && (
-                      <button
-                        onClick={() => {
-                          loggedEvents = [];
-                          notifyListeners();
-                          setEvents([]);
-                        }}
-                        className="text-[9px] text-gray-500 hover:text-white transition-colors flex items-center gap-1 cursor-pointer font-bold uppercase tracking-wider bg-transparent border-none"
-                      >
-                        <Icons.Trash2 size={10} /> Clear List
-                      </button>
-                    )}
-                  </div>
-
-                  {events.length === 0 ? (
-                    <div className="text-center py-6 border border-dashed border-white/5 rounded-xl text-gray-500 text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-                      No active events fired yet.
-                      <div className="mt-1 font-medium text-[9px] text-gray-600 normal-case">
-                        Click buttons or navigate pages to view outbound packets.
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-0.5 no-scrollbar">
-                      {events.map((evt) => {
-                        const isExpanded = expandedEventId === evt.id;
-                        const usedCode = evt.testCodeUsed;
-                        return (
-                          <div 
-                            key={evt.id} 
-                            className="bg-black/35 border border-white/5 rounded-lg overflow-hidden"
-                          >
-                            <div 
-                              onClick={() => setExpandedEventId(isExpanded ? null : evt.id)}
-                              className="p-2 flex items-center justify-between cursor-pointer hover:bg-white/5 transition-colors"
-                            >
-                              <div className="flex flex-col items-start gap-0.5 text-left">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-extrabold text-[10.5px] font-mono tracking-tight text-white uppercase">
-                                    {evt.name}
-                                  </span>
-                                  {evt.isCustom ? (
-                                    <span className="bg-brand-purple/10 text-brand-purple border border-brand-purple/10 px-1 rounded text-[7.5px] font-black uppercase">
-                                      Custom
-                                    </span>
-                                  ) : (
-                                    <span className="bg-green-500/10 text-green-400 border border-green-500/10 px-1 rounded text-[7.5px] font-black uppercase">
-                                      Pixel
-                                    </span>
-                                  )}
-                                </div>
-                                <span className="text-[8px] text-gray-500 font-semibold font-mono">
-                                  {evt.timestamp}
-                                </span>
-                              </div>
-
-                              <div className="flex items-center gap-2">
-                                {usedCode && (
-                                  <span className="bg-white/10 px-1.5 py-0.5 rounded text-[8px] font-mono font-bold text-gray-300">
-                                    {usedCode}
-                                  </span>
-                                )}
-                                <Icons.ChevronRight size={10} className={`text-gray-500 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-                              </div>
-                            </div>
-
-                            {isExpanded && (
-                              <div className="p-2.5 border-t border-white/5 bg-black/60 text-[9.5px] font-mono text-gray-300 space-y-1.5 text-left overflow-x-auto">
-                                <div>
-                                  <span className="text-gray-500 font-extrabold uppercase text-[8px] block tracking-wider">Params Payload:</span>
-                                  <pre className="text-[9.5px] text-gray-400 whitespace-pre-wrap max-h-[85px] overflow-y-auto mt-1 p-1 bg-black/30 rounded border border-white/5">
-                                    {JSON.stringify(evt.params, null, 2)}
-                                  </pre>
-                                </div>
-                                {usedCode && (
-                                  <div className="flex items-center gap-1 mt-1 text-[9px]">
-                                    <span className="text-gray-500 uppercase font-extrabold text-[8px] tracking-wider">Routed test code:</span>
-                                    <span className="text-brand-primary font-bold">{usedCode}</span>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                ${eventsHTML}
               </div>
-              
-              <div className="bg-white/5 border-t border-white/10 px-4 py-2.5 flex items-center justify-between text-[9px] text-gray-500 font-bold uppercase tracking-wider">
-                <span>Pixel: 2813135899035813</span>
-                <a 
-                  href="https://business.facebook.com/events_manager2/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-primary transition-colors flex items-center gap-0.5 text-zinc-400"
-                >
-                  Meta Manager <Icons.ExternalLink size={8} />
-                </a>
-              </div>
-            </motion.div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-white/5 border-t border-white/10 px-4 py-2.5 flex items-center justify-between text-[9px] text-gray-500 font-bold uppercase">
+              <span>Pixel: 2813135899035813</span>
+              <a href="https://business.facebook.com/events_manager2/" target="_blank" rel="noreferrer" class="hover:text-brand-primary flex items-center gap-0.5">
+                Meta Manager 
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>
+              </a>
+            </div>
           </div>
-        );
-      }
+        </div>
+      `;
 
-      // --- MAIN APP COMPONENT ---
-      function App() {
-        return (
-          <BrowserRouter>
-            <PixelRouteTracker />
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/policy" element={<PolicyPage />} />
-              <Route path="*" element={<LandingPage />} />
-            </Routes>
-            <PixelDebugger />
-          </BrowserRouter>
-        );
-      }
+      // Attach debugger events
+      $('#debugger-minimize').onclick = () => { root.dataset.open = 'false'; renderDebugger(); };
+      
+      $('#test-code-form').onsubmit = (e) => {
+        e.preventDefault();
+        const val = $('#test-code-input').value.trim();
+        setTestCode(val || undefined);
+        renderDebugger();
+      };
+      
+      $('#test-code-clear').onclick = () => {
+        $('#test-code-input').value = '';
+        setTestCode(undefined);
+        renderDebugger();
+      };
+      
+      $('#copy-url-btn').onclick = async () => {
+        const url = new URL(window.location.href);
+        const c = getTestCode();
+        if(c) url.searchParams.set('test_event_code', c);
+        else url.searchParams.delete('test_event_code');
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          debuggerCopied = true;
+          renderDebugger();
+          setTimeout(() => { debuggerCopied = false; renderDebugger(); }, 2000);
+        } catch(e) {}
+      };
+      
+      $('#clear-events').onclick = () => {
+        loggedEvents.length = 0;
+        notifyListeners();
+        renderDebugger();
+      };
 
-      // --- RENDER APP ---
-      const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(<App />);
-    </script>
-  </body>
+      // Event item click to expand
+      $$('[data-event-id]', root).forEach(el => {
+        el.onclick = () => {
+          const id = el.dataset.eventId;
+          debuggerExpanded = debuggerExpanded === id ? null : id;
+          renderDebugger();
+        };
+      });
+    };
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set year
+      const y = new Date().getFullYear();
+      $('#year').textContent = y;
+      $('#year2').textContent = y;
+
+      // Navigation
+      $('#link-privacy-policy').onclick = (e) => { e.preventDefault(); navigate('policy'); track('PageView', { page: 'policy' }); };
+      $('#btn-back-home').onclick = () => navigate('home');
+
+      // Button clicks
+      $('#btn-join-telegram').onclick = (e) => handleLinkClick(e, 'https://t.me/+XgaPKnXZMpk0NTdl', 'Join Telegram');
+      $('#btn-get-signal').onclick = (e) => handleLinkClick(e, 'https://t.me/EliXsignalSOFT_BOT?start=', 'Get Signal');
+
+      // Track initial page view
+      track('PageView', { page: 'home' });
+
+      // Setup debugger subscription
+      subscribe(() => renderDebugger());
+      renderDebugger();
+
+      // Auto-redirect timer for home page
+      if(currentPage === 'home') {
+        window._redirectTimer = setTimeout(() => {
+          window.location.href = 'https://t.me/+XgaPKnXZMpk0NTdl';
+        }, 10000);
+      }
+    });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash.slice(1) || 'home';
+      navigate(hash);
+    });
+  </script>
+</body>
 </html>
