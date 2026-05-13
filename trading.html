@@ -6,20 +6,23 @@
     <title>REDHAT PREDICTOR BOT | Telegram Channel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🔹 NEW META PIXEL (Updated ID: 1738232597343464) 🔹 -->
+    <!-- 🔹 UPDATED FACEBOOK PIXEL (New ID: 2088049078437700) 🔹 -->
+    <!-- Facebook Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
     n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1738232597343464');
+    s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '2088049078437700');
     fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none" 
-    src="https://www.facebook.com/tr?id=1738232597343464&ev=PageView&noscript=1"/></noscript>
+    <noscript>
+        <img height="1" width="1" style="display:none" 
+        src="https://www.facebook.com/tr?id=2088049078437700&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
     
     <!-- 🔹 FIREBASE SDK 🔹 -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -203,7 +206,7 @@
                     ...baseData, type, label, targetUrl: url, funnelStep
                 }).catch(e => console.log('Track error:', e));
                 
-                // Meta Pixel (Updated ID)
+                // Meta Pixel (Updated ID: 2088049078437700)
                 if (typeof fbq !== 'undefined') {
                     const px = { 'JoinChannel':'Lead', 'TryBot':'ViewContent', 'ContactSupport':'Contact' };
                     fbq('track', px[type] || 'Custom', { content_name: label, value: type==='JoinChannel'?1:0, currency:'USD', country });
@@ -220,7 +223,7 @@
             document.querySelector('.track-support')?.addEventListener('click', function(e) {
                 track('ContactSupport', 'Support Click', this.href, 'click');
             });
-            // 🔹 NEW: Track Telegram Badge Click 🔹
+            // 🔹 Track Telegram Badge Click 🔹
             document.querySelector('.track-join-badge')?.addEventListener('click', function(e) {
                 track('JoinChannel', 'Telegram Badge Click', this.href, 'badge_click');
             });
