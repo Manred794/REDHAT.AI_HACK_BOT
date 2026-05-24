@@ -234,41 +234,28 @@
     @keyframes sheen { 0%{left:-100%} 100%{left:170%} }
     .join-btn svg { flex-shrink: 0; }
 
-    /* ── SIGNAL BTN (purple gradient) ── */
+    /* ── SIGNAL BTN (outline secondary) ── */
     .signal-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 7px;
       width: 100%;
-      padding: 14px 24px;
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed, #d946ef);
-      color: white;
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      border-radius: 14px;
+      padding: 8px 12px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
       text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.18s, box-shadow 0.18s;
-      box-shadow: 0 6px 22px rgba(124,58,237,0.40);
-      border: 1px solid rgba(255,255,255,0.15);
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
       cursor: pointer;
       margin-top: 10px;
     }
-    .signal-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(124,58,237,0.50); }
-    .signal-btn:active { transform: scale(0.985); }
-    .signal-btn::after {
-      content: '';
-      position: absolute; top: 0; left: -100%;
-      width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-      animation: sheen 2.5s infinite;
-    }
-    .signal-btn svg { flex-shrink: 0; position: relative; z-index: 1; }
-    .signal-btn span { position: relative; z-index: 1; }
+    .signal-btn:hover { border-color: var(--tg); color: var(--tg); background: var(--tg-light); }
+    .signal-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .signal-btn span { position: relative; }
 
     .cta-note {
       display: flex;
