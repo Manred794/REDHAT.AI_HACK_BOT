@@ -15,26 +15,10 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)
   }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-
-  fbq('init', '2813135899035813');
-  try {
-    var urlParams = new URLSearchParams(window.location.search);
-    var testEventCode = urlParams.get('test_event_code') || urlParams.get('event_code');
-    if (!testEventCode) {
-      var hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
-      testEventCode = hashParams.get('test_event_code') || hashParams.get('event_code');
-    }
-    if (testEventCode) {
-      window.fbTestEventCode = testEventCode;
-      sessionStorage.setItem('fb_test_event_code', testEventCode);
-    } else {
-      window.fbTestEventCode = sessionStorage.getItem('fb_test_event_code') || 'TEST319';
-    }
-  } catch (e) { window.fbTestEventCode = ''; }
-  var trackOptions = {};
-  if (window.fbTestEventCode) trackOptions.test_event_code = window.fbTestEventCode;
-  fbq('track', 'PageView', {}, trackOptions);
+  fbq('init', '932713379757260');
+  fbq('track', 'PageView');
   </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=932713379757260&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel Code -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -371,7 +355,7 @@
 <body>
 
 <noscript>
-  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2813135899035813&ev=PageView&noscript=1"/>
+  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=932713379757260&ev=PageView&noscript=1"/>
 </noscript>
 
 <div class="page-wrap">
@@ -540,8 +524,7 @@
 <script>
   const track = (eventName, params = {}) => {
     if (typeof window.fbq !== 'undefined') {
-      const code = window.fbTestEventCode || 'TEST319';
-      try { window.fbq('track', eventName, params, code ? { test_event_code: code } : undefined); } catch(e) {}
+      try { window.fbq('track', eventName, params); } catch(e) {}
     }
   };
 
