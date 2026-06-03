@@ -535,10 +535,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(`page-${page}`).classList.add('active');
     window.scrollTo(0, 0);
-    if (page === 'home') {
-      clearTimeout(window._redirectTimer);
-      window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
-    } else {
+    if (page !== 'home') {
       clearTimeout(window._redirectTimer);
     }
   };
@@ -574,7 +571,6 @@
       handleLinkClick(e, 'https://t.me/EliXsignalSOFT_BOT?start=', 'Get Signal');
 
     track('PageView', { page: 'home' });
-    window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
   });
 </script>
 </body>
