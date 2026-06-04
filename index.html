@@ -376,8 +376,6 @@
           <img
             src="https://plain-apac-prod-public.komododecks.com/202605/07/9LinBLakLiPHKfydZ6z8/image.jpg"
             alt="EliX Signal Logo"
-            referrerpolicy="no-referrer"
-            onerror="this.src='https://via.placeholder.com/128/8b5cf6/ffffff?text=ELIX'"
           />
         </div>
 
@@ -507,12 +505,27 @@
 
         <div class="policy-section">
           <h3>Data Collection</h3>
-          <p>We collect user information only for educational updates and community access. We do not sell or share personal data with third parties.</p>
+          <p>We use Meta Pixel (Facebook Pixel) on this page to measure ad performance. This technology may collect your IP address, browser type, and pages visited. We do not collect your name, email, or personal contact details unless you voluntarily provide them.</p>
         </div>
 
         <div class="policy-section">
           <h3>How We Use It</h3>
-          <p>Your trust is important to us. Any data collected is used strictly to improve your experience within our trading community and to provide relevant market insights.</p>
+          <p>Data collected via Meta Pixel is used solely to understand how users interact with this page and to improve our advertising relevance. We do not sell or share your personal data with third parties outside of Meta's platform.</p>
+        </div>
+
+        <div class="policy-section">
+          <h3>Third-Party Tools</h3>
+          <p>This page uses Meta Pixel provided by Meta Platforms, Inc. Meta's use of your data is governed by Meta's own Privacy Policy at <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener" style="color:#0088cc">facebook.com/privacy/policy</a>.</p>
+        </div>
+
+        <div class="policy-section">
+          <h3>Your Rights</h3>
+          <p>You may opt out of interest-based advertising by visiting <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener" style="color:#0088cc">aboutads.info/choices</a> or adjusting your Facebook ad settings. You may also use browser tools to block tracking cookies.</p>
+        </div>
+
+        <div class="policy-section">
+          <h3>Contact</h3>
+          <p>For any privacy-related questions, please reach out to us via our Telegram community.</p>
         </div>
       </div>
 
@@ -541,9 +554,7 @@
   };
 
   const handleLinkClick = (e, url, name) => {
-    e.preventDefault();
     track('Lead', { content_name: name });
-    setTimeout(() => window.location.href = url, 500);
   };
 
   document.addEventListener('DOMContentLoaded', () => {
