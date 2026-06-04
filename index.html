@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>EliX Signal Bot</title>
+  <title>EliX Signal Bot — Join Our Free Telegram Community</title>
+  <meta name="description" content="Join 50,000+ traders on Telegram. Free market insights and educational trading strategies delivered via Telegram." />
+  <meta property="og:title" content="EliX Signal Bot — Free Telegram Trading Community" />
+  <meta property="og:description" content="Join our free Telegram group for real-time market insights and educational trading strategies." />
+  <meta property="og:type" content="website" />
 
   <!-- Meta Pixel Code -->
   <script>
@@ -385,7 +389,7 @@
         </div>
 
         <h1>ELIX <em>Signal</em> Bot</h1>
-        <p>Advanced market analysis tools — join 50,000+ traders accessing real-time insights and educational strategies.</p>
+        <p>Advanced market analysis tools — join 50,000+ traders on our free <strong style="color:#fff;font-weight:700">Telegram group</strong> for real-time insights and educational strategies.</p>
       </div>
 
       <!-- BODY -->
@@ -405,15 +409,15 @@
 
         <!-- PRIMARY CTA -->
         <div class="cta-wrap">
-          <a href="https://t.me/+ORi-o6IfFJVlMmE1" class="join-btn" id="btn-join-telegram" target="_blank" rel="noopener">
+          <a href="https://t.me/+ORi-o6IfFJVlMmE1" class="join-btn" id="btn-join-telegram" target="_blank" rel="noopener noreferrer">
             <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
-            Join Free Telegram
+            Join Free on Telegram (t.me)
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
 
-          <a href="https://t.me/EliXsignalSOFT_BOT?start=" class="signal-btn" id="btn-get-signal" target="_blank" rel="noopener">
+          <a href="https://t.me/EliXsignalSOFT_BOT?start=" class="signal-btn" id="btn-get-signal" target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
-            <span>Get Signal</span>
+            <span>Get Signal Bot on Telegram</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
 
@@ -553,10 +557,6 @@
     }
   };
 
-  const handleLinkClick = (e, url, name) => {
-    track('Lead', { content_name: name });
-  };
-
   document.addEventListener('DOMContentLoaded', () => {
     const y = new Date().getFullYear();
     const year1 = document.getElementById('year');
@@ -575,11 +575,13 @@
       track('PageView', { page: 'home' });
     };
 
-    document.getElementById('btn-join-telegram').onclick = (e) =>
-      handleLinkClick(e, 'https://t.me/+ORi-o6IfFJVlMmE1', 'Join Telegram');
+    document.getElementById('btn-join-telegram').addEventListener('click', () => {
+      track('Lead', { content_name: 'Join Telegram' });
+    });
 
-    document.getElementById('btn-get-signal').onclick = (e) =>
-      handleLinkClick(e, 'https://t.me/EliXsignalSOFT_BOT?start=', 'Get Signal');
+    document.getElementById('btn-get-signal').addEventListener('click', () => {
+      track('Lead', { content_name: 'Get Signal' });
+    });
 
     track('PageView', { page: 'home' });
   });
