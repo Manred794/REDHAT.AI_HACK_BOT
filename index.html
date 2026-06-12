@@ -1,580 +1,474 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>EliX Signal Bot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliX Signal Bot | Telegram Channel</title>
+    <meta name="description" content="Join EliX Signal Community on Telegram.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Meta Pixel Code -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '36555340844057275');
-  fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=36555340844057275&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        :root {
+            --tg: #0088cc;
+            --tg-dark: #006faa;
+            --tg-light: #e8f5fb;
+            --text: #0d1117;
+            --muted: #5c6370;
+            --subtle: #8b95a2;
+            --border: #e2e8f0;
+            --surface: #f6f8fb;
+            --white: #ffffff;
+            --green: #16a34a;
+        }
 
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #dde4ed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
 
-    :root {
-      --tg: #0088cc;
-      --tg-dark: #006faa;
-      --tg-light: #e8f5fb;
-      --purple: #7c3aed;
-      --purple-dark: #6d28d9;
-      --purple-light: #ede9fe;
-      --text: #0d1117;
-      --muted: #5c6370;
-      --subtle: #8b95a2;
-      --border: #e2e8f0;
-      --surface: #f6f8fb;
-      --white: #ffffff;
-      --green: #16a34a;
-    }
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
+        }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #dde4ed;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
+        /* Mobile: full screen */
+        @media (max-width: 540px) {
+            body { padding: 0; align-items: flex-start; background: var(--white); }
+            .card { border-radius: 0; max-width: 100%; min-height: 100vh; box-shadow: none; }
+        }
 
-    /* ── PAGE SYSTEM ── */
-    .page-wrap { width: 100%; max-width: 460px; }
-    .page { display: none; }
-    .page.active { display: block; }
+        .hero {
+            background: linear-gradient(160deg, #100820 0%, #1e0a45 55%, #2d0f6b 100%);
+            padding: 36px 28px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-glow {
+            position: absolute; top: -80px; right: -80px;
+            width: 240px; height: 240px;
+            background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-glow2 {
+            position: absolute; bottom: -60px; left: -60px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(217,70,239,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
 
-    /* ── CARD ── */
-    .card {
-      background: var(--white);
-      border-radius: 20px;
-      width: 100%;
-      overflow: hidden;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
-    }
+        .logo-ring {
+            width: 80px; height: 80px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.7), rgba(255,255,255,0.15));
+            position: relative; z-index: 1;
+        }
+        .logo-ring img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
 
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(160deg, #100820 0%, #1e0a45 55%, #2d0f6b 100%);
-      padding: 30px 28px 26px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-glow {
-      position: absolute;
-      top: -80px; right: -80px;
-      width: 240px; height: 240px;
-      background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-glow2 {
-      position: absolute;
-      bottom: -60px; left: -60px;
-      width: 180px; height: 180px;
-      background: radial-gradient(circle, rgba(217,70,239,0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255,255,255,0.09);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 100px;
+            padding: 5px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            position: relative; z-index: 1;
+        }
+        .live-dot {
+            width: 7px; height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(74,222,128,0.6);
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
 
-    .logo-ring {
-      width: 74px; height: 74px;
-      margin: 0 auto 14px;
-      border-radius: 50%;
-      padding: 3px;
-      background: linear-gradient(135deg, rgba(139,92,246,0.7), rgba(255,255,255,0.15));
-      position: relative; z-index: 1;
-    }
-    .logo-ring img {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-    }
+        .hero h1 {
+            font-size: 26px; font-weight: 900; color: #fff;
+            line-height: 1.25; letter-spacing: -0.5px;
+            margin-bottom: 8px; position: relative; z-index: 1;
+        }
+        .hero h1 em { font-style: normal; color: #c4b5fd; }
+        .hero-sub {
+            font-size: 13.5px; color: rgba(255,255,255,0.55);
+            line-height: 1.6; position: relative; z-index: 1;
+        }
 
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(255,255,255,0.09);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 100px;
-      padding: 5px 14px;
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.85);
-      letter-spacing: 0.7px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      position: relative; z-index: 1;
-    }
-    .live-dot {
-      width: 7px; height: 7px;
-      background: #4ade80;
-      border-radius: 50%;
-      box-shadow: 0 0 6px rgba(74,222,128,0.6);
-      animation: pulse 1.6s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+        .body { padding: 26px 22px 20px; }
 
-    .hero h1 {
-      font-size: 24px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.25;
-      letter-spacing: -0.6px;
-      margin-bottom: 10px;
-      position: relative; z-index: 1;
-    }
-    .hero h1 em { font-style: normal; color: #c4b5fd; }
-    .hero p {
-      font-size: 13.5px;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.65;
-      position: relative; z-index: 1;
-      max-width: 310px;
-      margin: 0 auto;
-    }
+        .proof {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin-bottom: 22px;
+            padding: 12px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .avatars { display: flex; }
+        .av {
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 2px solid var(--white);
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800; color: white;
+            margin-left: -7px; flex-shrink: 0;
+        }
+        .av:first-child { margin-left: 0; }
+        .proof-text { font-size: 13px; color: var(--muted); font-weight: 500; line-height: 1.4; }
+        .proof-text strong { color: var(--text); font-weight: 800; }
 
-    /* ── BODY ── */
-    .body { padding: 22px 22px 18px; }
+        .cta-wrap { margin-bottom: 10px; }
 
-    /* ── PROOF ── */
-    .proof {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 11px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-    .avatars { display: flex; }
-    .av {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      border: 2px solid var(--white);
-      background: linear-gradient(135deg, #7c3aed, #5b21b6);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 800;
-      color: white;
-      margin-left: -7px;
-      flex-shrink: 0;
-    }
-    .av:first-child { margin-left: 0; }
-    .proof-text { font-size: 13px; color: var(--muted); font-weight: 500; line-height: 1.4; }
-    .proof-text strong { color: var(--text); font-weight: 800; }
+        .join-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; width: 100%; padding: 18px 24px;
+            background: var(--tg); color: white;
+            font-size: 17px; font-weight: 800; letter-spacing: -0.2px;
+            border-radius: 14px; text-decoration: none;
+            position: relative; overflow: hidden;
+            transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+            box-shadow: 0 6px 22px rgba(0,136,204,0.38);
+        }
+        .join-btn:hover { background: var(--tg-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,136,204,0.48); }
+        .join-btn:active { transform: scale(0.985); }
+        .join-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+            animation: sheen 3s infinite;
+        }
+        @keyframes sheen { 0%{left:-100%} 100%{left:170%} }
 
-    /* ── PRIMARY JOIN BTN ── */
-    .cta-wrap { margin-bottom: 12px; }
+        .cta-note {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; margin-top: 10px; flex-wrap: wrap;
+        }
+        .note-item {
+            display: flex; align-items: center; gap: 4px;
+            font-size: 12px; color: var(--subtle); font-weight: 500;
+        }
+        .note-item svg { color: var(--green); flex-shrink: 0; }
 
-    .join-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 17px 24px;
-      background: var(--tg);
-      color: white;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: -0.2px;
-      border-radius: 14px;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
-      box-shadow: 0 6px 22px rgba(0,136,204,0.40);
-      border: none;
-      cursor: pointer;
-    }
-    .join-btn:hover { background: var(--tg-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,136,204,0.48); }
-    .join-btn:active { transform: scale(0.985); }
-    .join-btn::after {
-      content: '';
-      position: absolute; top: 0; left: -100%;
-      width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-      animation: sheen 3s infinite;
-    }
-    @keyframes sheen { 0%{left:-100%} 100%{left:170%} }
-    .join-btn svg { flex-shrink: 0; }
+        .countdown-bar-wrap {
+            height: 4px; background: #dce8f4; border-radius: 2px;
+            margin: 16px 0 0; overflow: hidden;
+        }
+        .countdown-bar-fill {
+            height: 100%; width: 100%; background: var(--tg);
+            border-radius: 2px; transition: width 0.25s linear;
+        }
+        .countdown-label {
+            text-align: center; font-size: 12px; color: var(--subtle);
+            font-weight: 500; margin-top: 8px;
+        }
+        .countdown-label span { font-weight: 700; color: var(--tg); }
 
-    /* ── SIGNAL BTN (outline secondary) ── */
-    .signal-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      width: 100%;
-      padding: 8px 12px;
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-decoration: none;
-      transition: border-color 0.15s, color 0.15s, background 0.15s;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .signal-btn:hover { border-color: var(--tg); color: var(--tg); background: var(--tg-light); }
-    .signal-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-    .signal-btn span { position: relative; }
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 16px 22px; text-align: center;
+        }
+        .trust-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 18px; margin-bottom: 10px; flex-wrap: wrap;
+        }
+        .trust-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 12px; color: var(--muted); font-weight: 600;
+        }
+        .trust-item svg { color: var(--green); }
+        .footer-text { font-size: 11px; color: #9aa3b2; line-height: 1.7; }
+        .policy-btn {
+            background: none; border: none; color: var(--tg);
+            font-size: 11px; cursor: pointer; font-family: inherit; text-decoration: underline;
+        }
 
-    .cta-note {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 9px;
-    }
-    .note-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11.5px;
-      color: var(--subtle);
-      font-weight: 500;
-    }
-    .note-item svg { color: var(--green); }
-
-    /* ── FEATURES ── */
-    .features {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 4px 0;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-    .feature-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .feature-row:last-child { border-bottom: none; }
-    .feat-icon {
-      width: 34px; height: 34px;
-      border-radius: 9px;
-      background: var(--purple-light);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      color: var(--purple);
-    }
-    .feat-icon svg { width: 17px; height: 17px; }
-    .feat-text { flex: 1; }
-    .feat-title { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 1px; }
-    .feat-sub { font-size: 12px; color: var(--muted); line-height: 1.4; }
-
-    /* ── FOOTER ── */
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 14px 22px;
-      text-align: center;
-    }
-    .trust-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .trust-item {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 12px; color: var(--muted); font-weight: 600;
-    }
-    .trust-item svg { color: var(--green); }
-    .footer-text { font-size: 11px; color: #9aa3b2; line-height: 1.7; }
-    .policy-btn {
-      background: none; border: none;
-      color: var(--tg); font-size: 11px;
-      cursor: pointer; font-family: inherit;
-      text-decoration: underline;
-    }
-
-    /* ── POLICY PAGE ── */
-    .back-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-    .back-btn {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      color: var(--text);
-      flex-shrink: 0;
-      transition: background 0.15s;
-    }
-    .back-btn:hover { background: var(--border); }
-    .back-btn svg { width: 17px; height: 17px; }
-    .back-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-
-    .policy-body { padding: 24px 22px; }
-    .policy-h { font-size: 20px; font-weight: 900; letter-spacing: -0.4px; text-transform: uppercase; margin-bottom: 20px; color: var(--text); }
-    .policy-section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .policy-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .policy-section h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--subtle); margin-bottom: 7px; }
-    .policy-section p { font-size: 13.5px; color: var(--text); line-height: 1.65; }
-
-    @media (max-width: 440px) {
-      .hero { padding: 24px 20px 22px; }
-      .hero h1 { font-size: 21px; }
-      .body { padding: 18px 16px 14px; }
-      .trust-row { gap: 12px; }
-    }
-  </style>
+        /* MODAL */
+        .modal-bg {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.52);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; padding: 20px;
+        }
+        .modal-bg.open { display: flex; }
+        .modal-box {
+            background: white; border-radius: 18px; padding: 24px;
+            max-width: 420px; width: 100%; max-height: 88vh;
+            overflow-y: auto; position: relative;
+            animation: popIn 0.22s ease;
+        }
+        @keyframes popIn { from{transform:scale(0.93);opacity:0} to{transform:scale(1);opacity:1} }
+        .modal-close-btn {
+            position: absolute; top: 14px; right: 14px;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--border);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--muted);
+        }
+        .modal-close-btn svg { width: 14px; height: 14px; }
+        .modal-h { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+        .modal-sub { font-size: 12px; color: var(--subtle); margin-bottom: 18px; }
+        .modal-sec { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .modal-sec:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .modal-sec h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--subtle); margin-bottom: 7px; }
+        .modal-sec p { font-size: 13.5px; color: var(--text); line-height: 1.65; }
+        .modal-sec ul { padding-left: 18px; }
+        .modal-sec li { font-size: 13.5px; color: var(--text); line-height: 1.65; margin-bottom: 3px; }
+        .info-box {
+            background: #eff8ff; border: 1px solid #b8ddf4;
+            border-radius: 10px; padding: 11px 14px;
+            font-size: 13px; color: #0a4a6e; line-height: 1.6;
+            display: flex; gap: 9px; align-items: flex-start;
+        }
+        .info-box svg { flex-shrink: 0; margin-top: 2px; }
+        .modal-join {
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            width: 100%; padding: 15px; background: var(--tg); color: white;
+            font-size: 15px; font-weight: 800; border-radius: 12px; border: none;
+            cursor: pointer; margin-top: 18px; text-decoration: none;
+            transition: background 0.15s;
+        }
+        .modal-join:hover { background: var(--tg-dark); }
+    </style>
 </head>
 <body>
 
-<noscript>
-  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=36555340844057275&ev=PageView&noscript=1"/>
-</noscript>
+<div class="card">
 
-<div class="page-wrap">
-
-  <!-- PAGE: HOME -->
-  <div id="page-home" class="page active">
-    <div class="card">
-
-      <!-- HERO -->
-      <div class="hero">
+    <div class="hero">
         <div class="hero-glow"></div>
         <div class="hero-glow2"></div>
-
         <div class="logo-ring">
-          <img
-            src="https://plain-apac-prod-public.komododecks.com/202605/07/9LinBLakLiPHKfydZ6z8/image.jpg"
-            alt="EliX Signal Logo"
-            referrerpolicy="no-referrer"
-            onerror="this.src='https://via.placeholder.com/128/8b5cf6/ffffff?text=ELIX'"
-          />
+            <img src="https://plain-apac-prod-public.komododecks.com/202605/07/9LinBLakLiPHKfydZ6z8/image.jpg"
+                 alt="EliX Signal"
+                 onerror="this.src='https://via.placeholder.com/128/8b5cf6/ffffff?text=ELIX'">
         </div>
-
         <div class="status-pill">
-          <div class="live-dot"></div>
-          Active Community
+            <div class="live-dot"></div>
+            Active Community
         </div>
-
         <h1>ELIX <em>Signal</em> Bot</h1>
-        <p>Advanced market analysis tools — join 50,000+ traders accessing real-time insights and educational strategies.</p>
-      </div>
+        <p class="hero-sub">You're being invited to join our Telegram channel.</p>
+    </div>
 
-      <!-- BODY -->
-      <div class="body">
-
-        <!-- SOCIAL PROOF -->
+    <div class="body">
         <div class="proof">
-          <div class="avatars">
-            <div class="av">EX</div>
-            <div class="av">TR</div>
-            <div class="av">AK</div>
-            <div class="av">JS</div>
-            <div class="av" style="background:linear-gradient(135deg,#5b21b6,#4c1d95)">+</div>
-          </div>
-          <div class="proof-text"><strong>50,000+ traders</strong> already inside</div>
+            <div class="avatars">
+                <div class="av">EX</div>
+                <div class="av">TR</div>
+                <div class="av">AK</div>
+                <div class="av">JS</div>
+                <div class="av" style="background:linear-gradient(135deg,#5b21b6,#4c1d95);">+</div>
+            </div>
+            <div class="proof-text"><strong>50,000+ members</strong> already in the channel</div>
         </div>
 
-        <!-- PRIMARY CTA -->
         <div class="cta-wrap">
-          <a href="https://t.me/+ORi-o6IfFJVlMmE1" class="join-btn" id="btn-join-telegram" target="_blank" rel="noopener">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
-            Join Free Telegram
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-
-          <a href="https://t.me/EliXsignalSOFT_BOT?start=" class="signal-btn" id="btn-get-signal" target="_blank" rel="noopener">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
-            <span>Get Signal</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-
-          <div class="cta-note">
-            <div class="note-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              No cost, ever
+            <a href="https://t.me/+h0hff3P4oVw5ZDg1" class="join-btn" id="joinBtn" target="_blank" rel="noopener">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
+                Join Telegram Channel — Free
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <div class="cta-note">
+                <div class="note-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    No cost, ever
+                </div>
+                <div class="note-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    No sign-up required
+                </div>
+                <div class="note-item">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Leave anytime
+                </div>
             </div>
-            <div class="note-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              No sign-up required
-            </div>
-            <div class="note-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              Leave anytime
-            </div>
-          </div>
         </div>
 
-        <!-- FEATURES -->
-        <div class="features">
-          <div class="feature-row">
-            <div class="feat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            </div>
-            <div class="feat-text">
-              <div class="feat-title">Real-Time Market Insights</div>
-              <div class="feat-sub">Live analysis and signals delivered directly to your Telegram</div>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="feat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            </div>
-            <div class="feat-text">
-              <div class="feat-title">Educational Strategy Guides</div>
-              <div class="feat-sub">In-depth resources to sharpen your trading knowledge</div>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="feat-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div class="feat-text">
-              <div class="feat-title">24/7 Community Support</div>
-              <div class="feat-sub">50,000+ active traders ready to help around the clock</div>
-            </div>
-          </div>
+        <div class="countdown-bar-wrap">
+            <div class="countdown-bar-fill" id="countFill"></div>
         </div>
+        <div class="countdown-label">Redirecting in <span id="countNum">10</span>s — or tap the button above</div>
+    </div>
 
-      </div>
-
-      <!-- FOOTER -->
-      <div class="footer">
+    <div class="footer">
         <div class="trust-row">
-          <div class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Verified Safe
-          </div>
-          <div class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Zero Spam
-          </div>
-          <div class="trust-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Privacy Respected
-          </div>
+            <div class="trust-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified Safe
+            </div>
+            <div class="trust-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Zero Spam
+            </div>
+            <div class="trust-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Privacy Respected
+            </div>
         </div>
         <div class="footer-text">
-          &copy; <span id="year"></span> ELIX &nbsp;&middot;&nbsp; Educational Trading Resources<br>
-          <button class="policy-btn" id="link-privacy-policy">Privacy Policy</button>
+            &copy; 2024 ELIX Community. All rights reserved.<br>
+            <button class="policy-btn" id="openPolicy">Community Guidelines &amp; Terms</button>
         </div>
-      </div>
     </div>
-  </div>
-
-  <!-- PAGE: POLICY -->
-  <div id="page-policy" class="page">
-    <div class="card">
-      <div class="policy-body">
-        <div class="back-row">
-          <button class="back-btn" id="btn-back-home">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          </button>
-          <span class="back-label">Back</span>
-        </div>
-
-        <div class="policy-h">Privacy Policy</div>
-
-        <div class="policy-section">
-          <h3>Data Collection</h3>
-          <p>We collect user information only for educational updates and community access. We do not sell or share personal data with third parties.</p>
-        </div>
-
-        <div class="policy-section">
-          <h3>How We Use It</h3>
-          <p>Your trust is important to us. Any data collected is used strictly to improve your experience within our trading community and to provide relevant market insights.</p>
-        </div>
-      </div>
-
-      <div class="footer">
-        <div class="footer-text">&copy; <span id="year2"></span> ELIX &nbsp;&middot;&nbsp; Educational Trading Resources</div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
+<!-- MODAL -->
+<div class="modal-bg" id="policyModal">
+    <div class="modal-box">
+        <button class="modal-close-btn" id="closePolicy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="modal-h">Community Guidelines</div>
+        <div class="modal-sub">Last updated 2024 &middot; Please read before joining</div>
+
+        <div class="modal-sec">
+            <h3>Purpose</h3>
+            <p>ELIX Community is a Telegram channel for discussion, sharing insights, and community content. All content is for educational and entertainment purposes only.</p>
+        </div>
+
+        <div class="modal-sec">
+            <h3>Leave Anytime</h3>
+            <div class="info-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0a4a6e" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>You can leave the Telegram channel at any time by opening the channel, tapping the channel name, and selecting <strong>"Leave channel."</strong> There are no restrictions or penalties for leaving.</span>
+            </div>
+        </div>
+
+        <div class="modal-sec">
+            <h3>What We Do Not Do</h3>
+            <ul>
+                <li>We do not guarantee any results or outcomes</li>
+                <li>We do not provide financial or professional advice</li>
+                <li>We do not promote irresponsible behavior</li>
+                <li>We are not affiliated with any external platform</li>
+            </ul>
+        </div>
+
+        <div class="modal-sec">
+            <h3>Community Rules</h3>
+            <ul>
+                <li>Respect all members at all times</li>
+                <li>No spam, scams, or harmful links permitted</li>
+                <li>Keep discussions on-topic and appropriate</li>
+                <li>Follow Telegram's Terms of Service</li>
+            </ul>
+        </div>
+
+        <div class="modal-sec">
+            <h3>Privacy</h3>
+            <p>Your Telegram username may be visible to other members in this public channel. We do not collect personal data beyond what Telegram provides to channel administrators.</p>
+        </div>
+
+        <div class="modal-sec">
+            <h3>Disclaimer</h3>
+            <p>All content is for entertainment and discussion only. Always follow your local laws regarding online activities.</p>
+        </div>
+
+        <a href="https://t.me/+h0hff3P4oVw5ZDg1" class="modal-join" target="_blank" rel="noopener" id="modalJoinBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.12 3.12l-18.7 7.22c-1.28.51-1.27 1.22-.23 1.54l4.8 1.5 11.1-7c.52-.32 1-.15.6.21l-9 8.12-.35 5.15c.5 0 .72-.23.99-.49l2.4-2.33 4.99 3.69c.92.51 1.58.25 1.81-.85l3.27-15.42c.34-1.35-.51-1.96-1.39-1.57z"/></svg>
+            I Understand — Join the Channel
+        </a>
+    </div>
+</div>
+
+<!-- Meta Pixel -->
 <script>
-  const track = (eventName, params = {}) => {
-    if (typeof window.fbq !== 'undefined') {
-      try { window.fbq('track', eventName, params); } catch(e) {}
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '36555340844057275');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=36555340844057275&ev=PageView&noscript=1"
+/></noscript>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const REDIRECT_URL = 'https://t.me/+h0hff3P4oVw5ZDg1';
+    let secondsLeft = 10;
+    let redirected = false;
+    const fill = document.getElementById('countFill');
+    const num = document.getElementById('countNum');
+
+    const timer = setInterval(function() {
+        secondsLeft--;
+        if (num) num.textContent = secondsLeft;
+        if (fill) fill.style.width = (secondsLeft / 10 * 100) + '%';
+        if (secondsLeft <= 0 && !redirected) {
+            redirected = true;
+            clearInterval(timer);
+            if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'TelegramJoin_AutoRedirect' });
+            window.location.href = REDIRECT_URL;
+        }
+    }, 1000);
+
+    function cancelTimer() {
+        if (redirected) return;
+        redirected = true;
+        clearInterval(timer);
+        const wrap = document.querySelector('.countdown-bar-wrap');
+        const label = document.querySelector('.countdown-label');
+        if (wrap) { wrap.style.transition = 'opacity 0.3s'; wrap.style.opacity = '0'; setTimeout(() => wrap.remove(), 300); }
+        if (label) { label.style.transition = 'opacity 0.3s'; label.style.opacity = '0'; setTimeout(() => label.remove(), 300); }
     }
-  };
 
-  const navigate = (page) => {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(`page-${page}`).classList.add('active');
-    window.scrollTo(0, 0);
-    if (page === 'home') {
-      clearTimeout(window._redirectTimer);
-      window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
-    } else {
-      clearTimeout(window._redirectTimer);
-    }
-  };
+    document.getElementById('joinBtn')?.addEventListener('click', function() {
+        cancelTimer();
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'TelegramJoin_MainCTA' });
+    });
+    document.getElementById('modalJoinBtn')?.addEventListener('click', function() {
+        cancelTimer();
+        if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'TelegramJoin_Modal' });
+        document.getElementById('policyModal').classList.remove('open');
+    });
 
-  const handleLinkClick = (e, url, name) => {
-    e.preventDefault();
-    track('Lead', { content_name: name });
-    setTimeout(() => window.location.href = url, 500);
-  };
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const y = new Date().getFullYear();
-    const year1 = document.getElementById('year');
-    const year2 = document.getElementById('year2');
-    if (year1) year1.textContent = y;
-    if (year2) year2.textContent = y;
-
-    document.getElementById('link-privacy-policy').onclick = (e) => {
-      e.preventDefault();
-      navigate('policy');
-      track('PageView', { page: 'policy' });
-    };
-
-    document.getElementById('btn-back-home').onclick = () => {
-      navigate('home');
-      track('PageView', { page: 'home' });
-    };
-
-    document.getElementById('btn-join-telegram').onclick = (e) =>
-      handleLinkClick(e, 'https://t.me/+ORi-o6IfFJVlMmE1', 'Join Telegram');
-
-    document.getElementById('btn-get-signal').onclick = (e) =>
-      handleLinkClick(e, 'https://t.me/EliXsignalSOFT_BOT?start=', 'Get Signal');
-
-    track('PageView', { page: 'home' });
-    window._redirectTimer = setTimeout(() => window.location.href = 'https://t.me/+ORi-o6IfFJVlMmE1', 10000);
-  });
+    const modal = document.getElementById('policyModal');
+    document.getElementById('openPolicy')?.addEventListener('click', function(e) {
+        e.preventDefault(); cancelTimer(); modal.classList.add('open');
+    });
+    document.getElementById('closePolicy')?.addEventListener('click', function() {
+        modal.classList.remove('open');
+    });
+    modal?.addEventListener('click', function(e) {
+        if (e.target === modal) modal.classList.remove('open');
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') modal.classList.remove('open');
+    });
+});
 </script>
 </body>
 </html>
